@@ -470,6 +470,13 @@ class SymbolConfig(BaseModel):
     no_trading: Optional[bool] = None
 
 
+class StockStrategyConfig(BaseModel):
+    """Configuration for stock trading strategies."""
+
+    strategy: str = Field(default="bx_trender")
+    shares: int = Field(default=0, ge=0)
+
+
 class ActionWhenClosedEnum(str, Enum):
     wait = "wait"
     exit = "exit"
@@ -507,6 +514,7 @@ class Config(BaseModel, DisplayMixin):
     vix_call_hedge: VIXCallHedgeConfig = Field(default_factory=VIXCallHedgeConfig)
     write_when: WriteWhenConfig = Field(default_factory=WriteWhenConfig)
     symbols: Dict[str, SymbolConfig] = Field(default_factory=dict)
+    stocks: Dict[str, StockStrategyConfig] = Field(default_factory=dict)
     constants: ConstantsConfig = Field(default_factory=ConstantsConfig)
 
     def trading_is_allowed(self, symbol: str) -> bool:

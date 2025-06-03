@@ -14,6 +14,8 @@ from ib_async import (
     util,
 )
 from ib_async.contract import ComboLeg, Contract, Index, Option, Stock
+import pandas as pd
+from thetagang.stock_strategies import compute_bx_trender, bx_trender_signal
 from ib_async.ib import IB
 from ib_async.order import LimitOrder
 from rich.console import Group
@@ -573,6 +575,9 @@ class PortfolioManager:
 
             # manage dat cash
             await self.do_cashman(account_summary, portfolio_positions)
+
+            # execute stock trading strategies
+            await self.run_stock_strategies(portfolio_positions)
 
             if self.dry_run:
                 log.warning("Dry run enabled, no trades will be executed.")
@@ -2111,6 +2116,64 @@ class PortfolioManager:
                 log.error("Error occurred when cash hedging. Continuing anyway...")
 
         await inner_handler()
+
+    async def run_stock_strategies(
+        self, portfolio_positions: Dict[str, List[PortfolioItem]]
+    ) -> None:
+        """Execute stock trading strategies defined in the config."""
+        if not self.config.stocks:
+            return
+
+        for symbol, strat in self.config.stocks.items():
+            contract = Stock(
+                symbol,
+                self.get_order_exchange(),
+                currency="USD",
+                primaryExchange=self.get_primary_exchange(symbol),
+            )
+            try:
+                bars = await self.ibkr.request_historical_data(contract, "60 D")
+            except Exception:
+                log.error(f"{symbol}: failed to fetch historical data")
+                continue
+
+            closes = pd.Series([b.close for b in bars])
+            osc = compute_bx_trender(closes)
+            signal = bx_trender_signal(osc)
+
+            qty = sum(
+                p.position
+                for p in portfolio_positions.get(symbol, [])
+                if isinstance(p.contract, Stock)
+            )
+            in_position = qty > 0
+
+            price = closes.iloc[-1]
+
+            if signal == "BUY" and not in_position and strat.shares > 0:
+                order = LimitOrder(
+                    "BUY",
+                    strat.shares,
+                    round(price, 2),
+                    algoStrategy=self.get_algo_strategy(),
+                    algoParams=self.get_algo_params(),
+                    tif="DAY",
+                    account=self.account_number,
+                    transmit=True,
+                )
+                self.enqueue_order(contract, order)
+            elif signal == "SELL" and in_position and qty > 0:
+                order = LimitOrder(
+                    "SELL",
+                    abs(qty),
+                    round(price, 2),
+                    algoStrategy=self.get_algo_strategy(),
+                    algoParams=self.get_algo_params(),
+                    tif="DAY",
+                    account=self.account_number,
+                    transmit=True,
+                )
+                self.enqueue_order(contract, order)
 
     def enqueue_order(self, contract: Optional[Contract], order: LimitOrder) -> None:
         if not contract:
