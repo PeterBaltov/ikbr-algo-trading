@@ -152,3 +152,11 @@ cython_debug/
 
 # Ignore notebooks
 *.ipynb
+
+# Ignore TOML files
+*.toml
+
+# Ignore INI files
+*.ini
+
+.DS_Store

@@ -107,7 +107,7 @@ class OrdersConfig(BaseModel, DisplayMixin):
 
 class IBAsyncConfig(BaseModel):
     api_response_wait_time: int = Field(default=60, ge=0)
-    logfile: Optional[str] = None
+    logfile: Optional[str] = Field(default="/Users/petarbaltov/Documents/trading/ikbr-algo-trading/logs/ib_async.log")
 
 
 class IBCConfig(BaseModel):
