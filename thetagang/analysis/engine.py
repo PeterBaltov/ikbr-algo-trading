@@ -15,8 +15,8 @@ from .indicators import (
     BollingerBands, ATR, VWAP
 )
 from .signals import SignalAggregator, CombinedSignal, IndicatorResult
-from .timeframes import TimeFrameManager
-from .performance import IndicatorCache, AsyncIndicatorEngine
+from ..timeframes import TimeFrameManager
+# Performance optimization components moved to analytics package
 from ..strategies.enums import TimeFrame
 
 
@@ -41,8 +41,8 @@ class TechnicalAnalysisEngine:
         self.indicators: Dict[str, BaseIndicator] = {}
         self.signal_aggregator = SignalAggregator()
         self.timeframe_manager = TimeFrameManager()
-        self.cache = IndicatorCache() if cache_enabled else None
-        self.async_engine = AsyncIndicatorEngine()
+        self.cache = None  # Performance optimization moved to analytics package
+        self.async_engine = None  # Async processing moved to analytics package
         
         # Performance tracking
         self._calculation_count = 0

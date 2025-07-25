@@ -35,8 +35,8 @@ def test_phase4_imports():
         from thetagang.backtesting import BacktestStrategy, StrategyLifecycle, BacktestContext
         print("✅ BacktestStrategy components import - SUCCESS")
         
-        # Performance analytics
-        from thetagang.backtesting import PerformanceCalculator, PerformanceMetrics, RiskMetrics
+        # Performance analytics (now in analytics package)
+        from thetagang.analytics import PerformanceCalculator, PerformanceMetrics, RiskMetrics
         print("✅ PerformanceCalculator components import - SUCCESS")
         
         return True
@@ -144,7 +144,7 @@ def test_performance_calculator():
     print("\n📈 Testing PerformanceCalculator...")
     
     try:
-        from thetagang.backtesting import PerformanceCalculator
+        from thetagang.analytics import PerformanceCalculator
         
         # Create calculator
         calculator = PerformanceCalculator(risk_free_rate=0.02)

@@ -29,13 +29,8 @@ from .signals import (
     SignalStrength, SignalDirection, CombinedSignal
 )
 
-from .timeframes import (
-    TimeFrameManager, DataSynchronizer, MultiTimeFrameAnalyzer
-)
-
-from .performance import (
-    IndicatorCache, BatchProcessor, AsyncIndicatorEngine
-)
+# Timeframe management moved to thetagang.timeframes package
+# Performance optimization features moved to thetagang.analytics package
 
 # Version and metadata
 __version__ = "2.0.0"
@@ -60,9 +55,6 @@ __all__ = [
     "SignalProcessor", "SignalAggregator", "ConfidenceCalculator",
     "SignalStrength", "SignalDirection", "CombinedSignal",
     
-    # Multi-timeframe
-    "TimeFrameManager", "DataSynchronizer", "MultiTimeFrameAnalyzer",
-    
-    # Performance
-    "IndicatorCache", "BatchProcessor", "AsyncIndicatorEngine",
+    # Multi-timeframe management moved to thetagang.timeframes
+    # Performance optimization moved to thetagang.analytics
 ] 

@@ -37,10 +37,11 @@ from .engine import BacktestEngine, BacktestConfig, BacktestResult, BacktestStat
 from .data import DataManager, DataConfig, DataSource, DataValidator, create_data_config
 from .simulator import TradeSimulator, ExecutionConfig, SlippageModel, MarketImpactModel
 from .strategy_api import BacktestStrategy, StrategyLifecycle, BacktestContext
-from .performance import PerformanceCalculator, PerformanceMetrics, RiskMetrics
+from .metrics import PerformanceCalculator, PerformanceMetrics, RiskMetrics
 from .portfolio import PortfolioManager, PositionSizer, CapitalAllocator, create_portfolio_config
 from .optimizer import StrategyOptimizer, OptimizationConfig, WalkForwardAnalysis
-from .reports import ReportGenerator, ReportConfig, BenchmarkComparator
+from .reports import ReportGenerator, ReportConfig
+from .benchmark import BenchmarkComparator, BenchmarkComparison
 from .live_adapter import LiveTradingAdapter, AdapterConfig, create_live_config
 
 __all__ = [
@@ -88,6 +89,7 @@ __all__ = [
     "ReportGenerator",
     "ReportConfig",
     "BenchmarkComparator",
+    "BenchmarkComparison",
     
     # Live trading
     "LiveTradingAdapter",

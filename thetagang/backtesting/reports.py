@@ -135,40 +135,7 @@ class ReportSection:
     metadata: Dict[str, Any] = field(default_factory=dict)
 
 
-@dataclass
-class BenchmarkComparison:
-    """Benchmark comparison results"""
-    
-    strategy_name: str
-    benchmark_name: str
-    
-    # Performance comparison
-    strategy_return: float
-    benchmark_return: float
-    excess_return: float
-    
-    # Risk-adjusted metrics
-    strategy_sharpe: float
-    benchmark_sharpe: float
-    information_ratio: float
-    
-    # Risk metrics
-    strategy_volatility: float
-    benchmark_volatility: float
-    tracking_error: float
-    
-    # Correlation analysis
-    correlation: float
-    beta: float
-    alpha: float
-    
-    # Periods analysis
-    outperformance_periods: int
-    total_periods: int
-    outperformance_ratio: float
-    
-    # Metadata
-    metadata: Dict[str, Any] = field(default_factory=dict)
+# BenchmarkComparison moved to benchmark.py module
 
 
 class ReportGenerator:
@@ -652,40 +619,4 @@ class ReportGenerator:
         """
 
 
-class BenchmarkComparator:
-    """Utility for comparing strategies against benchmarks"""
-    
-    def __init__(self):
-        self.logger = logging.getLogger(__name__)
-    
-    def compare_to_benchmark(
-        self,
-        strategy_results: Any,
-        benchmark_data: pd.Series,
-        strategy_name: str = "Strategy",
-        benchmark_name: str = "Benchmark"
-    ) -> BenchmarkComparison:
-        """Compare strategy to benchmark"""
-        
-        # Mock comparison - would normally use actual data
-        comparison = BenchmarkComparison(
-            strategy_name=strategy_name,
-            benchmark_name=benchmark_name,
-            strategy_return=getattr(strategy_results, 'total_return', 0.15),
-            benchmark_return=0.10,  # Mock benchmark return
-            excess_return=0.05,
-            strategy_sharpe=getattr(strategy_results, 'sharpe_ratio', 1.2),
-            benchmark_sharpe=0.8,
-            information_ratio=0.6,
-            strategy_volatility=getattr(strategy_results, 'volatility', 0.18),
-            benchmark_volatility=0.15,
-            tracking_error=0.08,
-            correlation=0.75,
-            beta=1.1,
-            alpha=0.03,
-            outperformance_periods=150,
-            total_periods=252,
-            outperformance_ratio=0.60
-        )
-        
-        return comparison 
+# BenchmarkComparator moved to benchmark.py module 
