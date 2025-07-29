@@ -24,6 +24,16 @@ from rich.table import Table
 
 from thetagang import log
 from thetagang.config import Config
+
+# Phase 7: Strategy Framework Integration
+from thetagang.strategies.base import BaseStrategy, StrategyResult, StrategyContext
+from thetagang.strategies.enums import StrategySignal, StrategyType, TimeFrame, StrategyStatus
+from thetagang.strategies.registry import StrategyRegistry, get_registry
+from thetagang.strategies.implementations.factory import StrategyFactory, create_strategy_from_config
+from thetagang.execution.engine import StrategyExecutionEngine
+from thetagang.timeframes.manager import TimeFrameManager
+from thetagang.analysis import TechnicalAnalysisEngine
+from datetime import datetime, timedelta
 from thetagang.fmt import dfmt, ffmt, ifmt, pfmt
 from thetagang.ibkr import IBKR, RequiredFieldValidationError, TickerField
 from thetagang.orders import Orders
@@ -90,6 +100,100 @@ class PortfolioManager:
         self.target_quantities: Dict[str, int] = {}
         self.qualified_contracts: Dict[int, Contract] = {}
         self.dry_run = dry_run
+        
+        # Phase 7: Strategy Framework Integration
+        self._initialize_strategy_framework()
+
+    def _initialize_strategy_framework(self) -> None:
+        """Initialize the strategy framework components for Phase 7 integration."""
+        # Strategy factory for creating strategies
+        self.strategy_factory = StrategyFactory()
+        
+        # Registry for managing strategies
+        self.strategy_registry = get_registry()
+        
+        # Active strategies loaded from configuration
+        self.active_strategies: Dict[str, BaseStrategy] = {}
+        
+        # Strategy execution engine for coordinating multi-strategy execution
+        # Note: We'll initialize this when needed, for now just set to None
+        self.strategy_execution_engine = None
+        
+        # Timeframe manager for handling multi-timeframe data
+        self.timeframe_manager = TimeFrameManager()
+        
+        # Technical analysis engine for strategy indicators
+        self.technical_analysis_engine = TechnicalAnalysisEngine()
+        
+        # Resource allocation tracking
+        self.allocated_capital: Dict[str, float] = {}
+        self.strategy_weights: Dict[str, float] = {}
+        
+        # Load strategies from configuration
+        self._load_strategies_from_config()
+    
+    def _load_strategies_from_config(self) -> None:
+        """Load and initialize strategies from configuration."""
+        try:
+            # Check if strategies are configured
+            if not hasattr(self.config, 'strategies') or not self.config.strategies:
+                log.info("No strategies configured in Phase 5 format, using legacy mode")
+                return
+            
+            # Get enabled strategies from config
+            enabled_strategies = self.config.get_enabled_strategies()
+            log.info(f"Loading {len(enabled_strategies)} strategies from configuration")
+            
+            total_weight = 0.0
+            for strategy_name in enabled_strategies:
+                try:
+                    # For now, use factory to create strategies with basic config
+                    # In the future, this can be enhanced to use the full configuration
+                    
+                    # Create basic strategy config dictionary
+                    strategy_config_dict = {
+                        'type': strategy_name,
+                        'name': f"{strategy_name}_instance",
+                        'symbols': self.config.symbols,
+                        'timeframes': ['1D'],  # Default timeframe
+                        'config': {}
+                    }
+                    
+                    # Create strategy instance using factory
+                    symbols_list = list(self.config.symbols.keys()) if self.config.symbols else []
+                    strategy = self.strategy_factory.create_strategy(
+                        strategy_name=strategy_name,
+                        name=f"{strategy_name}_instance",
+                        symbols=symbols_list,
+                        timeframes=['1D'],
+                        config={}
+                    )
+                    
+                    # Add to active strategies
+                    self.active_strategies[strategy_name] = strategy
+                    
+                    # Set default weight
+                    weight = 1.0
+                    self.strategy_weights[strategy_name] = weight
+                    total_weight += weight
+                    
+                    log.info(f"Loaded strategy: {strategy_name} ({strategy.strategy_type.value})")
+                    
+                except Exception as e:
+                    log.error(f"Failed to load strategy '{strategy_name}': {e}")
+                    continue
+            
+            # Normalize weights to sum to 1.0
+            if total_weight > 0:
+                for strategy_name in self.strategy_weights:
+                    self.strategy_weights[strategy_name] /= total_weight
+                    
+            log.info(f"Successfully loaded {len(self.active_strategies)} strategies")
+            
+        except Exception as e:
+            log.error(f"Failed to load strategies from configuration: {e}")
+            # Fall back to legacy mode
+            self.active_strategies = {}
 
     def get_short_calls(
         self, portfolio_positions: Dict[str, List[PortfolioItem]]
@@ -596,8 +700,15 @@ class PortfolioManager:
             # manage dat cash
             await self.do_cashman(account_summary, portfolio_positions)
 
-            # execute stock trading strategies
-            await self.run_stock_strategies(portfolio_positions)
+            # Phase 7: Log strategy status and run compatibility checks
+            self.log_strategy_status()
+            await self.validate_strategy_compatibility()
+            
+            # execute strategies (both framework and legacy)
+            await self.run_strategies(portfolio_positions)
+            
+            # Suggest migration if appropriate
+            self.suggest_migration()
 
             if self.dry_run:
                 log.warning("Dry run enabled, no trades will be executed.")
@@ -2383,13 +2494,298 @@ class PortfolioManager:
 
         await inner_handler()
 
+    async def run_strategies(
+        self, portfolio_positions: Dict[str, List[PortfolioItem]]
+    ) -> None:
+        """Execute all strategies (new framework + legacy)."""
+        # Phase 7: Execute new strategy framework strategies
+        if self.active_strategies:
+            await self._execute_framework_strategies(portfolio_positions)
+        
+        # Maintain backward compatibility: run legacy stock strategies
+        await self._run_legacy_stock_strategies(portfolio_positions)
+    
+    async def _execute_framework_strategies(
+        self, portfolio_positions: Dict[str, List[PortfolioItem]]
+    ) -> None:
+        """Execute strategies using the new framework."""
+        log.info(f"Executing {len(self.active_strategies)} framework strategies")
+        
+        # Get account summary for resource allocation
+        try:
+            account_summary, _ = await self.summarize_account()
+            total_nav = account_summary.get('NetLiquidation', 100000.0)  # Default fallback
+        except Exception as e:
+            log.error(f"Failed to get account summary for strategy execution: {e}")
+            return
+        
+        strategy_results = {}
+        
+        for strategy_name, strategy in self.active_strategies.items():
+            try:
+                # Allocate capital based on strategy weight
+                allocated_capital = float(total_nav) * self.strategy_weights.get(strategy_name, 0.0)
+                self.allocated_capital[strategy_name] = allocated_capital
+                
+                log.info(f"Executing strategy {strategy_name} with ${allocated_capital:,.2f} allocated")
+                
+                # Execute strategy for each symbol it covers
+                for symbol in strategy.symbols:
+                    try:
+                        # Get market data for the symbol
+                        timeframe_data = await self._get_market_data_for_strategy(symbol, strategy)
+                        
+                        if not timeframe_data:
+                            log.warning(f"No market data available for {symbol}")
+                            continue
+                        
+                        # Create strategy context
+                        context = self._create_strategy_context(symbol, portfolio_positions)
+                        
+                        # Execute strategy analysis
+                        result = await strategy.analyze(symbol, timeframe_data, context)
+                        
+                        if result and result.signal != StrategySignal.HOLD:
+                            strategy_results[f"{strategy_name}_{symbol}"] = result
+                            log.info(f"Strategy {strategy_name} generated {result.signal.value} signal for {symbol}")
+                            
+                            # Execute the strategy result
+                            await self._execute_strategy_result(result, symbol, allocated_capital)
+                        
+                    except Exception as e:
+                        log.error(f"Failed to execute strategy {strategy_name} for {symbol}: {e}")
+                        continue
+                        
+            except Exception as e:
+                log.error(f"Failed to execute strategy {strategy_name}: {e}")
+                continue
+        
+        log.info(f"Framework strategy execution completed. Generated {len(strategy_results)} signals")
+    
+    # Phase 7.2: Backward Compatibility and Migration Support
+    
+    def has_legacy_strategies(self) -> bool:
+        """Check if legacy strategies are configured."""
+        return bool(self.config.stocks)
+    
+    def has_framework_strategies(self) -> bool:
+        """Check if new framework strategies are configured and loaded."""
+        return bool(self.active_strategies)
+    
+    def get_strategy_execution_mode(self) -> str:
+        """Determine the execution mode based on configured strategies."""
+        has_legacy = self.has_legacy_strategies()
+        has_framework = self.has_framework_strategies()
+        
+        if has_framework and has_legacy:
+            return "hybrid"
+        elif has_framework:
+            return "framework"
+        elif has_legacy:
+            return "legacy"
+        else:
+            return "wheel_only"
+    
+    def log_strategy_status(self) -> None:
+        """Log the current strategy configuration status."""
+        mode = self.get_strategy_execution_mode()
+        
+        log.info(f"Strategy execution mode: {mode}")
+        
+        if mode == "hybrid":
+            log.info(f"Running {len(self.active_strategies)} framework strategies + {len(self.config.stocks)} legacy strategies")
+        elif mode == "framework":
+            log.info(f"Running {len(self.active_strategies)} framework strategies only")
+        elif mode == "legacy":
+            log.info(f"Running {len(self.config.stocks)} legacy strategies only")
+        else:
+            log.info("Running wheel strategy only (original ThetaGang mode)")
+    
+    def suggest_migration(self) -> None:
+        """Suggest migration path for users with legacy configurations."""
+        if self.has_legacy_strategies() and not self.has_framework_strategies():
+            log.info("💡 Migration Suggestion:")
+            log.info("  Consider migrating to the new strategy framework for:")
+            log.info("  • Enhanced strategy options (17 strategies available)")
+            log.info("  • Better resource allocation and risk management")
+            log.info("  • Multi-timeframe support")
+            log.info("  • Technical analysis integration")
+            log.info("  See Phase 5 configuration examples in thetagang.toml")
+    
+    async def validate_strategy_compatibility(self) -> None:
+        """Validate that strategies don't conflict with each other."""
+        if self.get_strategy_execution_mode() == "hybrid":
+            # Check for symbol conflicts between legacy and framework strategies
+            legacy_symbols = set(self.config.stocks.keys()) if self.config.stocks else set()
+            framework_symbols = set()
+            
+            for strategy in self.active_strategies.values():
+                framework_symbols.update(strategy.symbols)
+            
+            conflicts = legacy_symbols.intersection(framework_symbols)
+            
+            if conflicts:
+                log.warning(f"Symbol conflicts detected between legacy and framework strategies: {conflicts}")
+                log.warning("Consider using framework strategies only for these symbols")
+            else:
+                log.info("No conflicts detected between legacy and framework strategies")
+    
+    def auto_migrate_config_suggestions(self) -> Dict[str, Any]:
+        """Generate suggested configuration for migrating legacy strategies to framework."""
+        if not self.has_legacy_strategies():
+            return {}
+        
+        suggestions = {
+            "strategies": {},
+            "migration_notes": []
+        }
+        
+        for symbol, strat in self.config.stocks.items():
+            # Suggest equivalent framework strategy based on legacy config
+            strategy_name = f"momentum_scalper_{symbol.lower()}"
+            
+            suggestions["strategies"][strategy_name] = {
+                "enabled": True,
+                "type": "stocks", 
+                "timeframes": ["1H"],
+                "symbols": [symbol],
+                "parameters": {
+                    "shares": strat.shares if hasattr(strat, 'shares') else 100,
+                    "risk_per_trade": 0.02
+                }
+            }
+            
+            suggestions["migration_notes"].append(
+                f"Legacy stock strategy for {symbol} can be migrated to momentum_scalper_{symbol.lower()}"
+            )
+        
+        return suggestions
+    
+    async def _get_market_data_for_strategy(
+        self, symbol: str, strategy: BaseStrategy
+    ) -> Optional[Dict[TimeFrame, pd.DataFrame]]:
+        """Get market data for a symbol in the timeframes required by strategy."""
+        try:
+            contract = Stock(
+                symbol,
+                self.get_order_exchange(),
+                currency="USD",
+                primaryExchange=self.get_primary_exchange(symbol),
+            )
+            
+            # Get historical data (using daily for now, can be enhanced later)
+            bars = await self.ibkr.request_historical_data(contract, "60 D")
+            
+            if not bars:
+                return None
+            
+            # Convert to DataFrame
+            data = pd.DataFrame([
+                {
+                    'open': bar.open,
+                    'high': bar.high,
+                    'low': bar.low,
+                    'close': bar.close,
+                    'volume': bar.volume,
+                    'date': bar.date
+                }
+                for bar in bars
+            ])
+            
+            data.set_index('date', inplace=True)
+            
+            # For now, return daily timeframe data for all required timeframes
+            # In the future, this can be enhanced to support multiple timeframes
+            return {TimeFrame.DAY_1: data}
+            
+        except Exception as e:
+            log.error(f"Failed to get market data for {symbol}: {e}")
+            return None
+    
+    def _create_strategy_context(
+        self, symbol: str, portfolio_positions: Dict[str, List[PortfolioItem]]
+    ) -> StrategyContext:
+        """Create strategy context with market interfaces."""
+        # For now, create a basic context
+        # In the future, this can be enhanced with proper market data and order interfaces
+        return StrategyContext(
+            market_data=None,  # Will be enhanced later
+            order_manager=None,  # Will be enhanced later
+            portfolio_manager=self,
+            timestamp=datetime.now()
+        )
+    
+    async def _execute_strategy_result(
+        self, result: StrategyResult, symbol: str, allocated_capital: float
+    ) -> None:
+        """Execute a strategy result by placing appropriate orders."""
+        try:
+            contract = Stock(
+                symbol,
+                self.get_order_exchange(),
+                currency="USD",
+                primaryExchange=self.get_primary_exchange(symbol),
+            )
+            
+            # Calculate position size based on allocated capital and strategy result
+            position_size = self._calculate_position_size(result, allocated_capital)
+            
+            if position_size <= 0:
+                return
+            
+            # Create order based on signal
+            action = "BUY" if result.signal == StrategySignal.BUY else "SELL"
+            
+            order = LimitOrder(
+                action,
+                position_size,
+                round(result.price, 2),
+                algoStrategy=self.get_algo_strategy(),
+                algoParams=self.get_algo_params(),
+                tif="DAY",
+                account=self.account_number,
+                transmit=True,
+            )
+            
+            self.enqueue_order(contract, order)
+            log.info(f"Enqueued {action} order for {position_size} shares of {symbol} at ${result.price:.2f}")
+            
+        except Exception as e:
+            log.error(f"Failed to execute strategy result for {symbol}: {e}")
+    
+    def _calculate_position_size(self, result: StrategyResult, allocated_capital: float) -> int:
+        """Calculate position size based on strategy result and allocated capital."""
+        try:
+            # Simple position sizing: use confidence to scale position
+            # Default to 10% of allocated capital, scaled by confidence
+            base_allocation = allocated_capital * 0.1
+            scaled_allocation = base_allocation * result.confidence
+            
+            # Calculate shares based on price
+            shares = int(scaled_allocation / result.price)
+            
+            # Minimum position size of 1 share
+            return max(1, shares)
+            
+        except Exception as e:
+            log.error(f"Failed to calculate position size: {e}")
+            return 0
+
     async def run_stock_strategies(
         self, portfolio_positions: Dict[str, List[PortfolioItem]]
     ) -> None:
-        """Execute stock trading strategies defined in the config."""
+        """Legacy method - now calls the new run_strategies method for backward compatibility."""
+        await self.run_strategies(portfolio_positions)
+    
+    async def _run_legacy_stock_strategies(
+        self, portfolio_positions: Dict[str, List[PortfolioItem]]
+    ) -> None:
+        """Execute legacy stock trading strategies defined in the config."""
         if not self.config.stocks:
             return
 
+        log.info("Executing legacy stock strategies")
+        
         for symbol, strat in self.config.stocks.items():
             contract = Stock(
                 symbol,
