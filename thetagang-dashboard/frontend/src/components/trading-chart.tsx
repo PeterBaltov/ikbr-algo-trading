@@ -36,56 +36,51 @@ function TradingChartInner({ data, title = "Portfolio Performance", height = 400
       height: height,
       layout: {
         background: { type: ColorType.Solid, color: 'transparent' },
-        textColor: 'hsl(var(--foreground))',
+        textColor: '#374151',
         fontSize: 12,
         fontFamily: 'Inter, system-ui, sans-serif'
       },
       grid: {
         vertLines: {
-          color: 'hsl(var(--border))',
+          color: '#e5e7eb',
           style: LineStyle.Dotted,
         },
         horzLines: {
-          color: 'hsl(var(--border))',
+          color: '#e5e7eb',
           style: LineStyle.Dotted,
         },
       },
       crosshair: {
         mode: CrosshairMode.Normal,
         vertLine: {
-          color: 'hsl(var(--primary))',
+          color: '#2563eb',
           width: 1,
           style: LineStyle.Solid,
         },
         horzLine: {
-          color: 'hsl(var(--primary))',
+          color: '#2563eb',
           width: 1,
           style: LineStyle.Solid,
         },
       },
       rightPriceScale: {
-        borderColor: 'hsl(var(--border))',
-        textColor: 'hsl(var(--muted-foreground))',
+        borderColor: '#e5e7eb',
+        textColor: '#6b7280',
       },
       timeScale: {
-        borderColor: 'hsl(var(--border))',
-        textColor: 'hsl(var(--muted-foreground))',
+        borderColor: '#e5e7eb',
+        textColor: '#6b7280',
         timeVisible: true,
         secondsVisible: false,
       },
     })
 
-    // Add the area series
+    // Add the area series using correct v5 API
     const series = chart.addAreaSeries({
-      lineColor: 'hsl(var(--primary))',
-      topColor: 'hsl(var(--primary) / 0.3)',
-      bottomColor: 'hsl(var(--primary) / 0.05)',
+      lineColor: '#2563eb',
+      topColor: 'rgba(37, 99, 235, 0.3)',
+      bottomColor: 'rgba(37, 99, 235, 0.05)',
       lineWidth: 2,
-      priceLineVisible: false,
-      crosshairMarkerVisible: true,
-      crosshairMarkerRadius: 4,
-      crosshairMarkerBorderColor: 'hsl(var(--primary))',
-      crosshairMarkerBackgroundColor: 'hsl(var(--primary))',
     })
 
     // Set the data
