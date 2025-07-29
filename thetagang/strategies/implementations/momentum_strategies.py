@@ -730,7 +730,7 @@ class MomentumScalperStrategy(BaseStrategy):
             timeframes=timeframes
         )
         
-        self.momentum_config = MomentumConfig(**self.self.config.get('momentum_parameters', {}))
+        self.momentum_config = MomentumConfig(**self.config.get('momentum_parameters', {}))
         self.positions: Dict[str, List[MomentumPosition]] = {}  # Multiple positions per symbol
         for symbol in symbols:
             self.positions[symbol] = []
