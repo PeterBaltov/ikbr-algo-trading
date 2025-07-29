@@ -1,21 +1,27 @@
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 import asyncio
-import json
+import socketio
 from datetime import datetime, timezone
-from typing import List
 
 from app.routers import portfolio, strategies, trades, analytics
-from app.websockets.manager import ConnectionManager
 from app.models.dashboard import PortfolioSnapshot, StrategyUpdate
 from app.integrations.thetagang_integration import DashboardIntegration
 
-# WebSocket connection manager
-manager = ConnectionManager()
+# Socket.IO server
+sio = socketio.AsyncServer(
+    async_mode='asgi',
+    cors_allowed_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000", 
+        "http://localhost:3001",
+        "https://your-domain.vercel.app"
+    ]
+)
 
 # ThetaGang integration instance
-dashboard_integration: DashboardIntegration = None
+dashboard_integration: DashboardIntegration | None = None
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -34,7 +40,7 @@ async def lifespan(app: FastAPI):
     
     # Shutdown
     print("🛑 Shutting down ThetaGang Dashboard API...")
-    await manager.disconnect_all()
+    await sio.disconnect()
 
 # FastAPI application
 app = FastAPI(

@@ -109,6 +109,14 @@ export interface ChartDataPoint {
   close?: number
 }
 
+export interface PerformanceDataPoint {
+  timestamp: string
+  value: number
+  volume?: number
+  pnl?: number
+  drawdown?: number
+}
+
 export interface Alert {
   id: string
   type: 'price' | 'strategy' | 'system' | 'risk'
@@ -134,7 +142,7 @@ export interface DashboardState {
 // WebSocket Event Types
 export interface WebSocketEvent {
   type: 'portfolio.update' | 'strategy.update' | 'trade.executed' | 'market.data' | 'alert.new'
-  data: any
+  data: unknown
   timestamp: string
 }
 
@@ -152,7 +160,7 @@ export interface StrategyConfig {
   allocation: number
   symbols: string[]
   timeframes: string[]
-  parameters: Record<string, any>
+  parameters: Record<string, unknown>
   riskLimits: {
     maxPositionSize: number
     stopLoss?: number
@@ -175,7 +183,7 @@ export interface TableColumn<T> {
   key: keyof T
   label: string
   sortable?: boolean
-  format?: (value: any) => string
+  format?: (value: unknown) => string
   className?: string
 }
 
