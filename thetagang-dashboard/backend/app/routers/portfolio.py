@@ -6,18 +6,18 @@ from ..models.dashboard import (
     PortfolioResponse, PortfolioSnapshot, 
     Position, ApiResponse
 )
-from ..integrations.thetagang_integration import DashboardIntegration
+from ..integrations.simple_integration import SimpleDashboardIntegration
 
 router = APIRouter()
 
 # Dependency to get the dashboard integration
-async def get_dashboard_integration() -> DashboardIntegration:
+async def get_dashboard_integration() -> SimpleDashboardIntegration:
     """Dependency to provide dashboard integration instance"""
-    return DashboardIntegration()
+    return SimpleDashboardIntegration()
 
 @router.get("/", response_model=PortfolioResponse)
 async def get_portfolio(
-    integration: DashboardIntegration = Depends(get_dashboard_integration)
+    integration: SimpleDashboardIntegration = Depends(get_dashboard_integration)
 ):
     """Get current portfolio overview"""
     try:
@@ -41,7 +41,7 @@ async def get_portfolio(
 
 @router.get("/positions", response_model=ApiResponse)
 async def get_positions(
-    integration: DashboardIntegration = Depends(get_dashboard_integration)
+    integration: SimpleDashboardIntegration = Depends(get_dashboard_integration)
 ):
     """Get current portfolio positions"""
     try:
@@ -62,7 +62,7 @@ async def get_positions(
 
 @router.get("/summary")
 async def get_portfolio_summary(
-    integration: DashboardIntegration = Depends(get_dashboard_integration)
+    integration: SimpleDashboardIntegration = Depends(get_dashboard_integration)
 ):
     """Get portfolio summary with key metrics"""
     try:
@@ -97,7 +97,7 @@ async def get_portfolio_summary(
 
 @router.get("/health")
 async def portfolio_health_check(
-    integration: DashboardIntegration = Depends(get_dashboard_integration)
+    integration: SimpleDashboardIntegration = Depends(get_dashboard_integration)
 ):
     """Health check for portfolio data connection"""
     try:

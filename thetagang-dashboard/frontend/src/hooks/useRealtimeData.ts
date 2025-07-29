@@ -22,18 +22,45 @@ export function useRealtimePortfolio() {
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    // Temporarily disable WebSocket and use demo data
-    console.log('🎯 Using demo data mode - WebSocket disabled');
-    setIsLoading(false);
-    setIsConnected(false);
+    const ws = getSocket();
+    setIsLoading(true);
 
-    // Simulate loading demo data after a short delay
-    const timer = setTimeout(() => {
-      console.log('✅ Demo data loaded');
-    }, 500);
+    const handleConnect = () => {
+      console.log('🔗 Connected to WebSocket');
+      setIsConnected(true);
+      ws.emit('subscribe', { channels: ['portfolio'] });
+    };
+
+    const handleDisconnect = () => {
+      console.log('🔌 Disconnected from WebSocket');
+      setIsConnected(false);
+    };
+
+    const handlePortfolioUpdate = (data: any) => {
+      console.log('📊 Portfolio update received:', data);
+      setPortfolio(data.data);
+      setIsLoading(false);
+    };
+
+    const handleError = (error: unknown) => {
+      console.error('WebSocket error:', error);
+      setIsLoading(false);
+    };
+
+    // Event listeners
+    ws.on('connect', handleConnect);
+    ws.on('disconnect', handleDisconnect);
+    ws.on('portfolio.update', handlePortfolioUpdate);
+    ws.on('error', handleError);
+
+    // Connect to socket
+    ws.connect();
 
     return () => {
-      clearTimeout(timer);
+      ws.off('connect', handleConnect);
+      ws.off('disconnect', handleDisconnect);
+      ws.off('portfolio.update', handlePortfolioUpdate);
+      ws.off('error', handleError);
     };
   }, []);
 
@@ -64,16 +91,34 @@ export function useRealtimeStrategies() {
   }, []);
 
   useEffect(() => {
-    // Temporarily disable WebSocket - strategies will use demo data
-    console.log('🎯 Using demo strategies - WebSocket disabled');
-    setIsLoading(false);
+    const ws = getSocket();
+    setIsLoading(true);
 
-    const timer = setTimeout(() => {
-      console.log('✅ Demo strategies loaded');
-    }, 300);
+    const handleStrategiesUpdate = (data: any) => {
+      console.log('🎛️ Strategies update received:', data);
+      setStrategies(data.data);
+      setIsLoading(false);
+    };
+
+    const handleStrategyUpdate = (data: any) => {
+      console.log('🔄 Strategy update received:', data);
+      // Update individual strategy data
+      setStrategies(prev => 
+        prev.map(s => {
+          const update = data.data.find((u: any) => u.name === s.name);
+          return update ? { ...s, ...update } : s;
+        })
+      );
+    };
+
+    // Event listeners
+    ws.on('strategies.update', handleStrategiesUpdate);
+    ws.on('strategy.update', handleStrategyUpdate);
+    ws.emit('subscribe', { channels: ['strategies'] });
 
     return () => {
-      clearTimeout(timer);
+      ws.off('strategies.update', handleStrategiesUpdate);
+      ws.off('strategy.update', handleStrategyUpdate);
     };
   }, []);
 

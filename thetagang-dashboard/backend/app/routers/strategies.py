@@ -3,16 +3,16 @@ from datetime import datetime, timezone
 from typing import List
 
 from ..models.dashboard import StrategiesResponse, ApiResponse
-from ..integrations.thetagang_integration import DashboardIntegration
+from ..integrations.simple_integration import SimpleDashboardIntegration
 
 router = APIRouter()
 
-async def get_dashboard_integration() -> DashboardIntegration:
-    return DashboardIntegration()
+async def get_dashboard_integration() -> SimpleDashboardIntegration:
+    return SimpleDashboardIntegration()
 
 @router.get("/", response_model=StrategiesResponse)
 async def get_strategies(
-    integration: DashboardIntegration = Depends(get_dashboard_integration)
+    integration: SimpleDashboardIntegration = Depends(get_dashboard_integration)
 ):
     """Get all strategy snapshots"""
     try:
@@ -34,7 +34,7 @@ async def get_strategies(
 @router.post("/{strategy_name}/pause")
 async def pause_strategy(
     strategy_name: str,
-    integration: DashboardIntegration = Depends(get_dashboard_integration)
+    integration: SimpleDashboardIntegration = Depends(get_dashboard_integration)
 ):
     """Pause a strategy"""
     try:

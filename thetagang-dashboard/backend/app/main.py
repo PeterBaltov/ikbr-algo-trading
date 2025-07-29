@@ -3,11 +3,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 import asyncio
 import socketio
-from datetime import datetime, timezone
 
 from app.routers import portfolio, strategies, trades, analytics
-from app.models.dashboard import PortfolioSnapshot, StrategyUpdate
-from app.integrations.thetagang_integration import DashboardIntegration
+from app.integrations.simple_integration import SimpleDashboardIntegration
 
 # Socket.IO server
 sio = socketio.AsyncServer(
@@ -17,11 +15,13 @@ sio = socketio.AsyncServer(
         "http://127.0.0.1:3000", 
         "http://localhost:3001",
         "https://your-domain.vercel.app"
-    ]
+    ],
+    logger=True,
+    engineio_logger=True
 )
 
-# ThetaGang integration instance
-dashboard_integration: DashboardIntegration | None = None
+# ThetaGang integration instance  
+dashboard_integration: SimpleDashboardIntegration | None = None
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -31,7 +31,7 @@ async def lifespan(app: FastAPI):
     
     # Initialize ThetaGang integration
     global dashboard_integration
-    dashboard_integration = DashboardIntegration()
+    dashboard_integration = SimpleDashboardIntegration()
     
     # Start background tasks
     asyncio.create_task(broadcast_updates())
@@ -40,7 +40,6 @@ async def lifespan(app: FastAPI):
     
     # Shutdown
     print("🛑 Shutting down ThetaGang Dashboard API...")
-    await sio.disconnect()
 
 # FastAPI application
 app = FastAPI(
@@ -78,7 +77,7 @@ async def health_check():
     """Health check endpoint"""
     return {
         "status": "healthy",
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestamp": "2024-01-01T00:00:00Z",
         "version": "1.0.0",
         "services": {
             "api": "running",
@@ -96,72 +95,82 @@ async def root():
         "version": "1.0.0",
         "docs": "/docs",
         "health": "/health",
-        "websocket": "/ws"
+        "socket_io": "/socket.io/"
     }
 
-# WebSocket endpoint
-@app.websocket("/ws")
-async def websocket_endpoint(websocket: WebSocket):
-    """WebSocket endpoint for real-time updates"""
-    await manager.connect(websocket)
-    try:
-        while True:
-            # Keep connection alive and handle incoming messages
-            data = await websocket.receive_text()
-            message = json.loads(data)
-            
-            # Handle different message types
-            if message.get("type") == "ping":
-                await websocket.send_text(json.dumps({
-                    "type": "pong",
-                    "timestamp": datetime.now(timezone.utc).isoformat()
-                }))
-            elif message.get("type") == "subscribe":
-                # Handle subscription requests
-                await websocket.send_text(json.dumps({
-                    "type": "subscribed",
-                    "data": message.get("data", {}),
-                    "timestamp": datetime.now(timezone.utc).isoformat()
-                }))
-                
-    except WebSocketDisconnect:
-        manager.disconnect(websocket)
+# Socket.IO events
+@sio.event
+async def connect(sid, environ, auth):
+    """Handle client connection"""
+    print(f"🔗 Client connected: {sid}")
+    await sio.emit('welcome', {
+        'message': 'Connected to ThetaGang Dashboard',
+        'sid': sid
+    }, room=sid)
+
+@sio.event
+async def disconnect(sid):
+    """Handle client disconnection"""
+    print(f"🔌 Client disconnected: {sid}")
+
+@sio.event
+async def subscribe(sid, data):
+    """Handle subscription requests"""
+    channels = data.get('channels', [])
+    print(f"📡 Client {sid} subscribing to: {channels}")
+    
+    # Join rooms for subscriptions
+    for channel in channels:
+        await sio.enter_room(sid, channel)
+    
+    await sio.emit('subscribed', {
+        'channels': channels,
+        'message': f'Subscribed to {len(channels)} channels'
+    }, room=sid)
+
+@sio.event
+async def ping(sid, data):
+    """Handle ping requests"""
+    await sio.emit('pong', {'timestamp': data.get('timestamp')}, room=sid)
+
+# Create Socket.IO ASGI app
+socket_app = socketio.ASGIApp(sio, app)
 
 # Background task for broadcasting updates
 async def broadcast_updates():
     """Background task to broadcast real-time updates"""
+    print("🔄 Starting real-time broadcast service...")
+    
     while True:
         try:
-            if dashboard_integration and manager.active_connections:
+            if dashboard_integration:
                 # Get portfolio snapshot
                 portfolio_data = await dashboard_integration.get_portfolio_snapshot()
                 
-                # Broadcast to all connected clients
-                await manager.broadcast({
-                    "type": "portfolio.update",
-                    "data": portfolio_data.dict() if portfolio_data else None,
-                    "timestamp": datetime.now(timezone.utc).isoformat()
-                })
+                # Broadcast to portfolio subscribers
+                await sio.emit('portfolio.update', {
+                    'data': portfolio_data.dict(),
+                    'timestamp': '2024-01-01T00:00:00Z'
+                }, room='portfolio')
                 
                 # Get strategy updates
                 strategy_updates = await dashboard_integration.get_strategy_updates()
                 if strategy_updates:
-                    await manager.broadcast({
-                        "type": "strategy.update",
-                        "data": [update.dict() for update in strategy_updates],
-                        "timestamp": datetime.now(timezone.utc).isoformat()
-                    })
+                    await sio.emit('strategy.update', {
+                        'data': [update.dict() for update in strategy_updates],
+                        'timestamp': '2024-01-01T00:00:00Z'
+                    }, room='strategies')
                 
         except Exception as e:
             print(f"Error in broadcast_updates: {e}")
         
-        # Wait 1 second before next update
-        await asyncio.sleep(1)
+        # Wait 2 seconds before next update
+        await asyncio.sleep(2)
 
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(
-        "app.main:app",
+        "app.main:socket_app",  # Use socket_app instead of app
         host="0.0.0.0",
         port=8000,
         reload=True,

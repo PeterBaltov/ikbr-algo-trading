@@ -1,264 +1,319 @@
 import asyncio
-from datetime import datetime, timedelta, timezone
+import logging
+from datetime import datetime, timezone
 from typing import List, Optional, Dict, Any
-import random
+from decimal import Decimal
+
+from ..models.dashboard import PortfolioSnapshot, StrategyUpdate, Position, Trade, PositionType, PositionSide
+from thetagang.portfolio_manager import PortfolioManager
+from thetagang.config import Config
+from ib_async import IB
+from asyncio import Future
 from uuid import uuid4
 
-from ..models.dashboard import (
-    PortfolioSnapshot, StrategySnapshot, StrategyUpdate,
-    StrategyType, StrategyStatus, StrategyPnL, StrategyMetrics,
-    Position, Trade, PositionType, PositionSide, TradeAction, OrderType, OrderStatus
-)
+logger = logging.getLogger(__name__)
 
 class DashboardIntegration:
-    """
-    Integration layer between ThetaGang system and Dashboard API.
+    """Integration layer between ThetaGang and the dashboard"""
     
-    For Phase 1, this provides mock data for development.
-    In Phase 3, this will integrate with the actual ThetaGang system.
-    """
-    
-    def __init__(self):
+    def __init__(self, config_path: Optional[str] = None):
+        """Initialize the integration with ThetaGang system"""
+        self.config = None
+        self.portfolio_manager: Optional[PortfolioManager] = None
         self.is_connected = False
-        self.last_update = datetime.now(timezone.utc)
-        self.mock_data_initialized = False
-        self._init_mock_data()
-    
-    def _init_mock_data(self):
-        """Initialize mock data for development"""
-        self.mock_portfolio = PortfolioSnapshot(
-            total_value=125450.23,
-            day_pnl=1250.75,
-            total_pnl=12340.50,
-            cash_balance=25000.00,
-            margin_used=15000.00,
-            buying_power=85450.23,
-            day_pnl_percent=1.01,
-            total_pnl_percent=10.87,
-            win_rate=73.2,
-            active_strategies=5,
-            last_updated=datetime.now(timezone.utc)
-        )
+        self.config_path = config_path or "thetagang.toml"
+        self.last_snapshot_time = None
         
-        self.mock_strategies = [
-            StrategySnapshot(
-                name="enhanced_wheel",
-                type=StrategyType.OPTIONS,
-                status=StrategyStatus.ACTIVE,
-                allocation=30.0,
-                pnl=StrategyPnL(daily=450.25, total=2340.50, percentage=15.2),
-                metrics=StrategyMetrics(
-                    win_rate=78.5,
-                    sharpe_ratio=1.8,
-                    max_drawdown=-5.2,
-                    total_trades=45,
-                    avg_win=125.50,
-                    avg_loss=-85.25
-                ),
-                positions=[],
-                recent_trades=[],
-                last_updated=datetime.now(timezone.utc)
-            ),
-            StrategySnapshot(
-                name="momentum_scalper",
-                type=StrategyType.STOCKS,
-                status=StrategyStatus.ACTIVE,
-                allocation=25.0,
-                pnl=StrategyPnL(daily=300.15, total=890.25, percentage=8.7),
-                metrics=StrategyMetrics(
-                    win_rate=65.2,
-                    sharpe_ratio=1.4,
-                    max_drawdown=-8.1,
-                    total_trades=128,
-                    avg_win=85.75,
-                    avg_loss=-65.50
-                ),
-                positions=[],
-                recent_trades=[],
-                last_updated=datetime.now(timezone.utc)
-            ),
-            StrategySnapshot(
-                name="mean_reversion",
-                type=StrategyType.STOCKS,
-                status=StrategyStatus.PAUSED,
-                allocation=20.0,
-                pnl=StrategyPnL(daily=0.0, total=450.75, percentage=4.2),
-                metrics=StrategyMetrics(
-                    win_rate=58.8,
-                    sharpe_ratio=0.9,
-                    max_drawdown=-12.5,
-                    total_trades=32,
-                    avg_win=95.25,
-                    avg_loss=-75.80
-                ),
-                positions=[],
-                recent_trades=[],
-                last_updated=datetime.now(timezone.utc)
+        # Initialize connection
+        asyncio.create_task(self._initialize_connection())
+    
+    async def _initialize_connection(self):
+        """Initialize connection to ThetaGang system"""
+        try:
+            logger.info("🔗 Attempting ThetaGang connection...")
+            
+            # For now, we'll start in mock mode since we need IB connection setup
+            # In a real deployment, this would check for IB connection and credentials
+            logger.info("🎭 Real ThetaGang connection requires IB setup - using mock mode")
+            await self._initialize_mock_mode()
+            
+        except Exception as e:
+            logger.error(f"❌ Failed to connect to ThetaGang: {e}")
+            self.is_connected = False
+            # Fall back to mock mode
+            await self._initialize_mock_mode()
+    
+    async def _test_connection(self):
+        """Test the connection to ThetaGang system"""
+        if self.portfolio_manager:
+            # Test basic portfolio access
+            try:
+                account_summary, portfolio_positions = await self.portfolio_manager.summarize_account()
+                net_liquidation = account_summary.get("NetLiquidation")
+                if net_liquidation:
+                    logger.info(f"📈 Portfolio value: ${float(net_liquidation.value):,.2f}")
+            except Exception as e:
+                logger.warning(f"⚠️  Portfolio access test failed: {e}")
+                raise
+    
+    async def _initialize_mock_mode(self):
+        """Initialize with mock data when real connection fails"""
+        logger.info("🎭 Initializing mock mode for development")
+        self.is_connected = False  # Mark as mock mode
+    
+    async def get_portfolio_snapshot(self) -> PortfolioSnapshot:
+        """Get current portfolio state snapshot"""
+        try:
+            if self.is_connected and self.portfolio_manager:
+                return await self._get_real_portfolio_snapshot()
+            else:
+                return await self._get_mock_portfolio_snapshot()
+        except Exception as e:
+            logger.error(f"Error getting portfolio snapshot: {e}")
+            return await self._get_mock_portfolio_snapshot()
+    
+    async def _get_real_portfolio_snapshot(self) -> PortfolioSnapshot:
+        """Get real portfolio data from ThetaGang"""
+        if not self.portfolio_manager:
+            return await self._get_mock_portfolio_snapshot()
+            
+        try:
+            # Use the actual PortfolioManager API
+            account_summary, portfolio_positions = await self.portfolio_manager.summarize_account()
+            
+            # Extract key metrics from account summary
+            net_liquidation = float(account_summary.get("NetLiquidation", 0).value) if account_summary.get("NetLiquidation") else 0.0
+            total_cash = float(account_summary.get("TotalCashValue", 0).value) if account_summary.get("TotalCashValue") else 0.0
+            
+            # Convert portfolio positions to dashboard format
+            dashboard_positions = []
+            for symbol, positions in portfolio_positions.items():
+                for pos in positions:
+                    dashboard_positions.append(Position(
+                        symbol=pos.contract.symbol,
+                        quantity=int(pos.position),
+                        avg_price=float(pos.averageCost) if pos.averageCost else 0.0,
+                        market_value=float(pos.marketValue) if pos.marketValue else 0.0,
+                        unrealized_pnl=float(pos.unrealizedPNL) if pos.unrealizedPNL else 0.0
+                    ))
+            
+            # Get active strategies from the strategy framework
+            strategies = []
+            if hasattr(self.portfolio_manager, 'active_strategies'):
+                for strategy_name, strategy in self.portfolio_manager.active_strategies.items():
+                    strategies.append({
+                        "name": strategy_name,
+                        "status": "active",  # Simplified for now
+                        "pnl": 0.0,  # Would need to calculate from strategy
+                        "positions": 0,  # Would need to count strategy positions
+                        "last_update": datetime.now(timezone.utc).isoformat()
+                    })
+            
+            return PortfolioSnapshot(
+                timestamp=datetime.now(timezone.utc).isoformat(),
+                total_value=net_liquidation,
+                cash_balance=total_cash,
+                day_pnl=0.0,  # Would need to calculate daily P&L
+                total_pnl=0.0,  # Would need to calculate total P&L
+                positions=dashboard_positions,
+                strategies=strategies,
+                connection_status="connected"
             )
-        ]
-        
-        self.mock_data_initialized = True
+            
+        except Exception as e:
+            logger.warning(f"Failed to get real portfolio data: {e}")
+            return await self._get_mock_portfolio_snapshot()
     
-    async def connect(self) -> bool:
-        """
-        Connect to ThetaGang system.
-        For Phase 1, this is a mock connection.
-        """
-        # Simulate connection delay
-        await asyncio.sleep(0.1)
-        self.is_connected = True
-        print("📡 Connected to ThetaGang system (mock)")
-        return True
-    
-    async def disconnect(self):
-        """Disconnect from ThetaGang system"""
-        self.is_connected = False
-        print("📡 Disconnected from ThetaGang system")
-    
-    async def get_portfolio_snapshot(self) -> Optional[PortfolioSnapshot]:
-        """Get current portfolio snapshot"""
-        if not self.is_connected and not await self.connect():
-            return None
-        
-        # Simulate some volatility in the portfolio values
-        base_value = 125450.23
-        volatility = random.uniform(-0.02, 0.02)  # ±2% volatility
-        
-        # Update mock portfolio with slight variations
-        self.mock_portfolio.total_value = base_value * (1 + volatility)
-        self.mock_portfolio.day_pnl = base_value * volatility
-        self.mock_portfolio.day_pnl_percent = volatility * 100
-        self.mock_portfolio.last_updated = datetime.now(timezone.utc)
-        
-        return self.mock_portfolio
+    async def _get_mock_portfolio_snapshot(self) -> PortfolioSnapshot:
+        """Get mock portfolio data for development/demo"""
+        return PortfolioSnapshot(
+            timestamp=datetime.now(timezone.utc).isoformat(),
+            total_value=125450.23,
+            cash_balance=15680.45,
+            day_pnl=1250.75,
+            total_pnl=8945.30,
+            positions=[
+                Position(
+                    symbol="SPY",
+                    quantity=100,
+                    avg_price=445.20,
+                    market_value=44650.00,
+                    unrealized_pnl=430.00,
+                    position_type="long"
+                ),
+                Position(
+                    symbol="QQQ",
+                    quantity=-50,
+                    avg_price=385.40,
+                    market_value=-19120.00,
+                    unrealized_pnl=-180.50,
+                    position_type="short"
+                )
+            ],
+            strategies=[
+                {
+                    "name": "Enhanced Wheel",
+                    "status": "active",
+                    "pnl": 2340.50,
+                    "positions": 8,
+                    "last_update": datetime.now(timezone.utc).isoformat()
+                },
+                {
+                    "name": "Momentum Scalper", 
+                    "status": "paused",
+                    "pnl": -125.30,
+                    "positions": 3,
+                    "last_update": datetime.now(timezone.utc).isoformat()
+                }
+            ],
+            connection_status="mock" if not self.is_connected else "connected"
+        )
     
     async def get_strategy_updates(self) -> List[StrategyUpdate]:
         """Get recent strategy updates"""
-        if not self.is_connected:
-            return []
-        
+        try:
+            if self.is_connected and self.portfolio_manager:
+                return await self._get_real_strategy_updates()
+            else:
+                return await self._get_mock_strategy_updates()
+        except Exception as e:
+            logger.error(f"Error getting strategy updates: {e}")
+            return await self._get_mock_strategy_updates()
+    
+    async def _get_real_strategy_updates(self) -> List[StrategyUpdate]:
+        """Get real strategy updates from ThetaGang"""
         updates = []
-        for strategy in self.mock_strategies:
-            if strategy.status == StrategyStatus.ACTIVE:
-                # Simulate small PnL changes
-                pnl_change = random.uniform(-50, 100)
-                updates.append(StrategyUpdate(
-                    name=strategy.name,
-                    status=strategy.status,
-                    pnl_change=pnl_change,
-                    last_trade=None  # We'll add trade simulation later
-                ))
+        
+        if hasattr(self.portfolio_manager, 'active_strategies'):
+            for strategy in self.portfolio_manager.active_strategies:
+                if hasattr(strategy, 'get_recent_updates'):
+                    recent_updates = strategy.get_recent_updates()
+                    for update in recent_updates:
+                        updates.append(StrategyUpdate(
+                            strategy_name=strategy.name,
+                            action=update.get('action', 'update'),
+                            details=update.get('details', {}),
+                            timestamp=update.get('timestamp', datetime.now(timezone.utc).isoformat()),
+                            pnl_impact=float(update.get('pnl_impact', 0))
+                        ))
         
         return updates
     
-    async def get_strategies(self) -> List[StrategySnapshot]:
-        """Get all strategy snapshots"""
-        if not self.is_connected and not await self.connect():
-            return []
-        
-        # Update strategies with slight variations
-        for strategy in self.mock_strategies:
-            if strategy.status == StrategyStatus.ACTIVE:
-                # Simulate PnL changes
-                volatility = random.uniform(-0.05, 0.05)
-                strategy.pnl.daily *= (1 + volatility)
-                strategy.last_updated = datetime.now(timezone.utc)
-        
-        return self.mock_strategies
-    
-    async def get_positions(self) -> List[Position]:
-        """Get current positions"""
-        if not self.is_connected:
-            return []
-        
-        # Mock positions
+    async def _get_mock_strategy_updates(self) -> List[StrategyUpdate]:
+        """Get mock strategy updates for development"""
         return [
-            Position(
-                id=str(uuid4()),
-                symbol="AAPL",
-                quantity=100,
-                avg_price=150.25,
-                current_price=152.75,
-                market_value=15275.0,
-                unrealized_pnl=250.0,
-                unrealized_pnl_percent=1.66,
-                strategy="enhanced_wheel",
-                type=PositionType.STOCK,
-                side=PositionSide.LONG,
-                open_date=datetime.now(timezone.utc) - timedelta(days=5)
+            StrategyUpdate(
+                strategy_name="Enhanced Wheel",
+                action="position_opened",
+                details={"symbol": "AAPL", "strike": 175, "expiry": "2024-08-16"},
+                timestamp=datetime.now(timezone.utc).isoformat(),
+                pnl_impact=150.50
             ),
-            Position(
-                id=str(uuid4()),
-                symbol="TSLA",
-                quantity=50,
-                avg_price=220.50,
-                current_price=225.25,
-                market_value=11262.50,
-                unrealized_pnl=237.50,
-                unrealized_pnl_percent=2.15,
-                strategy="momentum_scalper",
-                type=PositionType.STOCK,
-                side=PositionSide.LONG,
-                open_date=datetime.now(timezone.utc) - timedelta(days=2)
+            StrategyUpdate(
+                strategy_name="Momentum Scalper",
+                action="position_closed",
+                details={"symbol": "MSFT", "pnl": 85.25},
+                timestamp=datetime.now(timezone.utc).isoformat(),
+                pnl_impact=85.25
             )
         ]
     
-    async def get_recent_trades(self, limit: int = 10) -> List[Trade]:
-        """Get recent trades"""
-        if not self.is_connected:
-            return []
+    async def stream_updates(self, websocket_manager):
+        """Stream real-time updates to connected clients"""
+        logger.info("🔄 Starting real-time update stream...")
         
-        # Mock recent trades
-        trades = []
-        for i in range(limit):
-            trades.append(Trade(
-                id=str(uuid4()),
-                timestamp=datetime.now(timezone.utc) - timedelta(minutes=random.randint(1, 1440)),
-                symbol=random.choice(["AAPL", "TSLA", "MSFT", "GOOGL"]),
-                action=random.choice([TradeAction.BUY, TradeAction.SELL]),
-                quantity=random.randint(10, 100),
-                price=random.uniform(100, 300),
-                commission=random.uniform(1, 5),
-                pnl=random.uniform(-50, 150),
-                strategy=random.choice(["enhanced_wheel", "momentum_scalper", "mean_reversion"]),
-                order_type=random.choice([OrderType.MARKET, OrderType.LIMIT]),
-                status=OrderStatus.FILLED
-            ))
-        
-        return sorted(trades, key=lambda x: x.timestamp, reverse=True)
+        while True:
+            try:
+                # Get current portfolio snapshot
+                snapshot = await self.get_portfolio_snapshot()
+                
+                # Broadcast to all connected clients
+                await websocket_manager.broadcast({
+                    "type": "portfolio.update",
+                    "data": snapshot.dict(),
+                    "timestamp": datetime.now(timezone.utc).isoformat()
+                })
+                
+                # Get strategy updates if time for detailed update
+                now = datetime.now(timezone.utc)
+                if (self.last_snapshot_time is None or 
+                    (now - self.last_snapshot_time).seconds >= 5):
+                    
+                    strategy_updates = await self.get_strategy_updates()
+                    if strategy_updates:
+                        await websocket_manager.broadcast({
+                            "type": "strategy.update",
+                            "data": [update.dict() for update in strategy_updates],
+                            "timestamp": now.isoformat()
+                        })
+                    
+                    self.last_snapshot_time = now
+                
+                # Wait before next update (1 second for portfolio, 5 seconds for strategies)
+                await asyncio.sleep(1)
+                
+            except Exception as e:
+                logger.error(f"Error in update stream: {e}")
+                await asyncio.sleep(5)  # Wait longer on error
     
-    async def pause_strategy(self, strategy_name: str) -> bool:
-        """Pause a strategy"""
-        for strategy in self.mock_strategies:
-            if strategy.name == strategy_name:
-                strategy.status = StrategyStatus.PAUSED
-                strategy.last_updated = datetime.now(timezone.utc)
-                return True
-        return False
-    
-    async def resume_strategy(self, strategy_name: str) -> bool:
-        """Resume a strategy"""
-        for strategy in self.mock_strategies:
-            if strategy.name == strategy_name:
-                strategy.status = StrategyStatus.ACTIVE
-                strategy.last_updated = datetime.now(timezone.utc)
-                return True
-        return False
-    
-    async def stop_strategy(self, strategy_name: str) -> bool:
-        """Stop a strategy"""
-        for strategy in self.mock_strategies:
-            if strategy.name == strategy_name:
-                strategy.status = StrategyStatus.STOPPED
-                strategy.last_updated = datetime.now(timezone.utc)
-                return True
-        return False
+    async def execute_strategy_action(self, strategy_name: str, action: str, params: Dict[str, Any]) -> Dict[str, Any]:
+        """Execute a strategy action (start, stop, modify)"""
+        try:
+            if not self.is_connected:
+                return {
+                    "success": False,
+                    "message": "Not connected to ThetaGang system",
+                    "mock_mode": True
+                }
+            
+            # Find the strategy
+            strategy = None
+            if hasattr(self.portfolio_manager, 'active_strategies'):
+                for s in self.portfolio_manager.active_strategies:
+                    if s.name == strategy_name:
+                        strategy = s
+                        break
+            
+            if not strategy:
+                return {
+                    "success": False,
+                    "message": f"Strategy '{strategy_name}' not found"
+                }
+            
+            # Execute the action
+            if action == "start":
+                result = await strategy.start()
+            elif action == "stop": 
+                result = await strategy.stop()
+            elif action == "pause":
+                result = await strategy.pause()
+            elif action == "modify":
+                result = await strategy.modify_parameters(params)
+            else:
+                return {
+                    "success": False,
+                    "message": f"Unknown action: {action}"
+                }
+            
+            return {
+                "success": True,
+                "message": f"Successfully executed {action} on {strategy_name}",
+                "result": result
+            }
+            
+        except Exception as e:
+            logger.error(f"Error executing strategy action: {e}")
+            return {
+                "success": False,
+                "message": f"Error executing action: {str(e)}"
+            }
     
     def get_connection_status(self) -> Dict[str, Any]:
-        """Get connection status information"""
+        """Get current connection status"""
         return {
             "connected": self.is_connected,
-            "last_update": self.last_update.isoformat(),
-            "system": "mock" if not self.is_connected else "thetagang",
-            "data_source": "mock_data" if self.mock_data_initialized else "live_data"
+            "mode": "live" if self.is_connected else "mock",
+            "config_path": self.config_path,
+            "last_update": datetime.now(timezone.utc).isoformat(),
+            "portfolio_manager": self.portfolio_manager is not None
         } 

@@ -2,17 +2,17 @@ from fastapi import APIRouter, Depends
 from datetime import datetime, timezone
 
 from ..models.dashboard import ApiResponse
-from ..integrations.thetagang_integration import DashboardIntegration
+from ..integrations.simple_integration import SimpleDashboardIntegration
 
 router = APIRouter()
 
-async def get_dashboard_integration() -> DashboardIntegration:
-    return DashboardIntegration()
+async def get_dashboard_integration() -> SimpleDashboardIntegration:
+    return SimpleDashboardIntegration()
 
 @router.get("/performance")
 async def get_performance_metrics(
     timeframe: str = "1D",
-    integration: DashboardIntegration = Depends(get_dashboard_integration)
+    integration: SimpleDashboardIntegration = Depends(get_dashboard_integration)
 ):
     """Get performance metrics"""
     # Placeholder for Phase 4 implementation
