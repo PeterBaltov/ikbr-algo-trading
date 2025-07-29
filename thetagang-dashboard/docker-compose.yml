@@ -29,10 +29,12 @@ services:
     environment:
       - DATABASE_URL=postgresql://thetagang:password@database:5432/thetagang_dashboard
       - REDIS_URL=redis://redis:6379
-      - PYTHONPATH=/app
+      - PYTHONPATH=/app:/thetagang-system
+      - PATH=/thetagang-system/.venv/bin:$PATH
     volumes:
       - ./backend:/app
-      - ../thetagang:/thetagang-system  # Mount ThetaGang system for integration
+      - ../:/thetagang-system  # Mount parent directory for shared .venv and thetagang module
+      - ../.venv:/thetagang-system/.venv  # Mount shared virtual environment
     depends_on:
       - database
       - redis

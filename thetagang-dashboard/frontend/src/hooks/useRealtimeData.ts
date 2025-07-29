@@ -2,6 +2,23 @@ import { useState, useEffect, useCallback } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { Portfolio, Strategy, PerformanceDataPoint } from '@/types';
 
+// Transform snake_case to camelCase for portfolio data
+function transformPortfolioData(data: any): Portfolio {
+  return {
+    totalValue: data.total_value || 0,
+    dayPnL: data.day_pnl || 0,
+    totalPnL: data.total_pnl || 0,
+    cashBalance: data.cash_balance || 0,
+    marginUsed: data.margin_used || 0,
+    buyingPower: data.buying_power || 0,
+    dayPnLPercent: data.day_pnl_percent || 0,
+    totalPnLPercent: data.total_pnl_percent || 0,
+    winRate: data.win_rate || 0,
+    activeStrategies: data.active_strategies || 0,
+    lastUpdated: data.last_updated || new Date().toISOString(),
+  };
+}
+
 // WebSocket connection
 let socket: Socket | null = null;
 
@@ -38,7 +55,9 @@ export function useRealtimePortfolio() {
 
     const handlePortfolioUpdate = (data: any) => {
       console.log('📊 Portfolio update received:', data);
-      setPortfolio(data.data);
+      const transformedData = transformPortfolioData(data.data);
+      console.log('📊 Transformed portfolio data:', transformedData);
+      setPortfolio(transformedData);
       setIsLoading(false);
     };
 

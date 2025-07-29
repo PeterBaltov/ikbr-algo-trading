@@ -67,10 +67,11 @@
 
 @layer base {
   * {
-    @apply border-border;
+    border-color: hsl(var(--border));
   }
   body {
-    @apply bg-background text-foreground;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
   }
 }
 
@@ -81,15 +82,16 @@
 }
 
 .scrollbar-thin::-webkit-scrollbar-track {
-  @apply bg-secondary;
+  background-color: hsl(var(--secondary));
 }
 
 .scrollbar-thin::-webkit-scrollbar-thumb {
-  @apply bg-muted-foreground rounded-full;
+  background-color: hsl(var(--muted-foreground));
+  border-radius: 9999px;
 }
 
 .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-  @apply bg-primary;
+  background-color: hsl(var(--primary));
 }
 
 /* Animation for profit/loss indicators */
@@ -123,31 +125,72 @@
   animation: loss-pulse 2s ease-in-out infinite;
 }
 
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .5;
+  }
+}
+
+@keyframes ping {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
 /* Trading-specific utilities */
 .trading-grid {
-  @apply grid gap-4 md:grid-cols-2 lg:grid-cols-4;
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .trading-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .trading-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
 }
 
 .metric-card {
-  @apply bg-card border rounded-lg p-6 shadow-sm;
+  background-color: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
 }
 
 .status-indicator {
-  @apply w-2 h-2 rounded-full;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
 }
 
 .status-active {
-  @apply bg-green-500 animate-pulse;
+  background-color: rgb(34 197 94);
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 .status-paused {
-  @apply bg-yellow-500;
+  background-color: rgb(234 179 8);
 }
 
 .status-stopped {
-  @apply bg-red-500;
+  background-color: rgb(239 68 68);
 }
 
 .status-error {
-  @apply bg-red-500 animate-ping;
+  background-color: rgb(239 68 68);
+  animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
 }

@@ -3,6 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 import asyncio
 import socketio
+import json
+from datetime import datetime
 
 from app.routers import portfolio, strategies, trades, analytics
 from app.integrations.simple_integration import SimpleDashboardIntegration
@@ -116,7 +118,14 @@ async def disconnect(sid):
 @sio.event
 async def subscribe(sid, data):
     """Handle subscription requests"""
-    channels = data.get('channels', [])
+    # Handle both dict and list formats
+    if isinstance(data, dict):
+        channels = data.get('channels', [])
+    elif isinstance(data, list):
+        channels = data
+    else:
+        channels = []
+    
     print(f"📡 Client {sid} subscribing to: {channels}")
     
     # Join rooms for subscriptions
@@ -137,6 +146,12 @@ async def ping(sid, data):
 socket_app = socketio.ASGIApp(sio, app)
 
 # Background task for broadcasting updates
+def json_serialize(obj):
+    """Custom JSON serializer for datetime objects"""
+    if isinstance(obj, datetime):
+        return obj.isoformat()
+    raise TypeError(f"Object of type {type(obj)} is not JSON serializable")
+
 async def broadcast_updates():
     """Background task to broadcast real-time updates"""
     print("🔄 Starting real-time broadcast service...")
@@ -147,18 +162,24 @@ async def broadcast_updates():
                 # Get portfolio snapshot
                 portfolio_data = await dashboard_integration.get_portfolio_snapshot()
                 
+                # Convert to dict and serialize with datetime handling
+                portfolio_dict = json.loads(json.dumps(portfolio_data.dict(), default=json_serialize))
+                
                 # Broadcast to portfolio subscribers
                 await sio.emit('portfolio.update', {
-                    'data': portfolio_data.dict(),
-                    'timestamp': '2024-01-01T00:00:00Z'
+                    'data': portfolio_dict,
+                    'timestamp': datetime.now().isoformat()
                 }, room='portfolio')
                 
                 # Get strategy updates
                 strategy_updates = await dashboard_integration.get_strategy_updates()
                 if strategy_updates:
+                    # Convert to dict and serialize with datetime handling
+                    strategy_dict = json.loads(json.dumps([update.dict() for update in strategy_updates], default=json_serialize))
+                    
                     await sio.emit('strategy.update', {
-                        'data': [update.dict() for update in strategy_updates],
-                        'timestamp': '2024-01-01T00:00:00Z'
+                        'data': strategy_dict,
+                        'timestamp': datetime.now().isoformat()
                     }, room='strategies')
                 
         except Exception as e:

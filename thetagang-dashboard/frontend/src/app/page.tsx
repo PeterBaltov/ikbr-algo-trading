@@ -1,88 +1,46 @@
-import { PortfolioOverview, ConnectionStatus } from "@/components/portfolio-overview"
-import { StrategyMonitor } from "@/components/strategy-monitor"
-import { PerformanceChart } from "@/components/performance-chart"
+import ModernPortfolioOverview from "@/components/modern-portfolio-overview"
+import ModernStrategyMonitor from "@/components/modern-strategy-monitor"
+import TradingChart from "@/components/trading-chart"
+import DashboardLayout from "@/components/layout/dashboard-layout"
+
+// Sample performance data for the TradingView chart
+const performanceData = [
+  { time: '2024-01-01', value: 120000 },
+  { time: '2024-01-02', value: 121500 },
+  { time: '2024-01-03', value: 119800 },
+  { time: '2024-01-04', value: 122300 },
+  { time: '2024-01-05', value: 123100 },
+  { time: '2024-01-08', value: 121900 },
+  { time: '2024-01-09', value: 124200 },
+  { time: '2024-01-10', value: 125450 },
+  { time: '2024-01-11', value: 126800 },
+  { time: '2024-01-12', value: 125200 },
+  { time: '2024-01-15', value: 127300 },
+  { time: '2024-01-16', value: 128900 },
+  { time: '2024-01-17', value: 127600 },
+  { time: '2024-01-18', value: 129400 },
+  { time: '2024-01-19', value: 131200 }
+]
 
 export default function DashboardPage() {
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b bg-card">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <h1 className="text-2xl font-bold text-foreground">
-                🎯 ThetaGang Dashboard
-              </h1>
-              <div className="text-sm text-muted-foreground">
-                Algorithmic Trading System
-              </div>
-            </div>
-            <div className="flex items-center space-x-4">
-              <ConnectionStatus isConnected={true} />
-              <div className="text-sm text-muted-foreground">
-                {new Date().toLocaleTimeString()}
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
+    <DashboardLayout>
+      <div className="space-y-8">
+        {/* Modern Portfolio Overview */}
+        <ModernPortfolioOverview />
 
-      {/* Main Content */}
-      <main className="container mx-auto px-6 py-8">
-        <div className="space-y-8">
-          {/* Portfolio Overview Section */}
-          <section>
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h2 className="text-xl font-semibold text-foreground">
-                  Portfolio Overview
-                </h2>
-                <p className="text-sm text-muted-foreground">
-                  Real-time portfolio performance and key metrics
-                </p>
-              </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span className="text-sm text-muted-foreground">Live</span>
-              </div>
-            </div>
-            
-            <PortfolioOverview />
-          </section>
+        {/* Advanced Trading Chart */}
+        <section>
+          <TradingChart 
+            data={performanceData}
+            title="Portfolio Performance"
+            height={400}
+          />
+        </section>
 
-          {/* Strategy Monitor Section */}
-          <section>
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h2 className="text-xl font-semibold text-foreground">
-                  Strategy Monitor
-                </h2>
-                <p className="text-sm text-muted-foreground">
-                  Active trading strategies and their performance
-                </p>
-              </div>
-            </div>
-            
-            <StrategyMonitor />
-          </section>
-
-          {/* Performance Chart Section */}
-          <section>
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h2 className="text-xl font-semibold text-foreground">
-                  Performance Chart
-                </h2>
-                <p className="text-sm text-muted-foreground">
-                  Portfolio value over time
-                </p>
-              </div>
-            </div>
-            
-            <PerformanceChart />
-          </section>
-        </div>
-      </main>
-    </div>
+        {/* Modern Strategy Monitor */}
+        <ModernStrategyMonitor />
+      </div>
+    </DashboardLayout>
   )
 }

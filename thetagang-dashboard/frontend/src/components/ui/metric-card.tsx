@@ -1,7 +1,7 @@
 import React from "react"
 import { TrendingUp, TrendingDown, Minus } from "lucide-react"
 
-import { cn, formatCurrency, formatPercentage, formatNumber, getPnLColor } from "@/lib/utils"
+import { cn, formatCurrency, formatPercentage, formatPercentageValue, formatNumber, getPnLColor } from "@/lib/utils"
 
 import { Card, CardContent, CardHeader, CardTitle } from "./card"
 
@@ -27,11 +27,16 @@ export function MetricCard({
   showTrend = true,
 }: MetricCardProps) {
   const formatValue = (val: number) => {
+    // Check if value is NaN or invalid
+    if (isNaN(val) || val === null || val === undefined) {
+      return format === "currency" ? "$0.00" : format === "percentage" ? "0.00%" : "0"
+    }
+    
     switch (format) {
       case "currency":
         return formatCurrency(val)
       case "percentage":
-        return formatPercentage(val)
+        return formatPercentageValue(val)
       case "number":
         return formatNumber(val)
       default:

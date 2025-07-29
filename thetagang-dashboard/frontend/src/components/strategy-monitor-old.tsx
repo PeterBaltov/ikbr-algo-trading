@@ -1,14 +1,16 @@
 'use client'
 
 import React from 'react'
+import { Play, Pause, Square, Settings, AlertTriangle } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import { useRealtimeStrategies } from '@/hooks/useRealtimeData'
 import { Strategy } from '@/types'
 import { cn, formatCurrency, formatPercentage, getPnLColor } from '@/lib/utils'
 import StrategyControls from './strategy-controls'
 
 export function StrategyMonitor() {
-  const { strategies, isLoading } = useRealtimeStrategies()
+  const { strategies, isLoading, toggleStrategy } = useRealtimeStrategies()
 
   // Demo strategies for when backend is not connected
   const demoStrategies = [
@@ -54,6 +56,8 @@ export function StrategyMonitor() {
 
   const displayStrategies = strategies.length > 0 ? strategies : demoStrategies
 
+  // Strategy control handlers are now managed by StrategyControls component
+
   if (isLoading) {
     const skeletonItems = ['strategy-1', 'strategy-2', 'strategy-3']
     return (
@@ -98,17 +102,96 @@ export function StrategyMonitor() {
 
 interface StrategyCardProps {
   strategy: Strategy
+  onToggle: (name: string) => void
+  onConfigure: (name: string) => void
 }
 
-function StrategyCard({ strategy }: StrategyCardProps) {
+export function StrategyCard({ strategy }: StrategyCardProps) {
+  const getStatusColor = (status: Strategy['status']) => {
+    switch (status) {
+      case 'active':
+        return 'text-green-600 bg-green-50 border-green-200 dark:text-green-400 dark:bg-green-950 dark:border-green-800'
+      case 'paused':
+        return 'text-yellow-600 bg-yellow-50 border-yellow-200 dark:text-yellow-400 dark:bg-yellow-950 dark:border-yellow-800'
+      case 'stopped':
+        return 'text-gray-600 bg-gray-50 border-gray-200 dark:text-gray-400 dark:bg-gray-950 dark:border-gray-800'
+      case 'error':
+        return 'text-red-600 bg-red-50 border-red-200 dark:text-red-400 dark:bg-red-950 dark:border-red-800'
+      default:
+        return 'text-gray-600 bg-gray-50 border-gray-200 dark:text-gray-400 dark:bg-gray-950 dark:border-gray-800'
+    }
+  }
+
+  const getStatusIcon = (status: Strategy['status']) => {
+    switch (status) {
+      case 'active':
+        return <Play className="h-4 w-4" />
+      case 'paused':
+        return <Pause className="h-4 w-4" />
+      case 'stopped':
+        return <Square className="h-4 w-4" />
+      case 'error':
+        return <AlertTriangle className="h-4 w-4" />
+      default:
+        return <Square className="h-4 w-4" />
+    }
+  }
+
+  const getActionButton = () => {
+    switch (strategy.status) {
+      case 'active':
+        return (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onToggle(strategy.name)}
+            className="gap-2"
+          >
+            <Pause className="h-4 w-4" />
+            Pause
+          </Button>
+        )
+      case 'paused':
+        return (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onToggle(strategy.name)}
+            className="gap-2"
+          >
+            <Play className="h-4 w-4" />
+            Resume
+          </Button>
+        )
+      default:
+        return (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onToggle(strategy.name)}
+            className="gap-2"
+          >
+            <Play className="h-4 w-4" />
+            Start
+          </Button>
+        )
+    }
+  }
+
   return (
-    <Card className="transition-all duration-200 hover:shadow-md">
+    <Card className={cn(
+      "border-l-4 transition-all hover:shadow-md",
+      strategy.status === 'active' && "border-l-green-500",
+      strategy.status === 'paused' && "border-l-yellow-500",
+      strategy.status === 'stopped' && "border-l-gray-500",
+      strategy.status === 'error' && "border-l-red-500"
+    )}>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg font-medium">
-            {strategy.name}
+          <CardTitle className="flex items-center justify-between">
+            <span>{strategy.name}</span>
+            <StrategyControls strategy={strategy} size="sm" />
           </CardTitle>
-          <StrategyControls strategy={strategy} size="sm" />
         </div>
       </CardHeader>
       
@@ -122,7 +205,7 @@ function StrategyCard({ strategy }: StrategyCardProps) {
           
           <div>
             <div className="text-xs text-muted-foreground mb-1">Allocation</div>
-            <div className="text-sm font-medium">{formatPercentage(strategy.allocation * 100)}</div>
+            <div className="text-sm font-medium">{formatPercentage(strategy.allocation)}</div>
           </div>
           
           {/* P&L Metrics */}
@@ -143,7 +226,7 @@ function StrategyCard({ strategy }: StrategyCardProps) {
           {/* Performance Metrics */}
           <div>
             <div className="text-xs text-muted-foreground mb-1">Win Rate</div>
-            <div className="text-sm font-medium">{formatPercentage(strategy.metrics.winRate * 100)}</div>
+            <div className="text-sm font-medium">{formatPercentage(strategy.metrics.winRate)}</div>
           </div>
           
           <div>
@@ -162,7 +245,7 @@ function StrategyCard({ strategy }: StrategyCardProps) {
           <div>
             <div className="text-xs text-muted-foreground mb-1">Max Drawdown</div>
             <div className="text-sm font-medium text-red-600">
-              {formatPercentage(strategy.metrics.maxDrawdown * 100)}
+              {formatPercentage(strategy.metrics.maxDrawdown)}
             </div>
           </div>
           
@@ -202,6 +285,4 @@ function StrategyCard({ strategy }: StrategyCardProps) {
       </CardContent>
     </Card>
   )
-}
-
-export default StrategyMonitor 
+} 

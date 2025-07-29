@@ -5,23 +5,21 @@ WORKDIR /app
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     gcc \
-    postgresql-client \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies
+# Use the shared virtual environment from parent directory
+ENV PATH="/thetagang-system/.venv/bin:$PATH"
+ENV PYTHONPATH="/app:/thetagang-system"
+
+# Copy and install requirements (some packages might already be in shared .venv)
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install -r requirements.txt
 
-# Copy source code
+# Copy application code
 COPY . .
-
-# Create non-root user
-RUN useradd --create-home --shell /bin/bash app
-RUN chown -R app:app /app
-USER app
 
 # Expose port
 EXPOSE 8000
 
-# Start development server
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"] 
+# Start the FastAPI application
+CMD ["uvicorn", "app.main:socket_app", "--host", "0.0.0.0", "--port", "8000", "--reload"] 

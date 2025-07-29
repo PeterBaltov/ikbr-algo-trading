@@ -5,7 +5,8 @@ from typing import List, Optional, Dict, Any
 from uuid import uuid4
 
 from ..models.dashboard import (
-    PortfolioSnapshot, StrategyUpdate, Position, Trade, 
+    PortfolioSnapshot, StrategyUpdate, StrategySnapshot, StrategyType, 
+    StrategyPnL, StrategyMetrics, Position, Trade, 
     PositionType, PositionSide, TradeAction, OrderType, OrderStatus, StrategyStatus
 )
 
@@ -48,6 +49,55 @@ class SimpleDashboardIntegration:
                 name="Momentum Scalper",
                 status=StrategyStatus.ACTIVE,
                 pnl_change=85.25
+            )
+        ]
+    
+    async def get_strategies(self) -> List[StrategySnapshot]:
+        """Get all strategy snapshots"""
+        return [
+            StrategySnapshot(
+                name="Enhanced Wheel Strategy",
+                type=StrategyType.OPTIONS,
+                status=StrategyStatus.ACTIVE,
+                allocation=25.0,
+                pnl=StrategyPnL(
+                    daily=1250.75,
+                    total=8340.50,
+                    percentage=15.2
+                ),
+                metrics=StrategyMetrics(
+                    win_rate=74.2,
+                    sharpe_ratio=1.85,
+                    max_drawdown=-5.8,
+                    total_trades=127,
+                    avg_win=285.50,
+                    avg_loss=-125.25
+                ),
+                positions=[],
+                recent_trades=[],
+                last_updated=datetime.now(timezone.utc)
+            ),
+            StrategySnapshot(
+                name="Momentum Scalper",
+                type=StrategyType.STOCKS,
+                status=StrategyStatus.PAUSED,
+                allocation=15.0,
+                pnl=StrategyPnL(
+                    daily=-85.25,
+                    total=2150.75,
+                    percentage=8.7
+                ),
+                metrics=StrategyMetrics(
+                    win_rate=68.1,
+                    sharpe_ratio=1.23,
+                    max_drawdown=-12.5,
+                    total_trades=203,
+                    avg_win=125.75,
+                    avg_loss=-85.50
+                ),
+                positions=[],
+                recent_trades=[],
+                last_updated=datetime.now(timezone.utc)
             )
         ]
     
