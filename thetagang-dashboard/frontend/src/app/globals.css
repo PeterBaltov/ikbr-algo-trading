@@ -1,0 +1,153 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 84% 4.9%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 84% 4.9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --radius: 0.5rem;
+    
+    /* Trading-specific CSS variables */
+    --profit: 142 76% 36%;
+    --profit-foreground: 138 100% 95%;
+    --loss: 0 84% 60%;
+    --loss-foreground: 0 0% 100%;
+    --neutral: 213 27% 84%;
+    --neutral-foreground: 222 84% 5%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 84% 4.9%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 94.1%;
+    
+    /* Dark mode trading colors */
+    --profit: 142 76% 45%;
+    --profit-foreground: 138 100% 95%;
+    --loss: 0 84% 70%;
+    --loss-foreground: 0 0% 100%;
+    --neutral: 213 27% 50%;
+    --neutral-foreground: 222 84% 95%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Custom scrollbar for trading tables */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  @apply bg-secondary;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  @apply bg-muted-foreground rounded-full;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  @apply bg-primary;
+}
+
+/* Animation for profit/loss indicators */
+@keyframes profit-pulse {
+  0%, 100% {
+    background-color: hsl(var(--profit));
+    transform: scale(1);
+  }
+  50% {
+    background-color: hsl(var(--profit));
+    transform: scale(1.05);
+  }
+}
+
+@keyframes loss-pulse {
+  0%, 100% {
+    background-color: hsl(var(--loss));
+    transform: scale(1);
+  }
+  50% {
+    background-color: hsl(var(--loss));
+    transform: scale(1.05);
+  }
+}
+
+.animate-profit-pulse {
+  animation: profit-pulse 2s ease-in-out infinite;
+}
+
+.animate-loss-pulse {
+  animation: loss-pulse 2s ease-in-out infinite;
+}
+
+/* Trading-specific utilities */
+.trading-grid {
+  @apply grid gap-4 md:grid-cols-2 lg:grid-cols-4;
+}
+
+.metric-card {
+  @apply bg-card border rounded-lg p-6 shadow-sm;
+}
+
+.status-indicator {
+  @apply w-2 h-2 rounded-full;
+}
+
+.status-active {
+  @apply bg-green-500 animate-pulse;
+}
+
+.status-paused {
+  @apply bg-yellow-500;
+}
+
+.status-stopped {
+  @apply bg-red-500;
+}
+
+.status-error {
+  @apply bg-red-500 animate-ping;
+}
