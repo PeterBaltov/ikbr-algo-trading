@@ -502,6 +502,228 @@ class ExchangeHoursConfig(BaseModel, DisplayMixin):
         table.add_row("", "Max wait until open", "=", f"{self.max_wait_until_open}s")
 
 
+# Phase 5: Advanced Configuration Models
+# ====================================
+
+class StrategyParametersConfig(BaseModel):
+    """Base class for strategy-specific parameters"""
+    pass
+
+
+class WheelStrategyParametersConfig(StrategyParametersConfig):
+    """Configuration for Wheel strategy parameters"""
+    min_premium: float = Field(default=0.01, ge=0.0, le=1.0, description="Minimum premium to collect")
+    target_dte: int = Field(default=30, ge=1, le=365, description="Target days to expiration")
+    delta_threshold: float = Field(default=0.30, ge=0.0, le=1.0, description="Maximum delta for options")
+
+
+class MomentumScalperParametersConfig(StrategyParametersConfig):
+    """Configuration for momentum scalping strategy parameters"""
+    rsi_period: int = Field(default=14, ge=2, le=100)
+    rsi_oversold: float = Field(default=30, ge=0, le=100)
+    rsi_overbought: float = Field(default=70, ge=0, le=100)
+    macd_fast: int = Field(default=12, ge=1, le=100)
+    macd_slow: int = Field(default=26, ge=1, le=200)
+    macd_signal: int = Field(default=9, ge=1, le=50)
+    ema_period: int = Field(default=20, ge=1, le=200)
+    position_size: float = Field(default=0.02, ge=0.001, le=1.0)
+    stop_loss: float = Field(default=0.015, ge=0.001, le=1.0)
+    take_profit: float = Field(default=0.025, ge=0.001, le=1.0)
+
+
+class VixHedgeParametersConfig(StrategyParametersConfig):
+    """Configuration for VIX hedging strategy parameters"""
+    vix_trigger: float = Field(default=25.0, ge=0, le=100)
+    hedge_ratio: float = Field(default=0.05, ge=0, le=1.0)
+    sma_period: int = Field(default=20, ge=1, le=200)
+    rebalance_frequency: str = Field(default="weekly", pattern="^(daily|weekly|monthly)$")
+
+
+class MeanReversionParametersConfig(StrategyParametersConfig):
+    """Configuration for mean reversion strategy parameters"""
+    bb_period: int = Field(default=20, ge=2, le=100)
+    bb_std_dev: float = Field(default=2.0, ge=0.1, le=5.0)
+    rsi_period: int = Field(default=14, ge=2, le=100)
+    volume_sma_period: int = Field(default=20, ge=1, le=200)
+    entry_threshold: float = Field(default=0.95, ge=0, le=1.0)
+    exit_threshold: float = Field(default=0.50, ge=0, le=1.0)
+    position_size: float = Field(default=0.03, ge=0.001, le=1.0)
+
+
+class StrategyConfig(BaseModel, DisplayMixin):
+    """Configuration for individual trading strategies"""
+    enabled: bool = Field(default=True, description="Enable/disable strategy")
+    type: Literal["options", "stocks", "mixed"] = Field(..., description="Strategy type")
+    timeframes: List[str] = Field(default_factory=list, description="Strategy timeframes")
+    indicators: List[str] = Field(default_factory=list, description="Required indicators")
+    description: str = Field(default="", description="Strategy description")
+    parameters: Optional[Dict[str, Any]] = Field(default_factory=dict, description="Strategy parameters")
+
+    def add_to_table(self, table: Table, section: str = "") -> None:
+        if section:
+            table.add_section()
+            table.add_row(f"[spring_green1]{section}")
+        
+        table.add_row("", "Enabled", "=", f"{self.enabled}")
+        table.add_row("", "Type", "=", self.type)
+        table.add_row("", "Timeframes", "=", ", ".join(self.timeframes))
+        table.add_row("", "Indicators", "=", ", ".join(self.indicators))
+        if self.description:
+            table.add_row("", "Description", "=", self.description)
+
+
+class BacktestExecutionConfig(BaseModel):
+    """Backtesting execution configuration"""
+    commission: float = Field(default=0.001, ge=0.0, le=0.1, description="Commission per trade")
+    slippage: float = Field(default=0.0005, ge=0.0, le=0.1, description="Slippage factor")
+    market_impact: float = Field(default=0.0002, ge=0.0, le=0.1, description="Market impact factor")
+    enable_partial_fills: bool = Field(default=True, description="Enable partial fills")
+    liquidity_constraint: bool = Field(default=True, description="Apply liquidity constraints")
+
+
+class BacktestRiskConfig(BaseModel):
+    """Backtesting risk management configuration"""
+    max_drawdown: float = Field(default=0.20, ge=0.0, le=1.0, description="Maximum drawdown limit")
+    position_size_limit: float = Field(default=0.10, ge=0.0, le=1.0, description="Maximum position size")
+    daily_loss_limit: float = Field(default=0.05, ge=0.0, le=1.0, description="Daily loss limit")
+    margin_requirement: float = Field(default=1.0, ge=0.1, le=10.0, description="Margin requirement")
+
+
+class BacktestDataConfig(BaseModel):
+    """Backtesting data configuration"""
+    primary_source: str = Field(default="ibkr", description="Primary data source")
+    secondary_source: str = Field(default="yahoo", description="Secondary data source")
+    validate_data: bool = Field(default=True, description="Enable data validation")
+    handle_missing_data: str = Field(default="forward_fill", pattern="^(forward_fill|interpolate|drop)$")
+    survivorship_bias_correction: bool = Field(default=True, description="Correct survivorship bias")
+
+
+class BacktestAnalyticsConfig(BaseModel):
+    """Backtesting analytics configuration"""
+    enable_detailed_analytics: bool = Field(default=True, description="Enable detailed analytics")
+    benchmark_symbol: str = Field(default="SPY", description="Benchmark symbol")
+    risk_free_rate: float = Field(default=0.02, ge=0.0, le=1.0, description="Risk-free rate")
+    calculate_var: bool = Field(default=True, description="Calculate Value at Risk")
+    var_confidence_level: float = Field(default=0.95, ge=0.5, le=0.99, description="VaR confidence level")
+    monte_carlo_iterations: int = Field(default=1000, ge=100, le=10000, description="Monte Carlo iterations")
+
+
+class BacktestReportingConfig(BaseModel):
+    """Backtesting reporting configuration"""
+    auto_generate_reports: bool = Field(default=True, description="Auto-generate reports")
+    report_format: str = Field(default="html", pattern="^(html|pdf|json|csv)$", description="Report format")
+    include_charts: bool = Field(default=True, description="Include charts in reports")
+    export_trades: bool = Field(default=True, description="Export trade details")
+    detailed_breakdown: bool = Field(default=True, description="Include detailed breakdown")
+
+
+class BacktestConfig(BaseModel, DisplayMixin):
+    """Comprehensive backtesting configuration"""
+    enabled: bool = Field(default=False, description="Enable backtesting mode")
+    start_date: str = Field(..., description="Backtest start date (YYYY-MM-DD)")
+    end_date: str = Field(..., description="Backtest end date (YYYY-MM-DD)")
+    initial_capital: float = Field(default=100000.0, ge=1000.0, description="Initial capital")
+    
+    execution: BacktestExecutionConfig = Field(default_factory=BacktestExecutionConfig)
+    risk: BacktestRiskConfig = Field(default_factory=BacktestRiskConfig)
+    data: BacktestDataConfig = Field(default_factory=BacktestDataConfig)
+    analytics: BacktestAnalyticsConfig = Field(default_factory=BacktestAnalyticsConfig)
+    reporting: BacktestReportingConfig = Field(default_factory=BacktestReportingConfig)
+
+    def add_to_table(self, table: Table, section: str = "") -> None:
+        table.add_section()
+        table.add_row("[spring_green1]Backtesting Configuration")
+        table.add_row("", "Enabled", "=", f"{self.enabled}")
+        table.add_row("", "Date Range", "=", f"{self.start_date} to {self.end_date}")
+        table.add_row("", "Initial Capital", "=", f"${self.initial_capital:,.2f}")
+        table.add_row("", "Commission", "=", f"{self.execution.commission:.3%}")
+        table.add_row("", "Slippage", "=", f"{self.execution.slippage:.3%}")
+        table.add_row("", "Max Drawdown", "=", f"{self.risk.max_drawdown:.1%}")
+
+
+class TrendIndicatorConfig(BaseModel):
+    """Trend indicator configuration"""
+    sma_period: int = Field(default=20, ge=1, le=200)
+    ema_period: int = Field(default=20, ge=1, le=200)
+    wma_period: int = Field(default=20, ge=1, le=200)
+
+
+class MomentumIndicatorConfig(BaseModel):
+    """Momentum indicator configuration"""
+    rsi_period: int = Field(default=14, ge=2, le=100)
+    macd_fast: int = Field(default=12, ge=1, le=100)
+    macd_slow: int = Field(default=26, ge=1, le=200)
+    macd_signal: int = Field(default=9, ge=1, le=50)
+    stochastic_k: int = Field(default=14, ge=1, le=100)
+    stochastic_d: int = Field(default=3, ge=1, le=50)
+    williams_r_period: int = Field(default=14, ge=1, le=100)
+
+
+class VolatilityIndicatorConfig(BaseModel):
+    """Volatility indicator configuration"""
+    bollinger_period: int = Field(default=20, ge=2, le=100)
+    bollinger_std_dev: float = Field(default=2.0, ge=0.1, le=5.0)
+    atr_period: int = Field(default=14, ge=1, le=100)
+
+
+class VolumeIndicatorConfig(BaseModel):
+    """Volume indicator configuration"""
+    volume_sma_period: int = Field(default=20, ge=1, le=200)
+    obv_enabled: bool = Field(default=True)
+    vwap_enabled: bool = Field(default=True)
+
+
+class IndicatorConfig(BaseModel, DisplayMixin):
+    """Technical indicator configuration"""
+    trend: TrendIndicatorConfig = Field(default_factory=TrendIndicatorConfig)
+    momentum: MomentumIndicatorConfig = Field(default_factory=MomentumIndicatorConfig)
+    volatility: VolatilityIndicatorConfig = Field(default_factory=VolatilityIndicatorConfig)
+    volume: VolumeIndicatorConfig = Field(default_factory=VolumeIndicatorConfig)
+
+    def add_to_table(self, table: Table, section: str = "") -> None:
+        table.add_section()
+        table.add_row("[spring_green1]Indicator Configuration")
+        table.add_row("", "SMA Period", "=", f"{self.trend.sma_period}")
+        table.add_row("", "RSI Period", "=", f"{self.momentum.rsi_period}")
+        table.add_row("", "Bollinger Period", "=", f"{self.volatility.bollinger_period}")
+        table.add_row("", "Volume SMA Period", "=", f"{self.volume.volume_sma_period}")
+
+
+class TimeframeSynchronizationConfig(BaseModel):
+    """Timeframe synchronization configuration"""
+    method: str = Field(default="forward_fill", pattern="^(forward_fill|interpolate|nearest)$")
+    alignment: str = Field(default="market_open", pattern="^(market_open|market_close|custom)$")
+    timezone: str = Field(default="US/Eastern")
+    handle_gaps: bool = Field(default=True)
+
+
+class TimeframePerformanceConfig(BaseModel):
+    """Timeframe performance configuration"""
+    max_cache_size: int = Field(default=1000, ge=100, le=10000)
+    cleanup_frequency: str = Field(default="daily", pattern="^(daily|weekly|monthly)$")
+    lazy_loading: bool = Field(default=True)
+    parallel_processing: bool = Field(default=True)
+
+
+class TimeframeConfig(BaseModel, DisplayMixin):
+    """Multi-timeframe configuration"""
+    primary: List[str] = Field(default_factory=lambda: ["1D"], description="Primary timeframes")
+    secondary: List[str] = Field(default_factory=lambda: ["1H", "4H"], description="Secondary timeframes")
+    high_frequency: List[str] = Field(default_factory=lambda: ["5M", "15M"], description="High-frequency timeframes")
+    
+    synchronization: TimeframeSynchronizationConfig = Field(default_factory=TimeframeSynchronizationConfig)
+    performance: TimeframePerformanceConfig = Field(default_factory=TimeframePerformanceConfig)
+
+    def add_to_table(self, table: Table, section: str = "") -> None:
+        table.add_section()
+        table.add_row("[spring_green1]Timeframe Configuration")
+        table.add_row("", "Primary", "=", ", ".join(self.primary))
+        table.add_row("", "Secondary", "=", ", ".join(self.secondary))
+        table.add_row("", "High Frequency", "=", ", ".join(self.high_frequency))
+        table.add_row("", "Sync Method", "=", self.synchronization.method)
+        table.add_row("", "Cache Size", "=", f"{self.performance.max_cache_size}")
+
+
 class Config(BaseModel, DisplayMixin):
     account: AccountConfig
     option_chains: OptionChainsConfig
@@ -519,6 +741,12 @@ class Config(BaseModel, DisplayMixin):
     symbols: Dict[str, SymbolConfig] = Field(default_factory=dict)
     stocks: Dict[str, StockStrategyConfig] = Field(default_factory=dict)
     constants: ConstantsConfig = Field(default_factory=ConstantsConfig)
+    
+    # Phase 5: Enhanced Configuration
+    strategies: Dict[str, StrategyConfig] = Field(default_factory=dict, description="Strategy configurations")
+    backtesting: Optional[BacktestConfig] = Field(default=None, description="Backtesting configuration")
+    indicators: IndicatorConfig = Field(default_factory=IndicatorConfig, description="Indicator configuration")
+    timeframes: TimeframeConfig = Field(default_factory=TimeframeConfig, description="Timeframe configuration")
 
     def trading_is_allowed(self, symbol: str) -> bool:
         symbol_config = self.symbols.get(symbol)
@@ -571,6 +799,62 @@ class Config(BaseModel, DisplayMixin):
         ):
             return symbol_config.calls.maintain_high_water_mark
         return self.roll_when.calls.maintain_high_water_mark
+
+    # Phase 5: Enhanced Configuration Helper Methods
+    
+    def get_strategy_config(self, strategy_name: str) -> Optional[StrategyConfig]:
+        """Get configuration for a specific strategy"""
+        return self.strategies.get(strategy_name)
+    
+    def is_strategy_enabled(self, strategy_name: str) -> bool:
+        """Check if a strategy is enabled"""
+        strategy = self.get_strategy_config(strategy_name)
+        return strategy is not None and strategy.enabled
+    
+    def get_enabled_strategies(self) -> Dict[str, StrategyConfig]:
+        """Get all enabled strategies"""
+        return {name: config for name, config in self.strategies.items() if config.enabled}
+    
+    def get_strategies_by_type(self, strategy_type: str) -> Dict[str, StrategyConfig]:
+        """Get strategies filtered by type (options, stocks, mixed)"""
+        return {name: config for name, config in self.strategies.items() 
+                if config.type == strategy_type and config.enabled}
+    
+    def get_strategies_by_timeframe(self, timeframe: str) -> Dict[str, StrategyConfig]:
+        """Get strategies that use a specific timeframe"""
+        return {name: config for name, config in self.strategies.items() 
+                if timeframe in config.timeframes and config.enabled}
+    
+    def is_backtesting_enabled(self) -> bool:
+        """Check if backtesting mode is enabled"""
+        return self.backtesting is not None and self.backtesting.enabled
+    
+    def get_indicator_config(self, indicator_type: str, indicator_name: str) -> Any:
+        """Get configuration for a specific indicator"""
+        indicator_category = getattr(self.indicators, indicator_type, None)
+        if indicator_category:
+            return getattr(indicator_category, indicator_name, None)
+        return None
+    
+    def get_all_required_timeframes(self) -> List[str]:
+        """Get all timeframes required by enabled strategies"""
+        timeframes = set()
+        for strategy in self.get_enabled_strategies().values():
+            timeframes.update(strategy.timeframes)
+        
+        # Add timeframes from timeframe config
+        timeframes.update(self.timeframes.primary)
+        timeframes.update(self.timeframes.secondary)
+        timeframes.update(self.timeframes.high_frequency)
+        
+        return sorted(list(timeframes))
+    
+    def get_all_required_indicators(self) -> List[str]:
+        """Get all indicators required by enabled strategies"""
+        indicators = set()
+        for strategy in self.get_enabled_strategies().values():
+            indicators.update(strategy.indicators)
+        return sorted(list(indicators))
 
     def get_write_threshold_sigma(
         self,

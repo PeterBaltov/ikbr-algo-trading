@@ -681,3 +681,202 @@ delay_after_open = 600
 # ThetaGang. For example, if set to 1800, ThetaGang will consider the market
 # closed 30 minutes prior to the actual close.
 delay_before_close = 300
+
+##############################################################################
+# Phase 5: Advanced Strategy Configuration
+##############################################################################
+
+# Strategy configuration allows you to define multiple trading strategies,
+# each with their own parameters, timeframes, and indicators. This enables
+# sophisticated multi-strategy and multi-timeframe trading systems.
+
+[strategies]
+# Configuration for individual trading strategies
+# Each strategy can be enabled/disabled, configured with specific timeframes,
+# indicators, and strategy-specific parameters.
+
+  [strategies.wheel]
+  # The classic ThetaGang Wheel strategy - selling cash-secured puts and covered calls
+  enabled = true
+  type = "options"
+  timeframes = ["1D"]
+  description = "Cash-secured puts and covered calls strategy"
+  
+  # Strategy-specific parameters
+  [strategies.wheel.parameters]
+  min_premium = 0.01          # Minimum premium to collect (1%)
+  target_dte = 30             # Target days to expiration
+  delta_threshold = 0.30      # Maximum delta for options
+  
+  [strategies.momentum_scalper]
+  # High-frequency momentum scalping strategy for stocks
+  enabled = false
+  type = "stocks" 
+  timeframes = ["5M", "1H"]
+  indicators = ["rsi", "macd", "ema"]
+  description = "Short-term momentum scalping using technical indicators"
+  
+  # Strategy-specific parameters
+  [strategies.momentum_scalper.parameters]
+  rsi_period = 14
+  rsi_oversold = 30
+  rsi_overbought = 70
+  macd_fast = 12
+  macd_slow = 26
+  macd_signal = 9
+  ema_period = 20
+  position_size = 0.02        # 2% of portfolio per trade
+  stop_loss = 0.015           # 1.5% stop loss
+  take_profit = 0.025         # 2.5% take profit
+  
+  [strategies.vix_hedge]
+  # VIX hedging strategy for portfolio protection
+  enabled = true
+  type = "mixed"
+  timeframes = ["1D"]
+  indicators = ["vix", "sma"]
+  description = "Portfolio hedging using VIX-based instruments"
+  
+  # Strategy-specific parameters
+  [strategies.vix_hedge.parameters]
+  vix_trigger = 25.0          # VIX level to trigger hedging
+  hedge_ratio = 0.05          # 5% of portfolio for hedging
+  sma_period = 20
+  rebalance_frequency = "weekly"
+  
+  [strategies.mean_reversion]
+  # Mean reversion strategy using Bollinger Bands
+  enabled = false
+  type = "stocks"
+  timeframes = ["1H", "4H"]
+  indicators = ["bollinger_bands", "rsi", "volume"]
+  description = "Mean reversion using Bollinger Bands and RSI"
+  
+  # Strategy-specific parameters
+  [strategies.mean_reversion.parameters]
+  bb_period = 20
+  bb_std_dev = 2.0
+  rsi_period = 14
+  volume_sma_period = 20
+  entry_threshold = 0.95      # Entry when price touches lower band
+  exit_threshold = 0.50       # Exit at middle band
+  position_size = 0.03        # 3% of portfolio per trade
+
+##############################################################################
+# Phase 5: Backtesting Configuration
+##############################################################################
+
+# Backtesting configuration enables historical simulation of strategies
+# with realistic execution costs, slippage, and market conditions.
+
+[backtesting]
+# Enable/disable backtesting mode
+enabled = false
+
+# Historical data range for backtesting
+start_date = "2023-01-01"
+end_date = "2024-01-01"
+
+# Initial capital for backtesting
+initial_capital = 100000.0
+
+# Execution costs and market simulation
+[backtesting.execution]
+commission = 0.001              # 0.1% commission per trade
+slippage = 0.0005              # 0.05% slippage
+market_impact = 0.0002         # 0.02% market impact
+enable_partial_fills = true
+liquidity_constraint = true
+
+# Risk management during backtesting
+[backtesting.risk]
+max_drawdown = 0.20            # 20% maximum drawdown
+position_size_limit = 0.10     # 10% maximum position size
+daily_loss_limit = 0.05        # 5% daily loss limit
+margin_requirement = 1.0       # 100% margin requirement
+
+# Data sources and quality settings
+[backtesting.data]
+primary_source = "ibkr"        # Primary data source: ibkr, yahoo, csv
+secondary_source = "yahoo"      # Fallback data source
+validate_data = true
+handle_missing_data = "forward_fill"  # forward_fill, interpolate, drop
+survivorship_bias_correction = true
+
+# Performance analytics configuration
+[backtesting.analytics]
+enable_detailed_analytics = true
+benchmark_symbol = "SPY"
+risk_free_rate = 0.02          # 2% risk-free rate
+calculate_var = true           # Calculate Value at Risk
+var_confidence_level = 0.95    # 95% confidence level
+monte_carlo_iterations = 1000   # Monte Carlo simulation iterations
+
+# Reporting configuration
+[backtesting.reporting]
+auto_generate_reports = true
+report_format = "html"         # html, pdf, json, csv
+include_charts = true
+export_trades = true
+detailed_breakdown = true
+
+##############################################################################
+# Phase 5: Technical Indicators Configuration
+##############################################################################
+
+# Global indicator configuration that applies to all strategies
+# Individual strategies can override these settings
+
+[indicators]
+# Default indicator settings
+
+  [indicators.trend]
+  sma_period = 20
+  ema_period = 20
+  wma_period = 20
+  
+  [indicators.momentum]
+  rsi_period = 14
+  macd_fast = 12
+  macd_slow = 26
+  macd_signal = 9
+  stochastic_k = 14
+  stochastic_d = 3
+  williams_r_period = 14
+  
+  [indicators.volatility]
+  bollinger_period = 20
+  bollinger_std_dev = 2.0
+  atr_period = 14
+  
+  [indicators.volume]
+  volume_sma_period = 20
+  obv_enabled = true
+  vwap_enabled = true
+
+##############################################################################
+# Phase 5: Multi-Timeframe Configuration
+##############################################################################
+
+# Multi-timeframe configuration for advanced strategy coordination
+# Defines how different timeframes interact and synchronize
+
+[timeframes]
+# Primary timeframes for strategy execution
+primary = ["1D"]               # Daily is the primary timeframe
+secondary = ["1H", "4H"]       # Hourly timeframes for additional signals
+high_frequency = ["5M", "15M"] # High-frequency timeframes for scalping
+
+# Data synchronization settings
+[timeframes.synchronization]
+method = "forward_fill"        # forward_fill, interpolate, nearest
+alignment = "market_open"      # market_open, market_close, custom
+timezone = "US/Eastern"       # Timezone for data alignment
+handle_gaps = true            # Handle weekend/holiday gaps
+
+# Memory and performance optimization
+[timeframes.performance]
+max_cache_size = 1000         # Maximum cached data points per timeframe
+cleanup_frequency = "daily"   # daily, weekly, monthly
+lazy_loading = true           # Load data on demand
+parallel_processing = true    # Enable parallel timeframe processing
