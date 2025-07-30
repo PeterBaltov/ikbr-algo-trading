@@ -73,7 +73,7 @@ class DashboardIntegration:
             return await self._get_mock_portfolio_snapshot()
     
     async def _get_real_portfolio_snapshot(self) -> PortfolioSnapshot:
-        """Get real portfolio data from ThetaGang"""
+        """Get real portfolio data from MoneyTrailz"""
         if not self.portfolio_manager:
             return await self._get_mock_portfolio_snapshot()
             
@@ -181,7 +181,7 @@ class DashboardIntegration:
             return await self._get_mock_strategy_updates()
     
     async def _get_real_strategy_updates(self) -> List[StrategyUpdate]:
-        """Get real strategy updates from ThetaGang"""
+        """Get real strategy updates from MoneyTrailz"""
         updates = []
         
         if hasattr(self.portfolio_manager, 'active_strategies'):

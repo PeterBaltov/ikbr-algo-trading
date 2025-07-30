@@ -17,7 +17,7 @@ from ib_async import (
 )
 from rich.console import Console
 
-from thetagang import log
+from moneytrailz import log
 
 console = Console()
 

@@ -10,7 +10,7 @@ from rich.table import Table
 from rich.tree import Tree
 from typing_extensions import Self
 
-from thetagang.fmt import dfmt, ffmt, pfmt
+from moneytrailz.fmt import dfmt, ffmt, pfmt
 
 error_console = Console(stderr=True, style="bold red")
 

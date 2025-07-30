@@ -6,8 +6,8 @@ import pandas as pd
 from rich import box
 from rich.table import Table
 
-from thetagang import log
-from thetagang.config import ExchangeHoursConfig
+from moneytrailz import log
+from moneytrailz.config import ExchangeHoursConfig
 
 
 def determine_action(config: ExchangeHoursConfig, now: datetime) -> str:

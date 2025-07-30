@@ -1,6 +1,6 @@
 import pandas as pd
 
-from thetagang.stock_strategies import compute_bx_trender, bx_trender_signal
+from moneytrailz.stock_strategies import compute_bx_trender, bx_trender_signal
 
 
 def test_bx_trender_signal_buy() -> None:

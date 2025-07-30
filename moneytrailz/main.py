@@ -37,7 +37,7 @@ def cli(config: str, without_ibc: bool, dry_run: bool) -> None:
     """MoneyTrailz is an IBKR bot for collecting money.
 
     You can configure this tool by supplying a toml configuration file.
-    Evolved from thetagang with advanced strategy framework and real-time dashboard.
+    Advanced algorithmic trading platform with enterprise-grade strategy framework and real-time dashboard.
     """
 
     from .moneytrailz import start

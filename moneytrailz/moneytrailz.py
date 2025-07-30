@@ -4,10 +4,10 @@ import toml
 from ib_async import IB, IBC, Contract, Watchdog, util
 from rich.console import Console
 
-from thetagang import log
-from thetagang.config import Config, normalize_config
-from thetagang.exchange_hours import need_to_exit
-from thetagang.portfolio_manager import PortfolioManager
+from moneytrailz import log
+from moneytrailz.config import Config, normalize_config
+from moneytrailz.exchange_hours import need_to_exit
+from moneytrailz.portfolio_manager import PortfolioManager
 
 util.patchAsyncio()
 
