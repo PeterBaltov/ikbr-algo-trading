@@ -8,7 +8,7 @@ click_log.basic_config(logger)  # type: ignore
 
 
 CONTEXT_SETTINGS = dict(
-    help_option_names=["-h", "--help"], auto_envvar_prefix="THETAGANG"
+    help_option_names=["-h", "--help"], auto_envvar_prefix="MONEYTRAILZ"
 )
 
 
@@ -19,14 +19,14 @@ CONTEXT_SETTINGS = dict(
     "--config",
     help="Path to toml config",
     required=True,
-    default="thetagang.toml",
+    default="moneytrailz.toml",
     type=click.Path(exists=True, readable=True),
 )
 @click.option(
     "--without-ibc",
     is_flag=True,
     help="Run without IBC. Enable this if you want to run the TWS "
-    "gateway yourself, without having ThetaGang manage it for you.",
+    "gateway yourself, without having MoneyTrailz manage it for you.",
 )
 @click.option(
     "--dry-run",
@@ -34,13 +34,12 @@ CONTEXT_SETTINGS = dict(
     help="Perform a dry run. This will display the the orders without sending any live trades.",
 )
 def cli(config: str, without_ibc: bool, dry_run: bool) -> None:
-    """ThetaGang is an IBKR bot for collecting money.
+    """MoneyTrailz is an IBKR bot for collecting money.
 
     You can configure this tool by supplying a toml configuration file.
-    There's a sample config on GitHub, here:
-    https://github.com/brndnmtthws/thetagang/blob/main/thetagang.toml
+    Evolved from thetagang with advanced strategy framework and real-time dashboard.
     """
 
-    from .thetagang import start
+    from .moneytrailz import start
 
     start(config, without_ibc, dry_run)

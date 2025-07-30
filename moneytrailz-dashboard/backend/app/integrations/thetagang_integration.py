@@ -5,8 +5,8 @@ from typing import List, Optional, Dict, Any
 from decimal import Decimal
 
 from ..models.dashboard import PortfolioSnapshot, StrategyUpdate, Position, Trade, PositionType, PositionSide
-from thetagang.portfolio_manager import PortfolioManager
-from thetagang.config import Config
+from moneytrailz.portfolio_manager import PortfolioManager
+from moneytrailz.config import Config
 from ib_async import IB
 from asyncio import Future
 from uuid import uuid4
@@ -21,7 +21,7 @@ class DashboardIntegration:
         self.config = None
         self.portfolio_manager: Optional[PortfolioManager] = None
         self.is_connected = False
-        self.config_path = config_path or "thetagang.toml"
+        self.config_path = config_path or "moneytrailz.toml"
         self.last_snapshot_time = None
         
         # Initialize connection

@@ -1,5 +1,5 @@
 """
-Custom exceptions for the ThetaGang strategy framework.
+Custom exceptions for the MoneyTrailz strategy framework.
 
 This module defines strategy-specific exceptions that provide detailed
 error information for debugging and error handling.

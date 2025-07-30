@@ -15,30 +15,30 @@ from ib_async import (
 )
 from ib_async.contract import ComboLeg, Contract, Index, Option, Stock
 import pandas as pd
-from thetagang.stock_strategies import compute_bx_trender, bx_trender_signal
+from moneytrailz.stock_strategies import compute_bx_trender, bx_trender_signal
 from ib_async.ib import IB
 from ib_async.order import LimitOrder
 from rich.console import Group
 from rich.panel import Panel
 from rich.table import Table
 
-from thetagang import log
-from thetagang.config import Config
+from moneytrailz import log
+from moneytrailz.config import Config
 
 # Phase 7: Strategy Framework Integration
-from thetagang.strategies.base import BaseStrategy, StrategyResult, StrategyContext
-from thetagang.strategies.enums import StrategySignal, StrategyType, TimeFrame, StrategyStatus
-from thetagang.strategies.registry import StrategyRegistry, get_registry
-from thetagang.strategies.implementations.factory import StrategyFactory, create_strategy_from_config
-from thetagang.execution.engine import StrategyExecutionEngine
-from thetagang.timeframes.manager import TimeFrameManager
-from thetagang.analysis import TechnicalAnalysisEngine
+from moneytrailz.strategies.base import BaseStrategy, StrategyResult, StrategyContext
+from moneytrailz.strategies.enums import StrategySignal, StrategyType, TimeFrame, StrategyStatus
+from moneytrailz.strategies.registry import StrategyRegistry, get_registry
+from moneytrailz.strategies.implementations.factory import StrategyFactory, create_strategy_from_config
+from moneytrailz.execution.engine import StrategyExecutionEngine
+from moneytrailz.timeframes.manager import TimeFrameManager
+from moneytrailz.analysis import TechnicalAnalysisEngine
 from datetime import datetime, timedelta
-from thetagang.fmt import dfmt, ffmt, ifmt, pfmt
-from thetagang.ibkr import IBKR, RequiredFieldValidationError, TickerField
-from thetagang.orders import Orders
-from thetagang.trades import Trades
-from thetagang.util import (
+from moneytrailz.fmt import dfmt, ffmt, ifmt, pfmt
+from moneytrailz.ibkr import IBKR, RequiredFieldValidationError, TickerField
+from moneytrailz.orders import Orders
+from moneytrailz.trades import Trades
+from moneytrailz.util import (
     account_summary_to_dict,
     calculate_net_short_positions,
     count_long_option_positions,
@@ -738,9 +738,9 @@ class PortfolioManager:
 
                 await self.ibkr.wait_for_submitting_orders(self.trades.records())
 
-            log.info("ThetaGang is done, shutting down! Cya next time. :sparkles:")
+            log.info("MoneyTrailz is done, shutting down! Cya next time. :sparkles:")
         except:
-            log.error("ThetaGang terminated with error...")
+            log.error("MoneyTrailz terminated with error...")
             raise
 
         finally:
@@ -2928,7 +2928,7 @@ class PortfolioManager:
         elif mode == "legacy":
             log.info(f"Running {len(self.config.stocks)} legacy strategies only")
         else:
-            log.info("Running wheel strategy only (original ThetaGang mode)")
+            log.info("Running wheel strategy only (original MoneyTrailz mode)")
     
     def suggest_migration(self) -> None:
         """Suggest migration path for users with legacy configurations."""
@@ -2939,7 +2939,7 @@ class PortfolioManager:
             log.info("  • Better resource allocation and risk management")
             log.info("  • Multi-timeframe support")
             log.info("  • Technical analysis integration")
-            log.info("  See Phase 5 configuration examples in thetagang.toml")
+            log.info("  See Phase 5 configuration examples in moneytrailz.toml")
     
     async def validate_strategy_compatibility(self) -> None:
         """Validate that strategies don't conflict with each other."""

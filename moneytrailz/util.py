@@ -7,8 +7,8 @@ import ib_async.ticker
 from ib_async import AccountValue, Order, PortfolioItem, Ticker, util
 from ib_async.contract import Option
 
-from thetagang.config import Config
-from thetagang.options import option_dte
+from moneytrailz.config import Config
+from moneytrailz.options import option_dte
 
 
 def account_summary_to_dict(

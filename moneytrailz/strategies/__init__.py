@@ -1,5 +1,5 @@
 """
-ThetaGang Strategy Framework
+MoneyTrailz Strategy Framework
 
 This package provides a flexible, extensible framework for implementing
 various trading strategies including options, stocks, and hybrid approaches.

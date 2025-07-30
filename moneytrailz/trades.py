@@ -5,9 +5,9 @@ from rich import box
 from rich.pretty import Pretty
 from rich.table import Table
 
-from thetagang import log
-from thetagang.fmt import dfmt, ffmt, ifmt
-from thetagang.ibkr import IBKR
+from moneytrailz import log
+from moneytrailz.fmt import dfmt, ffmt, ifmt
+from moneytrailz.ibkr import IBKR
 
 
 class Trades:

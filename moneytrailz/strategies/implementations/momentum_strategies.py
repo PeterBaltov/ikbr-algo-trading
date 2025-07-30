@@ -25,9 +25,9 @@ from enum import Enum
 import pandas as pd
 import numpy as np
 
-from thetagang.strategies.base import BaseStrategy, StrategyResult, StrategyContext
-from thetagang.strategies.enums import StrategySignal, StrategyType, TimeFrame
-from thetagang.strategies.exceptions import StrategyExecutionError, StrategyConfigError
+from moneytrailz.strategies.base import BaseStrategy, StrategyResult, StrategyContext
+from moneytrailz.strategies.enums import StrategySignal, StrategyType, TimeFrame
+from moneytrailz.strategies.exceptions import StrategyExecutionError, StrategyConfigError
 
 
 class MomentumState(Enum):

@@ -22,16 +22,16 @@ sio = socketio.AsyncServer(
     engineio_logger=True
 )
 
-# ThetaGang integration instance  
+# MoneyTrailz integration instance  
 dashboard_integration: SimpleDashboardIntegration | None = None
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan manager"""
     # Startup
-    print("🚀 Starting ThetaGang Dashboard API...")
-    
-    # Initialize ThetaGang integration
+    print("🚀 Starting MoneyTrailz Dashboard API...")
+
+# Initialize MoneyTrailz integration
     global dashboard_integration
     dashboard_integration = SimpleDashboardIntegration()
     
@@ -41,11 +41,11 @@ async def lifespan(app: FastAPI):
     yield
     
     # Shutdown
-    print("🛑 Shutting down ThetaGang Dashboard API...")
+    print("🛑 Shutting down MoneyTrailz Dashboard API...")
 
 # FastAPI application
 app = FastAPI(
-    title="ThetaGang Dashboard API",
+    title="MoneyTrailz Dashboard API",
     description="Real-time algorithmic trading dashboard API",
     version="1.0.0",
     docs_url="/docs",
@@ -84,7 +84,7 @@ async def health_check():
         "services": {
             "api": "running",
             "websocket": "running",
-            "thetagang_integration": "connected" if dashboard_integration else "disconnected"
+            "moneytrailz_integration": "connected" if dashboard_integration else "disconnected"
         }
     }
 
@@ -93,7 +93,7 @@ async def health_check():
 async def root():
     """Root endpoint with API information"""
     return {
-        "message": "ThetaGang Dashboard API",
+        "message": "MoneyTrailz Dashboard API",
         "version": "1.0.0",
         "docs": "/docs",
         "health": "/health",
@@ -106,7 +106,7 @@ async def connect(sid, environ, auth):
     """Handle client connection"""
     print(f"🔗 Client connected: {sid}")
     await sio.emit('welcome', {
-        'message': 'Connected to ThetaGang Dashboard',
+        'message': 'Connected to MoneyTrailz Dashboard',
         'sid': sid
     }, room=sid)
 

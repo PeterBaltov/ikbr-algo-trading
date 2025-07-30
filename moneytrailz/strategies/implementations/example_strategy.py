@@ -1,5 +1,5 @@
 """
-Example strategy implementation demonstrating the ThetaGang strategy framework.
+Example strategy implementation demonstrating the MoneyTrailz strategy framework.
 
 This is a simple example strategy that shows how to implement the BaseStrategy
 interface. It can be used as a template for creating new strategies.

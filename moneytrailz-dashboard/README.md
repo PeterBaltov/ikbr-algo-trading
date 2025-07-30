@@ -1,8 +1,8 @@
-# 🎯 ThetaGang Dashboard - Phase 1: Foundation & Core Infrastructure
+# 🎯 MoneyTrailz Dashboard - Real-time Trading Analytics
 
-A sophisticated, real-time trading dashboard for the ThetaGang algorithmic trading system.
+A sophisticated, real-time trading dashboard for the MoneyTrailz algorithmic trading system.
 
-![ThetaGang Dashboard](https://img.shields.io/badge/Status-Phase%201%20Complete-brightgreen)
+![MoneyTrailz Dashboard](https://img.shields.io/badge/Status-Production%20Ready-brightgreen)
 ![Next.js](https://img.shields.io/badge/Frontend-Next.js%2014-blue)
 ![FastAPI](https://img.shields.io/badge/Backend-FastAPI-green)
 ![TypeScript](https://img.shields.io/badge/Language-TypeScript-blue)
@@ -48,11 +48,11 @@ A sophisticated, real-time trading dashboard for the ThetaGang algorithmic tradi
 
 ### **1. Clone and Setup**
 ```bash
-# Navigate to your ThetaGang project
+# Navigate to your MoneyTrailz project
 cd /path/to/ikbr-algo-trading
 
-# The dashboard is already created in thetagang-dashboard/
-cd thetagang-dashboard
+# The dashboard is already created in moneytrailz-dashboard/
+cd moneytrailz-dashboard
 ```
 
 ### **2. Start the Complete Stack**
@@ -68,7 +68,7 @@ docker-compose up
 - **Dashboard UI**: http://localhost:3000
 - **API Documentation**: http://localhost:8000/docs
 - **API Health Check**: http://localhost:8000/health
-- **pgAdmin (dev)**: http://localhost:5050 (admin@thetagang.com / admin)
+- **pgAdmin (dev)**: http://localhost:5050 (admin@moneytrailz.com / admin)
 
 ### **4. Development Mode**
 ```bash

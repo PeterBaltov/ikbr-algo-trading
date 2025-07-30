@@ -5,8 +5,8 @@ from rich import box
 from rich.pretty import Pretty
 from rich.table import Table
 
-from thetagang import log
-from thetagang.fmt import dfmt, ifmt
+from moneytrailz import log
+from moneytrailz.fmt import dfmt, ifmt
 
 
 class Orders:

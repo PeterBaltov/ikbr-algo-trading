@@ -8,8 +8,8 @@ Factory for creating strategy instances from configuration.
 import logging
 from typing import Dict, List, Optional, Any, Type
 
-from thetagang.strategies.base import BaseStrategy
-from thetagang.strategies.registry import get_registry
+from moneytrailz.strategies.base import BaseStrategy
+from moneytrailz.strategies.registry import get_registry
 
 
 class StrategyFactory:

@@ -1,5 +1,5 @@
 """
-Base strategy class for the ThetaGang strategy framework.
+Base strategy class for the MoneyTrailz strategy framework.
 
 This module provides the abstract base class that all strategies must inherit from,
 defining the standard interface and common functionality for strategy execution.
