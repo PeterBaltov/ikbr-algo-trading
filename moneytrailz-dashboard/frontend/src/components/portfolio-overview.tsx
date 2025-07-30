@@ -153,12 +153,12 @@ export function EnhancedConnectionStatus({ isConnected, lastUpdate }: EnhancedCo
           {isConnected ? (
             <>
               <Wifi className="h-5 w-5 text-green-500" />
-              <span className="text-green-700 dark:text-green-400">ThetaGang Dashboard</span>
+              <span className="text-green-700 dark:text-green-400">MoneyTrailz Dashboard</span>
             </>
           ) : (
             <>
               <WifiOff className="h-5 w-5 text-red-500" />
-              <span className="text-red-700 dark:text-red-400">ThetaGang Dashboard</span>
+              <span className="text-red-700 dark:text-red-400">MoneyTrailz Dashboard</span>
             </>
           )}
         </CardTitle>

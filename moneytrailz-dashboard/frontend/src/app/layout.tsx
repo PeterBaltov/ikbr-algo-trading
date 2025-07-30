@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ThetaGang Dashboard",
+  title: "MoneyTrailz Dashboard",
   description: "Real-time algorithmic trading dashboard",
 };
 

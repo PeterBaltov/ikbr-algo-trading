@@ -52,18 +52,48 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Trading-specific colors
+        // Professional Trading Colors (IB-inspired)
         profit: {
-          DEFAULT: "hsl(142, 76%, 36%)",
-          foreground: "hsl(138, 100%, 95%)",
+          DEFAULT: "hsl(142, 76%, 45%)", // IB Green
+          foreground: "hsl(0, 0%, 100%)",
+          light: "hsl(142, 76%, 85%)",
+          dark: "hsl(142, 76%, 35%)",
         },
         loss: {
-          DEFAULT: "hsl(0, 84%, 60%)",
+          DEFAULT: "hsl(0, 84%, 60%)", // IB Red  
           foreground: "hsl(0, 0%, 100%)",
+          light: "hsl(0, 84%, 85%)",
+          dark: "hsl(0, 84%, 50%)",
         },
         neutral: {
-          DEFAULT: "hsl(213, 27%, 84%)",
-          foreground: "hsl(222, 84%, 5%)",
+          DEFAULT: "hsl(45, 100%, 51%)", // IB Yellow/Gold
+          foreground: "hsl(0, 0%, 0%)",
+          light: "hsl(45, 100%, 85%)",
+          dark: "hsl(45, 100%, 41%)",
+        },
+        // IB-specific trading colors
+        bid: {
+          DEFAULT: "hsl(45, 100%, 51%)", // Yellow for bid prices
+          foreground: "hsl(0, 0%, 0%)",
+        },
+        ask: {
+          DEFAULT: "hsl(142, 76%, 45%)", // Green for ask prices
+          foreground: "hsl(0, 0%, 100%)",
+        },
+        buy: {
+          DEFAULT: "hsl(217, 91%, 60%)", // IB Blue for buy
+          foreground: "hsl(0, 0%, 100%)",
+        },
+        sell: {
+          DEFAULT: "hsl(0, 84%, 60%)", // Red for sell
+          foreground: "hsl(0, 0%, 100%)",
+        },
+        trading: {
+          positive: "hsl(142, 76%, 45%)",
+          negative: "hsl(0, 84%, 60%)",
+          neutral: "hsl(45, 100%, 51%)",
+          unchanged: "hsl(210, 20%, 60%)",
+          last: "hsl(199, 89%, 48%)", // Light blue for last price
         },
       },
       borderRadius: {
@@ -100,12 +130,27 @@ const config: Config = {
             transform: "scale(1.02)"
           },
         },
+        "fade-in": {
+          "0%": { opacity: "0", transform: "translateY(10px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        "slide-in": {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(0)" },
+        },
+        "bounce-gentle": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-2px)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "pulse-profit": "pulse-profit 2s ease-in-out infinite",
         "pulse-loss": "pulse-loss 2s ease-in-out infinite",
+        "fade-in": "fade-in 0.5s ease-out",
+        "slide-in": "slide-in 0.3s ease-out",
+        "bounce-gentle": "bounce-gentle 1s ease-in-out infinite",
       },
     },
   },

@@ -1,7 +1,6 @@
-import ModernPortfolioOverview from "@/components/modern-portfolio-overview"
-import ModernStrategyMonitor from "@/components/modern-strategy-monitor"
-import TradingChart from "@/components/trading-chart"
 import DashboardLayout from "@/components/layout/dashboard-layout"
+import { ProfessionalDashboard } from "@/components/professional-dashboard"
+import TradingChart from "@/components/trading-chart"
 
 // Sample performance data for the TradingView chart
 const performanceData = [
@@ -26,8 +25,8 @@ export default function DashboardPage() {
   return (
     <DashboardLayout>
       <div className="space-y-8">
-        {/* Modern Portfolio Overview */}
-        <ModernPortfolioOverview />
+        {/* Professional Dashboard with IB-inspired design */}
+        <ProfessionalDashboard />
 
         {/* Advanced Trading Chart */}
         <section>
@@ -37,9 +36,6 @@ export default function DashboardPage() {
             height={400}
           />
         </section>
-
-        {/* Modern Strategy Monitor */}
-        <ModernStrategyMonitor />
       </div>
     </DashboardLayout>
   )
