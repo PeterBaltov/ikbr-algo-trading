@@ -275,6 +275,10 @@ class WriteWhenConfig(BaseModel, DisplayMixin):
         cap_factor: float = Field(default=1.0, ge=0.0, le=1.0)
         cap_target_floor: float = Field(default=0.0, ge=0.0, le=1.0)
         excess_only: bool = Field(default=False)
+        min_threshold_percent: Optional[float] = Field(default=None, ge=0.0, le=1.0)
+        min_threshold_percent_relative: Optional[float] = Field(
+            default=None, ge=0.0, le=1.0
+        )
 
     calculate_net_contracts: bool = Field(default=False)
     calls: "WriteWhenConfig.Calls" = Field(
@@ -300,6 +304,20 @@ class WriteWhenConfig(BaseModel, DisplayMixin):
             "", "Call cap target floor", "=", f"{pfmt(self.calls.cap_target_floor)}"
         )
         table.add_row("", "Excess only", "=", f"{self.calls.excess_only}")
+        if self.calls.min_threshold_percent is not None:
+            table.add_row(
+                "",
+                "Calls min threshold %",
+                "=",
+                f"{pfmt(self.calls.min_threshold_percent)}",
+            )
+        if self.calls.min_threshold_percent_relative is not None:
+            table.add_row(
+                "",
+                "Calls min threshold % relative",
+                "=",
+                f"{pfmt(self.calls.min_threshold_percent_relative)}",
+            )
 
 
 class RollWhenConfig(BaseModel, DisplayMixin):
@@ -471,6 +489,27 @@ class SymbolConfig(BaseModel):
     buy_only_rebalancing: Optional[bool] = None
     buy_only_min_threshold_shares: Optional[int] = Field(default=None, ge=1)
     buy_only_min_threshold_amount: Optional[float] = Field(default=None, ge=0.0)
+    buy_only_min_threshold_percent: Optional[float] = Field(
+        default=None, ge=0.0, le=1.0
+    )
+    buy_only_min_threshold_percent_relative: Optional[float] = Field(
+        default=None, ge=0.0, le=1.0
+    )
+    write_calls_only_min_threshold_percent: Optional[float] = Field(
+        default=None, ge=0.0, le=1.0
+    )
+    write_calls_only_min_threshold_percent_relative: Optional[float] = Field(
+        default=None, ge=0.0, le=1.0
+    )
+    sell_only_rebalancing: Optional[bool] = None
+    sell_only_min_threshold_shares: Optional[int] = Field(default=None, ge=1)
+    sell_only_min_threshold_amount: Optional[float] = Field(default=None, ge=0.0)
+    sell_only_min_threshold_percent: Optional[float] = Field(
+        default=None, ge=0.0, le=1.0
+    )
+    sell_only_min_threshold_percent_relative: Optional[float] = Field(
+        default=None, ge=0.0, le=1.0
+    )
 
 
 class StockStrategyConfig(BaseModel):
@@ -756,6 +795,10 @@ class Config(BaseModel, DisplayMixin):
         symbol_config = self.symbols.get(symbol)
         return symbol_config is not None and symbol_config.buy_only_rebalancing is True
 
+    def is_sell_only_rebalancing(self, symbol: str) -> bool:
+        symbol_config = self.symbols.get(symbol)
+        return symbol_config is not None and symbol_config.sell_only_rebalancing is True
+
     def symbol_config(self, symbol: str) -> Optional[SymbolConfig]:
         return self.symbols.get(symbol)
 
@@ -917,6 +960,7 @@ class Config(BaseModel, DisplayMixin):
         table.add_column("Symbol")
         table.add_column("Weight", justify="right")
         table.add_column("Buy-only", justify="center")
+        table.add_column("Sell-only", justify="center")
         table.add_column("Call delta", justify="right")
         table.add_column("Call strike limit", justify="right")
         table.add_column("Call threshold", justify="right")
@@ -941,6 +985,7 @@ class Config(BaseModel, DisplayMixin):
                 symbol,
                 pfmt(sconfig.weight or 0.0),
                 "✓" if sconfig.buy_only_rebalancing else "",
+                "✓" if sconfig.sell_only_rebalancing else "",
                 ffmt(self.get_target_delta(symbol, "C")),
                 dfmt(sconfig.calls.strike_limit if sconfig.calls else None),
                 call_thresh,

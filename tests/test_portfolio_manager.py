@@ -247,16 +247,22 @@ class TestPortfolioManager:
                 weight=0.5,
                 buy_only_min_threshold_shares=None,
                 buy_only_min_threshold_amount=None,
+                buy_only_min_threshold_percent=None,
+                buy_only_min_threshold_percent_relative=None,
             ),
             "MSFT": mocker.Mock(
                 weight=0.3,
                 buy_only_min_threshold_shares=None,
                 buy_only_min_threshold_amount=None,
+                buy_only_min_threshold_percent=None,
+                buy_only_min_threshold_percent_relative=None,
             ),
             "GOOGL": mocker.Mock(
                 weight=0.2,
                 buy_only_min_threshold_shares=None,
                 buy_only_min_threshold_amount=None,
+                buy_only_min_threshold_percent=None,
+                buy_only_min_threshold_percent_relative=None,
             ),
         }
         portfolio_manager.config.is_buy_only_rebalancing = mocker.Mock(
@@ -344,8 +350,9 @@ class TestPortfolioManager:
         mocker.patch("thetagang.portfolio_manager.Stock", return_value=mock_stock)
 
         # Mock LimitOrder class
+        mock_limit_order = mocker.patch("thetagang.portfolio_manager.LimitOrder")
         mock_order = mocker.Mock()
-        mocker.patch("thetagang.portfolio_manager.LimitOrder", return_value=mock_order)
+        mock_limit_order.return_value = mock_order
 
         # Mock log.notice and log.error
         mocker.patch("thetagang.log.notice")
@@ -367,9 +374,7 @@ class TestPortfolioManager:
         assert portfolio_manager.enqueue_order.call_count == 2
 
         # Verify order parameters
-        from thetagang.portfolio_manager import LimitOrder
-
-        LimitOrder.assert_any_call(
+        mock_limit_order.assert_any_call(
             "BUY",
             50,
             150.0,
@@ -378,7 +383,7 @@ class TestPortfolioManager:
             tif="DAY",
             account=portfolio_manager.account_number,
         )
-        LimitOrder.assert_any_call(
+        mock_limit_order.assert_any_call(
             "BUY",
             30,
             150.0,
@@ -399,6 +404,8 @@ class TestPortfolioManager:
                 weight=1.0,  # 100% allocation
                 buy_only_min_threshold_shares=None,
                 buy_only_min_threshold_amount=None,
+                buy_only_min_threshold_percent=None,
+                buy_only_min_threshold_percent_relative=None,
             ),
         }
         portfolio_manager.config.is_buy_only_rebalancing = mocker.Mock(
@@ -492,6 +499,8 @@ class TestPortfolioManager:
                 weight=0.1,
                 buy_only_min_threshold_shares=10,
                 buy_only_min_threshold_amount=None,
+                buy_only_min_threshold_percent=None,
+                buy_only_min_threshold_percent_relative=None,
             ),
         }
         portfolio_manager.config.is_buy_only_rebalancing = mocker.Mock(
@@ -542,6 +551,8 @@ class TestPortfolioManager:
                 weight=0.05,
                 buy_only_min_threshold_shares=None,
                 buy_only_min_threshold_amount=1000.0,
+                buy_only_min_threshold_percent=None,
+                buy_only_min_threshold_percent_relative=None,
             ),
         }
         portfolio_manager.config.is_buy_only_rebalancing = mocker.Mock(
@@ -594,6 +605,8 @@ class TestPortfolioManager:
                 weight=0.01,  # Small allocation
                 buy_only_min_threshold_shares=None,
                 buy_only_min_threshold_amount=100.0,  # Less than 1 share
+                buy_only_min_threshold_percent=None,
+                buy_only_min_threshold_percent_relative=None,
             ),
         }
         portfolio_manager.config.is_buy_only_rebalancing = mocker.Mock(
@@ -649,6 +662,8 @@ class TestPortfolioManager:
                 weight=0.1,
                 buy_only_min_threshold_shares=1,  # Would allow purchase
                 buy_only_min_threshold_amount=2000.0,  # Would block purchase
+                buy_only_min_threshold_percent=None,
+                buy_only_min_threshold_percent_relative=None,
             ),
         }
         portfolio_manager.config.is_buy_only_rebalancing = mocker.Mock(

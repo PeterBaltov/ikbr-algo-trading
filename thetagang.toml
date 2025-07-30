@@ -245,6 +245,22 @@ calculate_net_contracts = false
   green = true
   red   = true
 
+  # Global call writing thresholds (can be overridden per symbol)
+  # These work the same as buy_only thresholds but limit call writing
+  #
+  # Only write calls if position is at least X% of net liquidation value
+  # min_threshold_percent = 0.05  # Only write calls if position >= 5% of NLV
+  #
+  # Only write calls if position exceeds target allocation by X%
+  # min_threshold_percent_relative = 0.2  # Only write calls if position > 20% above target
+  #
+  # Example: If you set min_threshold_percent_relative = 0.2 and a symbol has 10% target allocation:
+  # - If position is 11% of NLV (10% above target), no calls written
+  # - If position is 13% of NLV (30% above target), calls can be written
+  #
+  # These can be overridden per symbol using write_calls_only_min_threshold_percent
+  # and write_calls_only_min_threshold_percent_relative in the symbol config
+
   # With covered calls, we can cap the number of calls to write by this factor. At
   # 1.0, we write covered calls on 100% of our positions. At 0.5, we'd only write
   # on 50% of our positions. This value must be between 1 and 0 inclusive.
@@ -445,11 +461,38 @@ minimum_open_interest = 10
   #   # value.
   #   excess_only = false
 
-  # [symbols.TLT]
-  # weight = 0.2
-  # # parts = 20
-  # # Override delta for this particular symbol, for both puts and calls.
-  # delta = 0.4
+# Sell-only rebalancing example:
+# This symbol demonstrates sell-only rebalancing, which is useful for gradually
+# reducing positions when they exceed target allocation.
+#
+# [symbols.TSLA]
+# weight = 0.1
+# sell_only_rebalancing = true
+# sell_only_min_threshold_shares = 5  # Only sell if selling at least 5 shares
+# sell_only_min_threshold_percent_relative = 0.2  # Only sell if >20% above target
+#
+# When TSLA grows to more than 12% of portfolio (20% above 10% target), the bot
+# will sell shares to bring it back to 10%. No puts are written, and no calls
+# are written on this position.
+
+# Band rebalancing example (both buy and sell):
+# This creates a rebalancing "band" around the target allocation.
+#
+# [symbols.BTC]
+# weight = 0.05
+# buy_only_rebalancing = true
+# sell_only_rebalancing = true
+# buy_only_min_threshold_percent_relative = 0.15   # Buy when >15% below target
+# sell_only_min_threshold_percent_relative = 0.15  # Sell when >15% above target
+#
+# This keeps BTC between 4.25% and 5.75% of the portfolio (±15% of 5% target).
+# No options are written on this position.
+
+  [symbols.TLT]
+  weight = 0.2
+  # parts = 20
+  # Override delta for this particular symbol, for both puts and calls.
+  delta = 0.4
 
   # Buy-only rebalancing: this will buy shares directly instead of writing puts
   # to build the position. This is useful for symbols where you want to maintain
@@ -465,13 +508,35 @@ minimum_open_interest = 10
   # Minimum thresholds (optional):
   # - buy_only_min_threshold_shares: Minimum number of shares to buy (default: 1)
   # - buy_only_min_threshold_amount: Minimum dollar amount for a purchase
-  #   * Dollar amount takes precedence over share count
+  # - buy_only_min_threshold_percent: Minimum as percentage of net liquidation value (absolute)
+  # - buy_only_min_threshold_percent_relative: Minimum as percentage difference from target allocation
+  #   * Priority: relative percent > absolute percent > dollar amount > share count
   #   * If min amount < 1 share price, it rounds up to 1 share
   #
   # Examples:
   # buy_only_rebalancing = true
   # buy_only_min_threshold_shares = 10  # Only buy if buying at least 10 shares
   # buy_only_min_threshold_amount = 1000.0  # Only buy if order is at least $1000
+  # buy_only_min_threshold_percent = 0.01  # Only buy if order is at least 1% of NLV
+  # buy_only_min_threshold_percent_relative = 0.1  # Only buy if position is >10% below target
+  #
+  # Relative threshold example:
+  # If TLT is allocated 50% but currently only 25% of NLV:
+  # - Relative difference = (50% - 25%) / 50% = 50%
+  # - If threshold = 0.1 (10%), then 50% > 10%, so buy is allowed
+  #
+  # Call writing thresholds (similar to buy thresholds but for limiting call writes):
+  # - write_calls_only_min_threshold_percent: Only write calls if position is at least X% of NLV
+  # - write_calls_only_min_threshold_percent_relative: Only write calls if position exceeds target by X%
+  #
+  # Examples:
+  # write_calls_only_min_threshold_percent = 0.05  # Only write calls if position is at least 5% of NLV
+  # write_calls_only_min_threshold_percent_relative = 0.2  # Only write calls if position exceeds target by 20%
+  #
+  # Relative threshold example for calls:
+  # If SPY is allocated 20% but currently 30% of NLV:
+  # - Relative excess = (30% - 20%) / 20% = 50%
+  # - If threshold = 0.2 (20%), then 50% > 20%, so call writing is allowed
 
   # [symbols.ABNB]
   # # For symbols that require an exchange, which is typically any company stock,
