@@ -249,15 +249,15 @@ class SystemValidator:
         print("🔍 Validating module structure...")
         
         required_modules = [
-            'thetagang.strategies.base',
-            'thetagang.strategies.registry',
-            'thetagang.strategies.enums',
-            'thetagang.analysis',
-            'thetagang.timeframes',
-            'thetagang.execution',
-            'thetagang.backtesting',
-            'thetagang.analytics',
-            'thetagang.config',
+            'moneytrailz.strategies.base',
+            'moneytrailz.strategies.registry',
+            'moneytrailz.strategies.enums',
+            'moneytrailz.analysis',
+            'moneytrailz.timeframes',
+            'moneytrailz.execution',
+            'moneytrailz.backtesting',
+            'moneytrailz.analytics',
+            'moneytrailz.config',
         ]
         
         for module in required_modules:
@@ -294,7 +294,7 @@ class SystemValidator:
         print("🔍 Validating configuration system...")
         
         try:
-            from thetagang.config import Config
+            from moneytrailz.config import Config
             
             # Test that we can import the Config class and it has expected attributes
             if hasattr(Config, '__annotations__'):
@@ -315,8 +315,8 @@ class SystemValidator:
         print("🔍 Validating strategy ecosystem...")
         
         try:
-            from thetagang.strategies.implementations.factory import StrategyFactory
-            from thetagang.strategies.registry import get_registry
+            from moneytrailz.strategies.implementations.factory import StrategyFactory
+            from moneytrailz.strategies.registry import get_registry
             
             # Test factory
             factory = StrategyFactory()
@@ -367,7 +367,7 @@ class SystemValidator:
         
         try:
             import time
-            from thetagang.strategies.implementations.factory import StrategyFactory
+            from moneytrailz.strategies.implementations.factory import StrategyFactory
             
             factory = StrategyFactory()
             
@@ -414,8 +414,8 @@ class SystemValidator:
             import pandas as pd
             import numpy as np
             import time
-            from thetagang.analysis.indicators import SMA, RSI
-            from thetagang.strategies.enums import TimeFrame
+            from moneytrailz.analysis.indicators import SMA, RSI
+            from moneytrailz.strategies.enums import TimeFrame
             
             # Create large dataset
             periods = 10000
@@ -467,7 +467,7 @@ class SystemValidator:
             
             # Create multiple strategies and data
             strategies = []
-            from thetagang.strategies.implementations.factory import StrategyFactory
+            from moneytrailz.strategies.implementations.factory import StrategyFactory
             
             factory = StrategyFactory()
             
@@ -517,7 +517,7 @@ class SystemValidator:
         try:
             import asyncio
             import time
-            from thetagang.strategies.implementations.factory import StrategyFactory
+            from moneytrailz.strategies.implementations.factory import StrategyFactory
             
             async def create_strategy_async(name):
                 factory = StrategyFactory()

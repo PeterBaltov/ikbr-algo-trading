@@ -221,7 +221,7 @@ class TechnicalMomentumStrategy(BaseStrategy):
 ### **Registry Integration**
 ```python
 # Register technical strategies in the Phase 1 registry
-from thetagang.strategies import get_registry
+from moneytrailz.strategies import get_registry
 
 registry = get_registry()
 registry.register_strategy(TechnicalMomentumStrategy, "technical_momentum")
@@ -382,7 +382,7 @@ stats = engine.get_performance_stats()
 async def execute_enhanced_strategies(self, account_summary, portfolio_positions):
     """Execute strategies with technical analysis capabilities"""
     
-    from thetagang.analysis import TechnicalAnalysisEngine
+    from moneytrailz.analysis import TechnicalAnalysisEngine
     
     # Create technical analysis engine
     ta_engine = TechnicalAnalysisEngine()
@@ -420,7 +420,7 @@ async def execute_enhanced_strategies(self, account_summary, portfolio_positions
 
 ### **Configuration Extension**
 ```toml
-# thetagang.toml - Enhanced strategies with technical analysis
+# moneytrailz.toml - Enhanced strategies with technical analysis
 [strategies]
   [strategies.technical_momentum]
   enabled = true

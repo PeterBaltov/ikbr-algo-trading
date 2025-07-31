@@ -15,11 +15,11 @@ from typing import Dict, Set, Any, Optional
 from unittest.mock import MagicMock, AsyncMock, patch
 
 # Import the strategy framework components
-from thetagang.strategies.base import BaseStrategy, StrategyResult, StrategyContext
-from thetagang.strategies.exceptions import (
+from moneytrailz.strategies.base import BaseStrategy, StrategyResult, StrategyContext
+from moneytrailz.strategies.exceptions import (
     StrategyError, StrategyConfigError, StrategyExecutionError, StrategyValidationError
 )
-from thetagang.strategies.enums import (
+from moneytrailz.strategies.enums import (
     StrategySignal, StrategyType, TimeFrame, StrategyStatus, OrderSide, PositionSide
 )
 

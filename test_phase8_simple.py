@@ -23,16 +23,16 @@ def test_basic_imports():
     
     try:
         # Test core strategy framework
-        from thetagang.strategies.base import BaseStrategy, StrategyResult
-        from thetagang.strategies.enums import StrategySignal, StrategyType, TimeFrame
+        from moneytrailz.strategies.base import BaseStrategy, StrategyResult
+        from moneytrailz.strategies.enums import StrategySignal, StrategyType, TimeFrame
         print("  ✅ Core strategy framework imports")
         
         # Test configuration system
-        from thetagang.config import Config
+        from moneytrailz.config import Config
         print("  ✅ Configuration system imports")
         
         # Test portfolio manager
-        from thetagang.portfolio_manager import PortfolioManager
+        from moneytrailz.portfolio_manager import PortfolioManager
         print("  ✅ Portfolio manager imports")
         
         return True
@@ -46,7 +46,7 @@ def test_strategy_factory():
     print("🔍 Testing strategy factory...")
     
     try:
-        from thetagang.strategies.implementations.factory import StrategyFactory
+        from moneytrailz.strategies.implementations.factory import StrategyFactory
         
         factory = StrategyFactory()
         available_strategies = factory.get_available_strategies()
@@ -70,7 +70,7 @@ def test_configuration_system():
     print("🔍 Testing configuration system...")
     
     try:
-        from thetagang.config import Config
+        from moneytrailz.config import Config
         
         # Test that we can import the config classes
         print("  ✅ Configuration classes imported successfully")
@@ -94,9 +94,9 @@ def test_technical_analysis():
     print("🔍 Testing technical analysis...")
     
     try:
-        from thetagang.analysis import TechnicalAnalysisEngine
-        from thetagang.analysis.indicators import SMA, RSI
-        from thetagang.strategies.enums import TimeFrame
+        from moneytrailz.analysis import TechnicalAnalysisEngine
+        from moneytrailz.analysis.indicators import SMA, RSI
+        from moneytrailz.strategies.enums import TimeFrame
         import pandas as pd
         import numpy as np
         
@@ -133,7 +133,7 @@ def test_portfolio_manager_integration():
     print("🔍 Testing portfolio manager integration...")
     
     try:
-        from thetagang.portfolio_manager import PortfolioManager
+        from moneytrailz.portfolio_manager import PortfolioManager
         from unittest.mock import MagicMock
         
         # Create mock config

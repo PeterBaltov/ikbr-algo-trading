@@ -21,7 +21,7 @@ def test_imports():
     
     try:
         # Core framework imports
-        from thetagang.strategies import (
+        from moneytrailz.strategies import (
             BaseStrategy, StrategyResult, StrategyContext,
             StrategySignal, StrategyType, TimeFrame, StrategyStatus,
             StrategyError, StrategyConfigError, StrategyExecutionError,
@@ -31,11 +31,11 @@ def test_imports():
         print("✅ Core strategy framework imports - SUCCESS")
         
         # Registry imports
-        from thetagang.strategies.registry import StrategyLoader, StrategyValidator
+        from moneytrailz.strategies.registry import StrategyLoader, StrategyValidator
         print("✅ Registry system imports - SUCCESS")
         
         # Example strategy import
-        from thetagang.strategies.implementations.example_strategy import ExampleStrategy
+        from moneytrailz.strategies.implementations.example_strategy import ExampleStrategy
         print("✅ Example strategy import - SUCCESS")
         
         return True
@@ -49,7 +49,7 @@ def test_enums():
     print("\n🔢 Testing Enums...")
     
     try:
-        from thetagang.strategies import StrategySignal, StrategyType, TimeFrame
+        from moneytrailz.strategies import StrategySignal, StrategyType, TimeFrame
         
         # Test StrategySignal
         signal = StrategySignal.BUY
@@ -75,8 +75,8 @@ def test_strategy_registry():
     print("\n📚 Testing Strategy Registry...")
     
     try:
-        from thetagang.strategies import get_registry, StrategyRegistry
-        from thetagang.strategies.implementations.example_strategy import ExampleStrategy
+        from moneytrailz.strategies import get_registry, StrategyRegistry
+        from moneytrailz.strategies.implementations.example_strategy import ExampleStrategy
         
         # Get global registry
         registry = get_registry()
@@ -126,8 +126,8 @@ def test_example_strategy():
     print("\n🧪 Testing Example Strategy...")
     
     try:
-        from thetagang.strategies.implementations.example_strategy import ExampleStrategy
-        from thetagang.strategies import StrategyType, TimeFrame
+        from moneytrailz.strategies.implementations.example_strategy import ExampleStrategy
+        from moneytrailz.strategies import StrategyType, TimeFrame
         
         # Create strategy instance
         config = {
@@ -173,8 +173,8 @@ async def test_strategy_execution():
     print("\n🚀 Testing Strategy Execution...")
     
     try:
-        from thetagang.strategies.implementations.example_strategy import ExampleStrategy
-        from thetagang.strategies import StrategyType, TimeFrame, StrategyContext
+        from moneytrailz.strategies.implementations.example_strategy import ExampleStrategy
+        from moneytrailz.strategies import StrategyType, TimeFrame, StrategyContext
         
         # Create mock market data
         dates = pd.date_range('2024-01-01', periods=10, freq='D')
@@ -271,9 +271,9 @@ def test_configuration_validation():
     print("\n⚙️ Testing Configuration Validation...")
     
     try:
-        from thetagang.strategies.registry.validator import StrategyValidator
-        from thetagang.strategies.implementations.example_strategy import ExampleStrategy
-        from thetagang.strategies import StrategyType, TimeFrame
+        from moneytrailz.strategies.registry.validator import StrategyValidator
+        from moneytrailz.strategies.implementations.example_strategy import ExampleStrategy
+        from moneytrailz.strategies import StrategyType, TimeFrame
         
         validator = StrategyValidator()
         
@@ -317,13 +317,13 @@ def test_integration_points():
     
     try:
         # Test that we can import existing ThetaGang modules alongside new framework
-        from thetagang.config import Config
-        from thetagang.strategies import get_registry, StrategyType
+        from moneytrailz.config import Config
+        from moneytrailz.strategies import get_registry, StrategyType
         
         print("  ✅ Existing ThetaGang imports - SUCCESS")
         
         # Test that TimeFrame enum works with existing timeframe concepts
-        from thetagang.strategies import TimeFrame
+        from moneytrailz.strategies import TimeFrame
         daily_tf = TimeFrame.DAY_1
         print(f"  ⏰ TimeFrame integration: {daily_tf.value} = {daily_tf.seconds}s")
         

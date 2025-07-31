@@ -29,8 +29,8 @@ from .signals import (
     SignalStrength, SignalDirection, CombinedSignal
 )
 
-# Timeframe management moved to thetagang.timeframes package
-# Performance optimization features moved to thetagang.analytics package
+# Timeframe management moved to moneytrailz.timeframes package
+# Performance optimization features moved to moneytrailz.analytics package
 
 # Version and metadata
 __version__ = "2.0.0"
@@ -55,6 +55,6 @@ __all__ = [
     "SignalProcessor", "SignalAggregator", "ConfidenceCalculator",
     "SignalStrength", "SignalDirection", "CombinedSignal",
     
-    # Multi-timeframe management moved to thetagang.timeframes
-    # Performance optimization moved to thetagang.analytics
+    # Multi-timeframe management moved to moneytrailz.timeframes
+    # Performance optimization moved to moneytrailz.analytics
 ] 

@@ -18,17 +18,17 @@ from datetime import datetime, timedelta
 from typing import Dict, List, Any
 
 # Import technical analysis components
-from thetagang.analysis import TechnicalAnalysisEngine
-from thetagang.analysis.indicators import (
+from moneytrailz.analysis import TechnicalAnalysisEngine
+from moneytrailz.analysis.indicators import (
     BaseIndicator, SMA, EMA, WMA, DEMA, TEMA,
     RSI, MACD, Stochastic, WilliamsR, ROC,
     BollingerBands, ATR, KeltnerChannels, DonchianChannel,
     VWAP, OBV, ADLine, PVT
 )
-from thetagang.analysis.signals import (
+from moneytrailz.analysis.signals import (
     SignalProcessor, SignalAggregator, ConfidenceCalculator, CombinedSignal
 )
-from thetagang.strategies.enums import TimeFrame
+from moneytrailz.strategies.enums import TimeFrame
 
 
 class TestMarketDataGenerator:

@@ -11,13 +11,13 @@ ThetaGang is an automated options trading bot for Interactive Brokers (IBKR) tha
 ### Running the application
 ```bash
 # Always use uv to run the application
-uv run thetagang --config thetagang.toml
+uv run thetagang --config moneytrailz.toml
 
 # Dry run mode (no actual trades)
-uv run thetagang --config thetagang.toml --dry-run
+uv run thetagang --config moneytrailz.toml --dry-run
 
 # Without IBC (when TWS/Gateway is already running)
-uv run thetagang --config thetagang.toml --without-ibc
+uv run thetagang --config moneytrailz.toml --without-ibc
 ```
 
 ### Testing
@@ -54,7 +54,7 @@ uv run pre-commit run --all-files
 
 ### Core Components
 
-1. **Entry Point** (`thetagang/thetagang.py`):
+1. **Entry Point** (`thetagang/moneytrailz.py`):
    - Initializes IB connection and IBC controller
    - Sets up event loop with ib_async
    - Creates PortfolioManager instance
@@ -71,7 +71,7 @@ uv run pre-commit run --all-files
 3. **Configuration** (`thetagang/config.py`):
    - Pydantic models for type-safe configuration
    - Key configs: `Config`, `SymbolConfig`, `RollWhenConfig`, `WriteWhenConfig`
-   - Loaded from `thetagang.toml` file
+   - Loaded from `moneytrailz.toml` file
 
 4. **IBKR Integration** (`thetagang/ibkr.py`):
    - Wrapper around ib_async library
@@ -91,14 +91,14 @@ uv run pre-commit run --all-files
 
 1. **Async/Await**: All IBKR interactions are async - use `await` for API calls
 2. **Event-driven**: Uses ib_async events for real-time updates
-3. **Configuration-driven**: Most behavior controlled via `thetagang.toml`
+3. **Configuration-driven**: Most behavior controlled via `moneytrailz.toml`
 4. **Dry run support**: Always test changes with `--dry-run` first
 
 ### Common Development Tasks
 
 When modifying trading logic:
 1. Start in `portfolio_manager.py` - this contains the main strategy implementation
-2. Test configuration changes in `thetagang.toml` with dry run mode
+2. Test configuration changes in `moneytrailz.toml` with dry run mode
 3. For new features, add configuration in `config.py` with Pydantic models
 4. IBKR API calls go through `ibkr.py` wrapper methods
 
@@ -123,7 +123,7 @@ The project uses ib_async which patches asyncio with nest_asyncio. When creating
 
 ### Configuration File
 
-The main configuration file is `thetagang.toml`. Key sections:
+The main configuration file is `moneytrailz.toml`. Key sections:
 - `account`: Account settings, margin usage
 - `orders`: Order routing, algorithms
 - `symbols`: List of symbols with individual configurations

@@ -18,12 +18,12 @@ from typing import Dict, List, Any, Set, Optional
 from unittest.mock import MagicMock, patch, AsyncMock
 
 # Import coordination components
-from thetagang.strategies.base import BaseStrategy, StrategyResult, StrategyContext
-from thetagang.strategies.enums import StrategySignal, StrategyType, TimeFrame
-from thetagang.execution import StrategyExecutionEngine
-from thetagang.strategies.implementations.factory import StrategyFactory
-from thetagang.portfolio_manager import PortfolioManager
-from thetagang.analysis import TechnicalAnalysisEngine
+from moneytrailz.strategies.base import BaseStrategy, StrategyResult, StrategyContext
+from moneytrailz.strategies.enums import StrategySignal, StrategyType, TimeFrame
+from moneytrailz.execution import StrategyExecutionEngine
+from moneytrailz.strategies.implementations.factory import StrategyFactory
+from moneytrailz.portfolio_manager import PortfolioManager
+from moneytrailz.analysis import TechnicalAnalysisEngine
 
 
 class MockStrategyA(BaseStrategy):

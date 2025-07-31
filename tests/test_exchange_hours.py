@@ -1,8 +1,8 @@
 from datetime import datetime, timezone
 from unittest.mock import patch
 
-from thetagang.config import ActionWhenClosedEnum, ExchangeHoursConfig
-from thetagang.exchange_hours import determine_action, waited_for_open
+from moneytrailz.config import ActionWhenClosedEnum, ExchangeHoursConfig
+from moneytrailz.exchange_hours import determine_action, waited_for_open
 
 
 def test_determine_action_continue_when_closed():
@@ -57,7 +57,7 @@ def test_determine_action_session_closed_wait():
     assert result == "wait"
 
 
-@patch("thetagang.exchange_hours.time.sleep")
+@patch("moneytrailz.exchange_hours.time.sleep")
 def test_waited_for_open_under_max(mock_sleep):
     config = ExchangeHoursConfig(
         exchange="XNYS",
@@ -72,7 +72,7 @@ def test_waited_for_open_under_max(mock_sleep):
     mock_sleep.assert_called_once()
 
 
-@patch("thetagang.exchange_hours.time.sleep")
+@patch("moneytrailz.exchange_hours.time.sleep")
 def test_waited_for_open_exceeds_max(mock_sleep):
     config = ExchangeHoursConfig(
         exchange="XNYS",
@@ -87,7 +87,7 @@ def test_waited_for_open_exceeds_max(mock_sleep):
     mock_sleep.assert_not_called()
 
 
-@patch("thetagang.exchange_hours.time.sleep")
+@patch("moneytrailz.exchange_hours.time.sleep")
 def test_waited_for_open_negative_difference(mock_sleep):
     config = ExchangeHoursConfig(
         exchange="XNYS",

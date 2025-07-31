@@ -152,10 +152,10 @@ config.get_all_required_indicators()                   # All indicators needed
 ### **📊 Multi-Strategy Configuration**
 
 ```python
-from thetagang.config import Config, load_config
+from moneytrailz.config import Config, load_config
 
 # Load enhanced configuration
-config = load_config("thetagang.toml")
+config = load_config("moneytrailz.toml")
 
 # Access strategy configurations
 enabled_strategies = config.get_enabled_strategies()
@@ -186,7 +186,7 @@ if config.is_backtesting_enabled():
     print(f"Max Drawdown: {backtest.risk.max_drawdown:.1%}")
     
     # Use with Phase 4 backtesting engine
-    from thetagang.backtesting import BacktestEngine, BacktestConfig as EngineConfig
+    from moneytrailz.backtesting import BacktestEngine, BacktestConfig as EngineConfig
     
     engine_config = EngineConfig(
         start_date=backtest.start_date,
@@ -204,7 +204,7 @@ if config.is_backtesting_enabled():
 indicators = config.indicators
 
 # Use with Phase 2 Technical Analysis
-from thetagang.analysis import TechnicalAnalysisEngine
+from moneytrailz.analysis import TechnicalAnalysisEngine
 
 engine = TechnicalAnalysisEngine()
 
@@ -224,7 +224,7 @@ engine.add_indicator("MACD",
 timeframes = config.timeframes
 
 # Use with Phase 3 Multi-Timeframe Engine
-from thetagang.timeframes import TimeFrameManager
+from moneytrailz.timeframes import TimeFrameManager
 
 manager = TimeFrameManager()
 
@@ -243,7 +243,7 @@ manager.set_timezone(sync_config.timezone)
 
 ```python
 # Integration with Phase 1 Strategy Framework
-from thetagang.strategies import StrategyRegistry
+from moneytrailz.strategies import StrategyRegistry
 
 registry = StrategyRegistry()
 
@@ -427,7 +427,7 @@ lazy_loading = true
 ## 🔧 **MIGRATION GUIDE**
 
 ### **From Phase 4 to Phase 5**
-1. **Update thetagang.toml**: Add new configuration sections
+1. **Update moneytrailz.toml**: Add new configuration sections
 2. **Enable Strategies**: Configure multi-strategy setup
 3. **Configure Backtesting**: Set up comprehensive backtesting
 4. **Update Code**: Use new configuration API methods

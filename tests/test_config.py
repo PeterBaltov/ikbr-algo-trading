@@ -1,6 +1,6 @@
 from polyfactory.factories.pydantic_factory import ModelFactory
 
-from thetagang.config import (
+from moneytrailz.config import (
     AccountConfig,
     Config,
     OptionChainsConfig,

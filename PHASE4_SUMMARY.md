@@ -40,11 +40,11 @@ thetagang/analytics/                 # ✅ Complete 4.2 Implementation
 
 ```python
 from datetime import datetime
-from thetagang.backtesting import (
+from moneytrailz.backtesting import (
     BacktestEngine, BacktestConfig, create_data_config, DataSource
 )
-from thetagang.analytics import PerformanceCalculator, ChartGenerator
-from thetagang.strategies import ExampleStrategy
+from moneytrailz.analytics import PerformanceCalculator, ChartGenerator
+from moneytrailz.strategies import ExampleStrategy
 
 # 1. Configure Data
 data_config = create_data_config(
@@ -89,7 +89,7 @@ print(f"Max Drawdown: {metrics.max_drawdown:.2%}")
 ### **📈 Advanced Analytics Examples**
 
 ```python
-from thetagang.analytics import (
+from moneytrailz.analytics import (
     RiskCalculator, AttributionAnalyzer, BenchmarkComparator
 )
 
@@ -117,7 +117,7 @@ print(f"Information Ratio: {comparison.information_ratio:.2f}")
 ### **💼 Portfolio Management & Optimization**
 
 ```python
-from thetagang.backtesting import (
+from moneytrailz.backtesting import (
     PortfolioManager, StrategyOptimizer, create_portfolio_config
 )
 
@@ -154,7 +154,7 @@ print(f"Best Sharpe: {optimization_result.best_score:.2f}")
 ### **📊 Professional Reporting**
 
 ```python
-from thetagang.backtesting import ReportGenerator, ReportConfig
+from moneytrailz.backtesting import ReportGenerator, ReportConfig
 
 # Generate Professional Reports
 report_config = ReportConfig(
@@ -176,7 +176,7 @@ print(f"Report generated: {report_path}")
 ### **🚀 Live Trading Deployment**
 
 ```python
-from thetagang.backtesting import LiveTradingAdapter, create_live_config
+from moneytrailz.backtesting import LiveTradingAdapter, create_live_config
 
 # Live Trading Bridge
 live_config = create_live_config(

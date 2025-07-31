@@ -3,7 +3,7 @@ ibc.log
 tws-installer.sh
 .idea/
 # local configuration
-thetagang.local.toml
+moneytrailz.local.toml
 
 # Ignore tws installer dir
 tws/

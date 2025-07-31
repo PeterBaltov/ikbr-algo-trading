@@ -169,7 +169,7 @@ Phase 6 represents the culmination of the ThetaGang algorithmic trading framewor
 
 ### **StrategyFactory Class**
 ```python
-from thetagang.strategies.implementations.factory import StrategyFactory
+from moneytrailz.strategies.implementations.factory import StrategyFactory
 
 # Create factory
 factory = StrategyFactory()
@@ -190,7 +190,7 @@ strategy = factory.create_strategy(
 
 ### **Configuration-Based Creation**
 ```python
-from thetagang.strategies.implementations.factory import create_strategy_from_config
+from moneytrailz.strategies.implementations.factory import create_strategy_from_config
 
 config = {
     'type': 'rsi_momentum',
@@ -215,7 +215,7 @@ strategy = create_strategy_from_config(config)
 
 ### **Position Sizing**
 ```python
-from thetagang.strategies.implementations.utils import PositionSizer
+from moneytrailz.strategies.implementations.utils import PositionSizer
 
 sizer = PositionSizer(max_position_size=0.10, risk_per_trade=0.02)
 
@@ -232,7 +232,7 @@ print(f"Risk level: {result.risk_level.value}")
 
 ### **Risk Management**
 ```python
-from thetagang.strategies.implementations.utils import RiskManager
+from moneytrailz.strategies.implementations.utils import RiskManager
 
 risk_mgr = RiskManager(max_portfolio_risk=0.20)
 
@@ -247,7 +247,7 @@ print(f"Portfolio VaR: ${risk_metrics.value_at_risk:.2f}")
 
 ### **Signal Filtering**
 ```python
-from thetagang.strategies.implementations.utils import SignalFilter
+from moneytrailz.strategies.implementations.utils import SignalFilter
 
 filter = SignalFilter(min_confidence=0.6)
 
@@ -265,7 +265,7 @@ consensus = filter.combine_signals(signals)
 
 ### **Performance Tracking**
 ```python
-from thetagang.strategies.implementations.utils import PerformanceTracker
+from moneytrailz.strategies.implementations.utils import PerformanceTracker
 
 tracker = PerformanceTracker()
 
@@ -284,7 +284,7 @@ print(f"Profit factor: {metrics.profit_factor:.2f}")
 
 ### **Strategy Discovery**
 ```python
-from thetagang.strategies.implementations import (
+from moneytrailz.strategies.implementations import (
     get_strategy_info,
     list_strategies_by_type,
     list_strategies_by_timeframe
@@ -346,10 +346,10 @@ rsi_overbought = 70.0
 
 ### **Pydantic Model Integration**
 ```python
-from thetagang.config import Config
+from moneytrailz.config import Config
 
 # Load configuration
-config = Config.from_file('thetagang.toml')
+config = Config.from_file('moneytrailz.toml')
 
 # Get strategy configuration
 wheel_config = config.get_strategy_config('enhanced_wheel')
@@ -430,7 +430,7 @@ enabled_strategies = config.get_enabled_strategies()
 ### **Basic Strategy Usage**
 ```python
 # 1. Create strategy factory
-from thetagang.strategies.implementations.factory import StrategyFactory
+from moneytrailz.strategies.implementations.factory import StrategyFactory
 
 factory = StrategyFactory()
 
@@ -457,7 +457,7 @@ print(f"Symbols: {wheel_strategy.symbols}")
 
 ### **Multi-Strategy Portfolio**
 ```python
-from thetagang.strategies.implementations.hybrid_strategies import StrategyOrchestrator
+from moneytrailz.strategies.implementations.hybrid_strategies import StrategyOrchestrator
 
 # Create orchestrator
 orchestrator = StrategyOrchestrator()
@@ -473,11 +473,11 @@ results = await orchestrator.orchestrate('AAPL', market_data)
 
 ### **Configuration-Driven Setup**
 ```python
-from thetagang.config import Config
-from thetagang.strategies.implementations.factory import create_strategy_from_config
+from moneytrailz.config import Config
+from moneytrailz.strategies.implementations.factory import create_strategy_from_config
 
 # Load configuration
-config = Config.from_file('thetagang.toml')
+config = Config.from_file('moneytrailz.toml')
 
 # Create strategies from configuration
 strategies = []
@@ -542,7 +542,7 @@ The architecture is **modular, extensible, and production-ready**, providing a s
 
 *For implementation details, see individual strategy files in `thetagang/strategies/implementations/`*
 *For testing and validation, run `python test_phase6.py`*
-*For configuration examples, see `thetagang.toml` Phase 5 sections* 
+*For configuration examples, see `moneytrailz.toml` Phase 5 sections* 
 
 # 🎉 **CONFIGURATION INTEGRATION ISSUES - COMPLETELY RESOLVED!**
 
@@ -596,7 +596,7 @@ The Configuration Integration test failure has been **completely resolved**! All
 ### **4. ✅ Missing Import Issues**
 **Fixed missing imports across all strategy files:**
 - `✅ Added Set import:` `from typing import ..., Set`
-- `✅ Added TimeFrame import:` `from thetagang.strategies.enums import ..., TimeFrame`
+- `✅ Added TimeFrame import:` `from moneytrailz.strategies.enums import ..., TimeFrame`
 
 ### **5. ✅ Syntax Errors**
 **Fixed empty method bodies and syntax issues:**

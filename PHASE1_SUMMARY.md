@@ -105,7 +105,7 @@ The framework is designed to integrate seamlessly with existing ThetaGang compon
 ### **Portfolio Manager Integration**
 ```python
 # Easy integration with existing portfolio manager
-from thetagang.strategies import get_registry, StrategyContext
+from moneytrailz.strategies import get_registry, StrategyContext
 
 # Get strategy registry
 registry = get_registry()
@@ -128,7 +128,7 @@ for strategy_name in registry.list_strategies():
 
 ### **Configuration Extension**
 ```toml
-# thetagang.toml - New strategies section
+# moneytrailz.toml - New strategies section
 [strategies]
   [strategies.example]
   enabled = true

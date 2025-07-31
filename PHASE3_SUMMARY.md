@@ -106,9 +106,9 @@ thetagang/execution/
 
 ### **Multi-Timeframe Strategy Execution**
 ```python
-from thetagang.timeframes import get_timeframe_manager, create_timeframe_config
-from thetagang.execution import StrategyExecutionEngine, create_execution_config
-from thetagang.strategies.enums import TimeFrame
+from moneytrailz.timeframes import get_timeframe_manager, create_timeframe_config
+from moneytrailz.execution import StrategyExecutionEngine, create_execution_config
+from moneytrailz.strategies.enums import TimeFrame
 
 # Setup multi-timeframe environment
 manager = get_timeframe_manager()
@@ -137,7 +137,7 @@ await engine.start()
 
 ### **Cross-Timeframe Data Synchronization**
 ```python
-from thetagang.timeframes import DataSynchronizer, create_sync_config, SyncMethod
+from moneytrailz.timeframes import DataSynchronizer, create_sync_config, SyncMethod
 
 # Prepare multi-timeframe data
 data_dict = {
@@ -165,8 +165,8 @@ print(f"Processing Time: {result.sync_duration_ms:.1f}ms")
 
 ### **Advanced Data Aggregation**
 ```python
-from thetagang.timeframes import DataAggregator, create_aggregation_config
-from thetagang.timeframes import AggregationMethod, AggregationScope
+from moneytrailz.timeframes import DataAggregator, create_aggregation_config
+from moneytrailz.timeframes import AggregationMethod, AggregationScope
 
 # Configure multiple aggregations
 configs = [
@@ -190,8 +190,8 @@ for name, result in results.items():
 
 ### **Sophisticated Execution Scheduling**
 ```python
-from thetagang.timeframes import ExecutionScheduler, create_schedule_config
-from thetagang.timeframes import ScheduleType, ExecutionPriority, create_execution_window
+from moneytrailz.timeframes import ExecutionScheduler, create_schedule_config
+from moneytrailz.timeframes import ScheduleType, ExecutionPriority, create_execution_window
 
 # Create execution scheduler
 scheduler = ExecutionScheduler(max_concurrent_total=15)
@@ -365,7 +365,7 @@ async def process_real_time_data(market_data_stream):
 
 ### **Configuration Extension**
 ```toml
-# thetagang.toml - Enhanced with multi-timeframe configuration
+# moneytrailz.toml - Enhanced with multi-timeframe configuration
 [timeframes]
   [timeframes.minute_1]
   enabled = true

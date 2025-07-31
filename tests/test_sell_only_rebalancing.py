@@ -1,7 +1,7 @@
 import pytest
 from ib_async import Stock
 
-from thetagang.portfolio_manager import PortfolioManager
+from moneytrailz.portfolio_manager import PortfolioManager
 
 
 @pytest.fixture
@@ -81,7 +81,7 @@ class TestSellOnlyRebalancing:
             for task in tasks:
                 await task
 
-        mocker.patch("thetagang.log.track_async", side_effect=mock_track_async)
+        mocker.patch("moneytrailz.log.track_async", side_effect=mock_track_async)
 
         # Call the method
         sell_actions_table, to_sell = await portfolio_manager.check_sell_only_positions(
@@ -138,7 +138,7 @@ class TestSellOnlyRebalancing:
             for task in tasks:
                 await task
 
-        mocker.patch("thetagang.log.track_async", side_effect=mock_track_async)
+        mocker.patch("moneytrailz.log.track_async", side_effect=mock_track_async)
 
         # Call the method
         sell_actions_table, to_sell = await portfolio_manager.check_sell_only_positions(
@@ -194,7 +194,7 @@ class TestSellOnlyRebalancing:
             for task in tasks:
                 await task
 
-        mocker.patch("thetagang.log.track_async", side_effect=mock_track_async)
+        mocker.patch("moneytrailz.log.track_async", side_effect=mock_track_async)
 
         # Call the method
         sell_actions_table, to_sell = await portfolio_manager.check_sell_only_positions(
@@ -252,7 +252,7 @@ class TestSellOnlyRebalancing:
             for task in tasks:
                 await task
 
-        mocker.patch("thetagang.log.track_async", side_effect=mock_track_async)
+        mocker.patch("moneytrailz.log.track_async", side_effect=mock_track_async)
 
         # Call the method
         sell_actions_table, to_sell = await portfolio_manager.check_sell_only_positions(
@@ -311,7 +311,7 @@ class TestSellOnlyRebalancing:
             for task in tasks:
                 await task
 
-        mocker.patch("thetagang.log.track_async", side_effect=mock_track_async)
+        mocker.patch("moneytrailz.log.track_async", side_effect=mock_track_async)
 
         # Call the method
         sell_actions_table, to_sell = await portfolio_manager.check_sell_only_positions(

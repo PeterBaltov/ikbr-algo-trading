@@ -340,8 +340,8 @@ docker stack deploy -c docker-compose.prod.yml thetagang-stack
 ### **Phase 3 Integration Plan**
 ```python
 # Integration will connect to actual ThetaGang system
-from thetagang.portfolio_manager import PortfolioManager
-from thetagang.strategies.registry import get_registry
+from moneytrailz.portfolio_manager import PortfolioManager
+from moneytrailz.strategies.registry import get_registry
 
 class ThetaGangIntegration:
     def __init__(self, portfolio_manager: PortfolioManager):

@@ -12,7 +12,7 @@ from tests.test_config import (
     TargetConfigFactory,
     TargetConfigPutsFactory,
 )
-from thetagang.util import (
+from moneytrailz.util import (
     calculate_net_short_positions,
     position_pnl,
     weighted_avg_long_strike,

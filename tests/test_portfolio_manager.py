@@ -1,7 +1,7 @@
 import pytest
 from ib_async import IB, Stock, Ticker
 
-from thetagang.portfolio_manager import PortfolioManager
+from moneytrailz.portfolio_manager import PortfolioManager
 
 
 @pytest.fixture
@@ -210,7 +210,7 @@ class TestPortfolioManager:
 
         # Mock get_close_price
         mocker.patch(
-            "thetagang.portfolio_manager.PortfolioManager.get_close_price",
+            "moneytrailz.portfolio_manager.PortfolioManager.get_close_price",
             return_value=149.0,
         )
 
@@ -219,7 +219,7 @@ class TestPortfolioManager:
             for task in tasks:
                 await task
 
-        mocker.patch("thetagang.log.track_async", side_effect=mock_track_async)
+        mocker.patch("moneytrailz.log.track_async", side_effect=mock_track_async)
 
         # Call the method
         (
@@ -298,7 +298,7 @@ class TestPortfolioManager:
             for task in tasks:
                 await task
 
-        mocker.patch("thetagang.log.track_async", side_effect=mock_track_async)
+        mocker.patch("moneytrailz.log.track_async", side_effect=mock_track_async)
 
         # Call the method
         buy_actions_table, to_buy = await portfolio_manager.check_buy_only_positions(
@@ -338,7 +338,7 @@ class TestPortfolioManager:
         mock_ticker.bid = 149.50
         mock_ticker.ask = 150.50
         mocker.patch(
-            "thetagang.portfolio_manager.midpoint_or_market_price", return_value=150.0
+            "moneytrailz.portfolio_manager.midpoint_or_market_price", return_value=150.0
         )
 
         portfolio_manager.ibkr.get_ticker_for_contract = mocker.AsyncMock(
@@ -347,16 +347,16 @@ class TestPortfolioManager:
 
         # Mock Stock class
         mock_stock = mocker.Mock(spec=Stock)
-        mocker.patch("thetagang.portfolio_manager.Stock", return_value=mock_stock)
+        mocker.patch("moneytrailz.portfolio_manager.Stock", return_value=mock_stock)
 
         # Mock LimitOrder class
-        mock_limit_order = mocker.patch("thetagang.portfolio_manager.LimitOrder")
+        mock_limit_order = mocker.patch("moneytrailz.portfolio_manager.LimitOrder")
         mock_order = mocker.Mock()
         mock_limit_order.return_value = mock_order
 
         # Mock log.notice and log.error
-        mocker.patch("thetagang.log.notice")
-        mocker.patch("thetagang.log.error")
+        mocker.patch("moneytrailz.log.notice")
+        mocker.patch("moneytrailz.log.error")
 
         # Mock enqueue_order (returns None)
         portfolio_manager.enqueue_order = mocker.Mock()
@@ -436,7 +436,7 @@ class TestPortfolioManager:
             for task in tasks:
                 await task
 
-        mocker.patch("thetagang.log.track_async", side_effect=mock_track_async)
+        mocker.patch("moneytrailz.log.track_async", side_effect=mock_track_async)
 
         # Call the method
         buy_actions_table, to_buy = await portfolio_manager.check_buy_only_positions(
@@ -531,7 +531,7 @@ class TestPortfolioManager:
             for task in tasks:
                 await task
 
-        mocker.patch("thetagang.log.track_async", side_effect=mock_track_async)
+        mocker.patch("moneytrailz.log.track_async", side_effect=mock_track_async)
 
         # Call the method
         buy_actions_table, to_buy = await portfolio_manager.check_buy_only_positions(
@@ -583,7 +583,7 @@ class TestPortfolioManager:
             for task in tasks:
                 await task
 
-        mocker.patch("thetagang.log.track_async", side_effect=mock_track_async)
+        mocker.patch("moneytrailz.log.track_async", side_effect=mock_track_async)
 
         # Call the method
         buy_actions_table, to_buy = await portfolio_manager.check_buy_only_positions(
@@ -637,7 +637,7 @@ class TestPortfolioManager:
             for task in tasks:
                 await task
 
-        mocker.patch("thetagang.log.track_async", side_effect=mock_track_async)
+        mocker.patch("moneytrailz.log.track_async", side_effect=mock_track_async)
 
         # Call the method
         buy_actions_table, to_buy = await portfolio_manager.check_buy_only_positions(
@@ -694,7 +694,7 @@ class TestPortfolioManager:
             for task in tasks:
                 await task
 
-        mocker.patch("thetagang.log.track_async", side_effect=mock_track_async)
+        mocker.patch("moneytrailz.log.track_async", side_effect=mock_track_async)
 
         # Call the method
         buy_actions_table, to_buy = await portfolio_manager.check_buy_only_positions(

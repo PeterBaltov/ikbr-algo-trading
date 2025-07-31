@@ -235,7 +235,7 @@ thetagang-api/
 │   │   ├── connection.py    # TimescaleDB setup
 │   │   └── schemas.py       # Database schemas
 │   └── integrations/
-│       └── thetagang.py     # Integration layer
+│       └── moneytrailz.py     # Integration layer
 ```
 
 #### **1.3 Database Schema Design**
@@ -389,9 +389,9 @@ export function useRealtimePortfolio() {
 
 #### **3.2 ThetaGang Integration Layer**
 ```python
-# integrations/thetagang.py
-from thetagang.portfolio_manager import PortfolioManager
-from thetagang.strategies.registry import get_registry
+# integrations/moneytrailz.py
+from moneytrailz.portfolio_manager import PortfolioManager
+from moneytrailz.strategies.registry import get_registry
 
 class DashboardIntegration:
     def __init__(self, portfolio_manager: PortfolioManager):

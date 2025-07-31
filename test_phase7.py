@@ -22,12 +22,12 @@ def test_phase7_imports():
     
     try:
         # Test enhanced portfolio manager imports
-        from thetagang.portfolio_manager import PortfolioManager
+        from moneytrailz.portfolio_manager import PortfolioManager
         print("✅ Enhanced PortfolioManager imported successfully")
         
         # Test that new strategy framework imports are available
-        from thetagang.strategies.base import BaseStrategy, StrategyResult
-        from thetagang.strategies.implementations.factory import StrategyFactory
+        from moneytrailz.strategies.base import BaseStrategy, StrategyResult
+        from moneytrailz.strategies.implementations.factory import StrategyFactory
         print("✅ Strategy framework imports successful")
         
         print("✅ Phase 7 integration imports - SUCCESS")
@@ -43,8 +43,8 @@ def test_portfolio_manager_strategy_framework_integration():
     print("\n🏗️ Testing Portfolio Manager Strategy Framework Integration...")
     
     try:
-        from thetagang.portfolio_manager import PortfolioManager
-        from thetagang.config import Config
+        from moneytrailz.portfolio_manager import PortfolioManager
+        from moneytrailz.config import Config
         from unittest.mock import MagicMock
         
         # Create mock config
@@ -98,7 +98,7 @@ def test_execution_mode_detection():
     print("\n🎯 Testing Execution Mode Detection...")
     
     try:
-        from thetagang.portfolio_manager import PortfolioManager
+        from moneytrailz.portfolio_manager import PortfolioManager
         from unittest.mock import MagicMock
         
         # Test different configuration scenarios
@@ -170,7 +170,7 @@ def test_resource_allocation():
     print("\n💰 Testing Resource Allocation...")
     
     try:
-        from thetagang.portfolio_manager import PortfolioManager
+        from moneytrailz.portfolio_manager import PortfolioManager
         from unittest.mock import MagicMock
         
         # Create mock config with multiple strategies
@@ -234,7 +234,7 @@ def test_backward_compatibility():
     print("\n🔄 Testing Backward Compatibility...")
     
     try:
-        from thetagang.portfolio_manager import PortfolioManager
+        from moneytrailz.portfolio_manager import PortfolioManager
         from unittest.mock import MagicMock
         
         # Test legacy configuration (stocks only)
@@ -285,7 +285,7 @@ def test_conflict_detection():
     print("\n⚠️  Testing Conflict Detection...")
     
     try:
-        from thetagang.portfolio_manager import PortfolioManager
+        from moneytrailz.portfolio_manager import PortfolioManager
         from unittest.mock import MagicMock
         
         # Create config with both legacy and framework strategies for same symbol
@@ -334,7 +334,7 @@ def test_strategy_coordination():
     print("\n🎼 Testing Multi-Strategy Coordination...")
     
     try:
-        from thetagang.portfolio_manager import PortfolioManager
+        from moneytrailz.portfolio_manager import PortfolioManager
         from unittest.mock import MagicMock
         
         # Create config with multiple strategies
@@ -400,9 +400,9 @@ def test_phase7_architecture():
     
     try:
         # Test integration with previous phases
-        from thetagang.strategies.base import BaseStrategy
-        from thetagang.strategies.implementations.factory import StrategyFactory
-        from thetagang.portfolio_manager import PortfolioManager
+        from moneytrailz.strategies.base import BaseStrategy
+        from moneytrailz.strategies.implementations.factory import StrategyFactory
+        from moneytrailz.portfolio_manager import PortfolioManager
         
         print("  ✅ Phase 1-6 integration imports successful")
         

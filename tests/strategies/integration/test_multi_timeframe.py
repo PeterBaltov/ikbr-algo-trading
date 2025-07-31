@@ -18,13 +18,13 @@ from typing import Dict, List, Any, Set
 from unittest.mock import MagicMock, patch
 
 # Import multi-timeframe components
-from thetagang.timeframes import (
+from moneytrailz.timeframes import (
     TimeFrameManager, DataSynchronizer, ExecutionScheduler, DataAggregator
 )
-from thetagang.execution import StrategyExecutionEngine
-from thetagang.strategies.base import BaseStrategy, StrategyResult, StrategyContext
-from thetagang.strategies.enums import StrategySignal, StrategyType, TimeFrame
-from thetagang.analysis import TechnicalAnalysisEngine
+from moneytrailz.execution import StrategyExecutionEngine
+from moneytrailz.strategies.base import BaseStrategy, StrategyResult, StrategyContext
+from moneytrailz.strategies.enums import StrategySignal, StrategyType, TimeFrame
+from moneytrailz.analysis import TechnicalAnalysisEngine
 
 
 class MultiTimeframeTestStrategy(BaseStrategy):

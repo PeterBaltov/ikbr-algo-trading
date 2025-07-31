@@ -154,10 +154,10 @@
 python test_phase8_simple.py
 
 # 2. Configure for live trading
-# Edit thetagang.toml for production settings
+# Edit moneytrailz.toml for production settings
 
 # 3. Start live trading
-python -m thetagang.main
+python -m moneytrailz.main
 
 # 4. Monitor system performance
 # Check logs and validate trading behavior

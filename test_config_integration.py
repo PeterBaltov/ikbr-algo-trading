@@ -17,7 +17,7 @@ def test_config_loading():
     
     try:
         # Load actual ThetaGang config
-        config_path = Path("thetagang.toml")
+        config_path = Path("moneytrailz.toml")
         if config_path.exists():
             with open(config_path, 'r') as f:
                 config_data = toml.load(f)
@@ -26,7 +26,7 @@ def test_config_loading():
             print(f"📊 Account: {config_data.get('account', {}).get('number', 'Not set')}")
             print(f"🎯 Symbols configured: {list(config_data.get('symbols', {}).keys())}")
         else:
-            print("⚠️  thetagang.toml not found, using mock config")
+            print("⚠️  moneytrailz.toml not found, using mock config")
             config_data = {
                 "account": {"number": "DUA123456"},
                 "symbols": {"SPY": {"weight": 0.5}, "QQQ": {"weight": 0.5}}
@@ -43,7 +43,7 @@ def test_strategy_config_compatibility():
     print("\n⚙️ TESTING STRATEGY CONFIG COMPATIBILITY")
     print("=" * 50)
     
-    # Example of how strategies could be configured in thetagang.toml
+    # Example of how strategies could be configured in moneytrailz.toml
     strategy_config_example = {
         "strategies": {
             "momentum_etf": {
@@ -81,9 +81,9 @@ async def test_portfolio_manager_integration():
     
     try:
         # Import actual ThetaGang components
-        from thetagang.config import Config, normalize_config
-        from thetagang.strategies import get_registry, StrategyContext
-        from thetagang.strategies.implementations.example_strategy import ExampleStrategy
+        from moneytrailz.config import Config, normalize_config
+        from moneytrailz.strategies import get_registry, StrategyContext
+        from moneytrailz.strategies.implementations.example_strategy import ExampleStrategy
         
         print("✅ Successfully imported ThetaGang and strategy framework")
         
@@ -113,7 +113,7 @@ async def test_portfolio_manager_integration():
         print("  • Strategies run alongside existing wheel logic")
         print("  • Shares same IBKR connection and order management")
         print("  • Uses same risk management and position sizing")
-        print("  • Configurable via thetagang.toml")
+        print("  • Configurable via moneytrailz.toml")
         
         return True
         
@@ -131,20 +131,20 @@ def test_backwards_compatibility():
     
     try:
         # Test that existing imports still work
-        from thetagang.config import Config
-        from thetagang.portfolio_manager import PortfolioManager
-        from thetagang.options import option_dte
-        from thetagang.trades import Trades
+        from moneytrailz.config import Config
+        from moneytrailz.portfolio_manager import PortfolioManager
+        from moneytrailz.options import option_dte
+        from moneytrailz.trades import Trades
         
         print("✅ All existing ThetaGang imports work")
         
         # Test that we can import strategy framework alongside
-        from thetagang.strategies import BaseStrategy, get_registry
+        from moneytrailz.strategies import BaseStrategy, get_registry
         
         print("✅ Strategy framework imports work alongside existing code")
         
         # Test that enums don't conflict
-        from thetagang.strategies import TimeFrame as StrategyTimeFrame
+        from moneytrailz.strategies import TimeFrame as StrategyTimeFrame
         
         print("✅ New TimeFrame enum works without conflicts")
         print(f"  Daily timeframe: {StrategyTimeFrame.DAY_1.value} = {StrategyTimeFrame.DAY_1.seconds}s")

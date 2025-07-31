@@ -4,7 +4,7 @@ import pytest
 from ib_async import IB, Contract, Order, OrderStatus, Stock, Ticker, Trade
 
 from thetagang import log
-from thetagang.ibkr import IBKR, RequiredFieldValidationError, TickerField
+from moneytrailz.ibkr import IBKR, RequiredFieldValidationError, TickerField
 
 # Mark all tests in this module as asyncio
 pytestmark = pytest.mark.asyncio

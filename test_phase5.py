@@ -21,7 +21,7 @@ def test_phase5_imports():
     
     try:
         # Import new configuration models
-        from thetagang.config import (
+        from moneytrailz.config import (
             StrategyConfig,
             BacktestConfig, BacktestExecutionConfig, BacktestRiskConfig,
             BacktestDataConfig, BacktestAnalyticsConfig, BacktestReportingConfig,
@@ -44,7 +44,7 @@ def test_strategy_config():
     print("\n📊 Testing Strategy Configuration...")
     
     try:
-        from thetagang.config import StrategyConfig
+        from moneytrailz.config import StrategyConfig
         
         # Test wheel strategy config
         wheel_config = StrategyConfig(
@@ -95,7 +95,7 @@ def test_backtesting_config():
     print("\n🔙 Testing Backtesting Configuration...")
     
     try:
-        from thetagang.config import (
+        from moneytrailz.config import (
             BacktestConfig, BacktestExecutionConfig, BacktestRiskConfig,
             BacktestDataConfig, BacktestAnalyticsConfig, BacktestReportingConfig
         )
@@ -158,7 +158,7 @@ def test_indicator_config():
     print("\n📈 Testing Indicator Configuration...")
     
     try:
-        from thetagang.config import (
+        from moneytrailz.config import (
             IndicatorConfig, TrendIndicatorConfig, MomentumIndicatorConfig,
             VolatilityIndicatorConfig, VolumeIndicatorConfig
         )
@@ -214,7 +214,7 @@ def test_timeframe_config():
     print("\n⏰ Testing Timeframe Configuration...")
     
     try:
-        from thetagang.config import (
+        from moneytrailz.config import (
             TimeframeConfig, TimeframeSynchronizationConfig, TimeframePerformanceConfig
         )
         
@@ -263,7 +263,7 @@ def test_enhanced_config_integration():
     print("\n🔗 Testing Enhanced Configuration Integration...")
     
     try:
-        from thetagang.config import Config, StrategyConfig, BacktestConfig, IndicatorConfig, TimeframeConfig
+        from moneytrailz.config import Config, StrategyConfig, BacktestConfig, IndicatorConfig, TimeframeConfig
         
         # Create mock configuration data
         config_data = {
@@ -361,7 +361,7 @@ def test_config_validation():
     print("\n⚙️ Testing Configuration Validation...")
     
     try:
-        from thetagang.config import StrategyConfig, BacktestConfig
+        from moneytrailz.config import StrategyConfig, BacktestConfig
         from pydantic import ValidationError
         
         # Test invalid strategy type
@@ -378,7 +378,7 @@ def test_config_validation():
         
         # Test invalid commission range
         try:
-            from thetagang.config import BacktestExecutionConfig
+            from moneytrailz.config import BacktestExecutionConfig
             invalid_execution = BacktestExecutionConfig(
                 commission=1.5  # Should be <= 0.1
             )
@@ -406,11 +406,11 @@ def test_config_validation():
 
 def test_phase5_integration_with_existing():
     """Test Phase 5 integration with existing ThetaGang configuration"""
-    print("\n🔗 Testing Phase 5 Integration with Existing ThetaGang...")
+    print("\n🔗 Testing Phase 5 Integration with Existing moneytrailz...")
     
     try:
                  # Try to use existing ThetaGang functionality
-         from thetagang.config import Config
+         from moneytrailz.config import Config
          
          print("  📋 Testing basic config functionality")
          

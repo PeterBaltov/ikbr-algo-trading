@@ -185,7 +185,7 @@ class TestBuyOnlyPercentageThreshold:
             for task in tasks:
                 await task
 
-        mocker.patch("thetagang.log.track_async", side_effect=mock_track_async)
+        mocker.patch("moneytrailz.log.track_async", side_effect=mock_track_async)
 
         # Call the method
         buy_actions_table, to_buy = await portfolio_manager.check_buy_only_positions(
@@ -239,7 +239,7 @@ class TestBuyOnlyPercentageThreshold:
             for task in tasks:
                 await task
 
-        mocker.patch("thetagang.log.track_async", side_effect=mock_track_async)
+        mocker.patch("moneytrailz.log.track_async", side_effect=mock_track_async)
 
         # Call the method
         buy_actions_table, to_buy = await portfolio_manager.check_buy_only_positions(

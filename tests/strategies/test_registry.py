@@ -15,12 +15,12 @@ from typing import Dict, List, Any, Set
 from unittest.mock import MagicMock, patch
 
 # Import registry components
-from thetagang.strategies.registry import (
+from moneytrailz.strategies.registry import (
     StrategyRegistry, StrategyLoader, StrategyValidator, get_registry
 )
-from thetagang.strategies.base import BaseStrategy, StrategyResult, StrategyContext
-from thetagang.strategies.enums import StrategySignal, StrategyType, TimeFrame, StrategyStatus
-from thetagang.strategies.exceptions import StrategyRegistrationError, StrategyNotFoundError
+from moneytrailz.strategies.base import BaseStrategy, StrategyResult, StrategyContext
+from moneytrailz.strategies.enums import StrategySignal, StrategyType, TimeFrame, StrategyStatus
+from moneytrailz.strategies.exceptions import StrategyRegistrationError, StrategyNotFoundError
 
 
 class MockStrategy(BaseStrategy):

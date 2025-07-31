@@ -70,7 +70,7 @@ services:
   pgadmin:
     image: dpage/pgadmin4:latest
     environment:
-      - PGADMIN_DEFAULT_EMAIL=admin@thetagang.com
+      - PGADMIN_DEFAULT_EMAIL=admin@moneytrailz.com
       - PGADMIN_DEFAULT_PASSWORD=admin
     ports:
       - "5050:80"

@@ -42,7 +42,7 @@ def check_thetagang_installation():
         print(f"📊 ThetaGang: Installed")
         
         # Try to run thetagang --help
-        result = subprocess.run([sys.executable, "-m", "thetagang.entry", "--help"], 
+        result = subprocess.run([sys.executable, "-m", "moneytrailz.entry", "--help"], 
                               capture_output=True, text=True, timeout=10)
         if result.returncode == 0:
             print("✅ ThetaGang command - GOOD")
@@ -105,7 +105,7 @@ def main():
         print("🚀 Environment ready for ThetaGang development!")
         print("\nQuick start:")
         print("  source activate_env.sh")
-        print("  thetagang -c thetagang.toml --dry-run")
+        print("  thetagang -c moneytrailz.toml --dry-run")
     else:
         print("❌ Some checks failed")
         print("Fix the issues above and run again")

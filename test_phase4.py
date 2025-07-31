@@ -20,23 +20,23 @@ def test_phase4_imports():
     
     try:
         # Data management
-        from thetagang.backtesting import DataManager, DataConfig, DataSource, DataValidator, create_data_config
+        from moneytrailz.backtesting import DataManager, DataConfig, DataSource, DataValidator, create_data_config
         print("✅ DataManager components import - SUCCESS")
         
         # Core engine
-        from thetagang.backtesting import BacktestEngine, BacktestConfig, BacktestResult, BacktestState
+        from moneytrailz.backtesting import BacktestEngine, BacktestConfig, BacktestResult, BacktestState
         print("✅ BacktestEngine components import - SUCCESS")
         
         # Trade execution
-        from thetagang.backtesting import TradeSimulator, ExecutionConfig, SlippageModel, MarketImpactModel
+        from moneytrailz.backtesting import TradeSimulator, ExecutionConfig, SlippageModel, MarketImpactModel
         print("✅ TradeSimulator components import - SUCCESS")
         
         # Strategy API
-        from thetagang.backtesting import BacktestStrategy, StrategyLifecycle, BacktestContext
+        from moneytrailz.backtesting import BacktestStrategy, StrategyLifecycle, BacktestContext
         print("✅ BacktestStrategy components import - SUCCESS")
         
         # Performance analytics (now in analytics package)
-        from thetagang.analytics import PerformanceCalculator, PerformanceMetrics, RiskMetrics
+        from moneytrailz.analytics import PerformanceCalculator, PerformanceMetrics, RiskMetrics
         print("✅ PerformanceCalculator components import - SUCCESS")
         
         return True
@@ -51,8 +51,8 @@ def test_data_manager():
     print("\n📊 Testing DataManager...")
     
     try:
-        from thetagang.backtesting import DataManager, create_data_config, DataSource
-        from thetagang.strategies.enums import TimeFrame
+        from moneytrailz.backtesting import DataManager, create_data_config, DataSource
+        from moneytrailz.strategies.enums import TimeFrame
         
         # Create sample data config
         config = create_data_config(
@@ -91,9 +91,9 @@ def test_trade_simulator():
     print("\n💹 Testing TradeSimulator...")
     
     try:
-        from thetagang.backtesting import TradeSimulator, ExecutionConfig, SlippageModel, MarketImpactModel
-        from thetagang.backtesting.simulator import Order, OrderType, OrderStatus
-        from thetagang.strategies.enums import OrderSide
+        from moneytrailz.backtesting import TradeSimulator, ExecutionConfig, SlippageModel, MarketImpactModel
+        from moneytrailz.backtesting.simulator import Order, OrderType, OrderStatus
+        from moneytrailz.strategies.enums import OrderSide
         
         # Create execution config
         config = ExecutionConfig(
@@ -144,7 +144,7 @@ def test_performance_calculator():
     print("\n📈 Testing PerformanceCalculator...")
     
     try:
-        from thetagang.analytics import PerformanceCalculator
+        from moneytrailz.analytics import PerformanceCalculator
         
         # Create calculator
         calculator = PerformanceCalculator(risk_free_rate=0.02)
@@ -189,9 +189,9 @@ def test_strategy_api():
     print("\n🧠 Testing BacktestStrategy API...")
     
     try:
-        from thetagang.backtesting import BacktestStrategy, BacktestContext, StrategyLifecycle
-        from thetagang.strategies import StrategyResult
-        from thetagang.strategies.enums import StrategySignal, TimeFrame
+        from moneytrailz.backtesting import BacktestStrategy, BacktestContext, StrategyLifecycle
+        from moneytrailz.strategies import StrategyResult
+        from moneytrailz.strategies.enums import StrategySignal, TimeFrame
         
         # Create test strategy class
         class TestBacktestStrategy(BacktestStrategy):
@@ -215,7 +215,7 @@ def test_strategy_api():
                 )
         
         # Create strategy instance with required parameters
-        from thetagang.strategies.enums import StrategyType
+        from moneytrailz.strategies.enums import StrategyType
         strategy = TestBacktestStrategy(
             name="TestStrategy",
             strategy_type=StrategyType.STOCKS,
@@ -253,13 +253,13 @@ def test_integration():
     print("\n🔗 Testing Phase 4 Integration...")
     
     try:
-        from thetagang.backtesting import (
+        from moneytrailz.backtesting import (
             DataManager, create_data_config, DataSource,
             TradeSimulator, ExecutionConfig,
             PerformanceCalculator,
             BacktestConfig, BacktestState
         )
-        from thetagang.strategies.enums import TimeFrame
+        from moneytrailz.strategies.enums import TimeFrame
         
         # Test data config creation
         data_config = create_data_config(

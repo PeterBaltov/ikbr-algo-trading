@@ -17,8 +17,8 @@ def demo_strategy_registration():
     print("=" * 50)
     
     # Import the new framework
-    from thetagang.strategies import get_registry, StrategyType, TimeFrame
-    from thetagang.strategies.implementations.example_strategy import ExampleStrategy
+    from moneytrailz.strategies import get_registry, StrategyType, TimeFrame
+    from moneytrailz.strategies.implementations.example_strategy import ExampleStrategy
     
     # Get the global registry
     registry = get_registry()
@@ -85,7 +85,7 @@ async def demo_strategy_execution(registry, configs):
     print("\n🚀 STRATEGY EXECUTION DEMO")
     print("=" * 50)
     
-    from thetagang.strategies import StrategyContext, TimeFrame
+    from moneytrailz.strategies import StrategyContext, TimeFrame
     
     # Create sample market data for different symbols
     symbols_data = {}
@@ -215,7 +215,7 @@ def demo_future_integration():
 async def execute_strategies(self, account_summary, portfolio_positions):
     """Execute registered strategies alongside existing wheel strategy"""
     
-    from thetagang.strategies import get_registry, StrategyContext
+    from moneytrailz.strategies import get_registry, StrategyContext
     
     # Get strategy registry
     registry = get_registry()
@@ -250,7 +250,7 @@ async def execute_strategies(self, account_summary, portfolio_positions):
                     # Process strategy signal (create orders, etc.)
                     await self.process_strategy_signal(result)
 
-# In thetagang.toml - New strategies section
+# In moneytrailz.toml - New strategies section
 [strategies]
   [strategies.conservative_momentum]
   enabled = true

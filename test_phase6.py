@@ -27,7 +27,7 @@ def test_phase6_imports():
     
     try:
         # Test implementations package import
-        from thetagang.strategies.implementations import (
+        from moneytrailz.strategies.implementations import (
             get_strategy_info,
             list_strategies_by_type,
             list_strategies_by_timeframe
@@ -35,13 +35,13 @@ def test_phase6_imports():
         print("✅ Implementations package functions imported successfully")
         
         # Test utility imports
-        from thetagang.strategies.implementations.utils import (
+        from moneytrailz.strategies.implementations.utils import (
             PositionSizer, RiskManager, SignalFilter, PerformanceTracker, StrategyUtils
         )
         print("✅ Strategy utilities imported successfully")
         
         # Test factory imports
-        from thetagang.strategies.implementations.factory import (
+        from moneytrailz.strategies.implementations.factory import (
             StrategyFactory, create_strategy_from_config
         )
         print("✅ Strategy factory imported successfully")
@@ -59,7 +59,7 @@ def test_strategy_factory():
     print("\n🏭 Testing Strategy Factory...")
     
     try:
-        from thetagang.strategies.implementations.factory import StrategyFactory
+        from moneytrailz.strategies.implementations.factory import StrategyFactory
         
         # Create factory instance
         factory = StrategyFactory()
@@ -107,7 +107,7 @@ def test_strategy_utilities():
     print("\n🛠️ Testing Strategy Utilities...")
     
     try:
-        from thetagang.strategies.implementations.utils import (
+        from moneytrailz.strategies.implementations.utils import (
             PositionSizer, RiskManager, SignalFilter, PerformanceTracker, StrategyUtils
         )
         
@@ -206,7 +206,7 @@ def test_strategy_info_system():
     print("\n📋 Testing Strategy Information System...")
     
     try:
-        from thetagang.strategies.implementations import (
+        from moneytrailz.strategies.implementations import (
             get_strategy_info,
             list_strategies_by_type,
             list_strategies_by_timeframe
@@ -253,7 +253,7 @@ def test_configuration_integration():
     print("\n⚙️ Testing Configuration Integration...")
     
     try:
-        from thetagang.strategies.implementations.factory import create_strategy_from_config
+        from moneytrailz.strategies.implementations.factory import create_strategy_from_config
         
         # Test strategy creation from config
         strategy_config = {
@@ -413,7 +413,7 @@ def test_phase6_architecture():
         
         for category, strategies in categories.items():
             try:
-                module_path = f"thetagang.strategies.implementations.{category}"
+                module_path = f"moneytrailz.strategies.implementations.{category}"
                 module = __import__(module_path, fromlist=strategies)
                 
                 imported_strategies = 0
@@ -434,7 +434,7 @@ def test_phase6_architecture():
         
         # Test utility organization
         print("  🛠️ Testing utility organization...")
-        from thetagang.strategies.implementations.utils import (
+        from moneytrailz.strategies.implementations.utils import (
             PositionSizer, RiskManager, SignalFilter, PerformanceTracker
         )
         
@@ -443,7 +443,7 @@ def test_phase6_architecture():
         
         # Test factory pattern
         print("  🏭 Testing factory pattern...")
-        from thetagang.strategies.implementations.factory import StrategyFactory
+        from moneytrailz.strategies.implementations.factory import StrategyFactory
         
         factory = StrategyFactory()
         available_count = len(factory.get_available_strategies())

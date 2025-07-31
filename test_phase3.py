@@ -20,27 +20,27 @@ def test_phase3_imports():
     
     try:
         # Timeframe management
-        from thetagang.timeframes import TimeFrameManager, TimeFrameConfig, TimeFrameState
+        from moneytrailz.timeframes import TimeFrameManager, TimeFrameConfig, TimeFrameState
         print("✅ TimeFrameManager components import - SUCCESS")
         
         # Data synchronization
-        from thetagang.timeframes import DataSynchronizer, SyncResult, SyncStatus
+        from moneytrailz.timeframes import DataSynchronizer, SyncResult, SyncStatus
         print("✅ DataSynchronizer components import - SUCCESS")
         
         # Execution scheduling
-        from thetagang.timeframes import ExecutionScheduler, ScheduleConfig, ExecutionWindow
+        from moneytrailz.timeframes import ExecutionScheduler, ScheduleConfig, ExecutionWindow
         print("✅ ExecutionScheduler components import - SUCCESS")
         
         # Data aggregation
-        from thetagang.timeframes import DataAggregator, AggregationResult, AggregationMethod
+        from moneytrailz.timeframes import DataAggregator, AggregationResult, AggregationMethod
         print("✅ DataAggregator components import - SUCCESS")
         
         # Execution engine
-        from thetagang.execution import StrategyExecutionEngine, ExecutionConfig, ExecutionState
+        from moneytrailz.execution import StrategyExecutionEngine, ExecutionConfig, ExecutionState
         print("✅ StrategyExecutionEngine components import - SUCCESS")
         
         # Pipeline and coordination
-        from thetagang.execution import DataPipeline, StrategyCoordinator
+        from moneytrailz.execution import DataPipeline, StrategyCoordinator
         print("✅ Pipeline and Coordinator components import - SUCCESS")
         
         return True
@@ -55,8 +55,8 @@ def test_timeframe_manager():
     print("\n📊 Testing TimeFrameManager...")
     
     try:
-        from thetagang.timeframes import TimeFrameManager, create_timeframe_config
-        from thetagang.strategies.enums import TimeFrame
+        from moneytrailz.timeframes import TimeFrameManager, create_timeframe_config
+        from moneytrailz.strategies.enums import TimeFrame
         
         # Create manager
         manager = TimeFrameManager()
@@ -111,8 +111,8 @@ def test_data_synchronizer():
     print("\n🔗 Testing DataSynchronizer...")
     
     try:
-        from thetagang.timeframes import DataSynchronizer, create_sync_config, SyncMethod
-        from thetagang.strategies.enums import TimeFrame
+        from moneytrailz.timeframes import DataSynchronizer, create_sync_config, SyncMethod
+        from moneytrailz.strategies.enums import TimeFrame
         
         # Create sample data for different timeframes
         dates_1m = pd.date_range('2024-01-01 09:30:00', periods=100, freq='1min')
@@ -179,8 +179,8 @@ def test_data_aggregator():
     print("\n📈 Testing DataAggregator...")
     
     try:
-        from thetagang.timeframes import DataAggregator, create_aggregation_config, AggregationMethod, AggregationScope
-        from thetagang.strategies.enums import TimeFrame
+        from moneytrailz.timeframes import DataAggregator, create_aggregation_config, AggregationMethod, AggregationScope
+        from moneytrailz.strategies.enums import TimeFrame
         
         # Create sample data
         symbols = ["AAPL", "GOOGL", "MSFT"]
@@ -247,8 +247,8 @@ async def test_execution_scheduler():
     print("\n⏰ Testing ExecutionScheduler...")
     
     try:
-        from thetagang.timeframes import ExecutionScheduler, create_schedule_config, ScheduleType, ExecutionPriority
-        from thetagang.strategies.enums import TimeFrame
+        from moneytrailz.timeframes import ExecutionScheduler, create_schedule_config, ScheduleType, ExecutionPriority
+        from moneytrailz.strategies.enums import TimeFrame
         
         # Create scheduler
         scheduler = ExecutionScheduler()
@@ -301,7 +301,7 @@ async def test_execution_engine():
     print("\n🚀 Testing StrategyExecutionEngine...")
     
     try:
-        from thetagang.execution import StrategyExecutionEngine, create_execution_config, ExecutionMode
+        from moneytrailz.execution import StrategyExecutionEngine, create_execution_config, ExecutionMode
         
         # Create execution configuration
         config = create_execution_config(
@@ -340,9 +340,9 @@ async def test_integration():
     print("\n🔗 Testing Phase 3 Integration...")
     
     try:
-        from thetagang.timeframes import get_timeframe_manager, create_timeframe_config
-        from thetagang.execution import StrategyExecutionEngine, create_execution_config, ExecutionMode
-        from thetagang.strategies.enums import TimeFrame
+        from moneytrailz.timeframes import get_timeframe_manager, create_timeframe_config
+        from moneytrailz.execution import StrategyExecutionEngine, create_execution_config, ExecutionMode
+        from moneytrailz.strategies.enums import TimeFrame
         
         # Get global timeframe manager
         manager = get_timeframe_manager()

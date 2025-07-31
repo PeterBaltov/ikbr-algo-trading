@@ -9,21 +9,21 @@ def test_basic_imports():
     
     try:
         # Test analysis package import
-        from thetagang.analysis import TechnicalAnalysisEngine
+        from moneytrailz.analysis import TechnicalAnalysisEngine
         print("✅ TechnicalAnalysisEngine imported successfully")
         
         # Test indicator imports
-        from thetagang.analysis.indicators.base import BaseIndicator, IndicatorResult
+        from moneytrailz.analysis.indicators.base import BaseIndicator, IndicatorResult
         print("✅ Base indicator classes imported successfully")
         
-        from thetagang.analysis.indicators.trend import SMA, EMA
+        from moneytrailz.analysis.indicators.trend import SMA, EMA
         print("✅ Trend indicators imported successfully")
         
-        from thetagang.analysis.indicators.momentum import RSI
+        from moneytrailz.analysis.indicators.momentum import RSI
         print("✅ Momentum indicators imported successfully")
         
         # Test signal processing
-        from thetagang.analysis.signals import SignalAggregator
+        from moneytrailz.analysis.signals import SignalAggregator
         print("✅ Signal processing imported successfully")
         
         print("\n✅ ALL PHASE 2 IMPORTS SUCCESSFUL!")
@@ -40,8 +40,8 @@ def test_engine_creation():
     print("\n🚀 Testing Engine Creation...")
     
     try:
-        from thetagang.analysis import TechnicalAnalysisEngine
-        from thetagang.strategies.enums import TimeFrame
+        from moneytrailz.analysis import TechnicalAnalysisEngine
+        from moneytrailz.strategies.enums import TimeFrame
         
         # Create engine
         engine = TechnicalAnalysisEngine()

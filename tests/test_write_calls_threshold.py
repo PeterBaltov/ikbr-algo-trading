@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock, MagicMock, Mock
 import pytest
 from ib_async import AccountValue, Option, PortfolioItem, Stock, Ticker
 
-from thetagang.portfolio_manager import PortfolioManager
+from moneytrailz.portfolio_manager import PortfolioManager
 
 
 @pytest.fixture

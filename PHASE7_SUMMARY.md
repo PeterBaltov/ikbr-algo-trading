@@ -242,7 +242,7 @@ AAPL = { shares = 100 }
 ```
 
 ### **Dynamic Strategy Loading**
-- **Configuration-Driven**: Strategies loaded based on `thetagang.toml` settings
+- **Configuration-Driven**: Strategies loaded based on `moneytrailz.toml` settings
 - **Weight-Based Allocation**: Capital distributed according to strategy weights
 - **Type-Safe Validation**: Pydantic models ensure configuration validity
 - **Hot Reloading**: Strategy configuration can be updated without restart
@@ -296,7 +296,7 @@ Framework strategy execution completed. Generated 2 signals
   • Better resource allocation and risk management
   • Multi-timeframe support
   • Technical analysis integration
-  See Phase 5 configuration examples in thetagang.toml
+  See Phase 5 configuration examples in moneytrailz.toml
 ```
 
 ---

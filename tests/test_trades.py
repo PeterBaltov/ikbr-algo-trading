@@ -3,8 +3,8 @@ from unittest.mock import Mock
 import pytest
 from ib_async import Contract, LimitOrder, Trade
 
-from thetagang.ibkr import IBKR
-from thetagang.trades import Trades
+from moneytrailz.ibkr import IBKR
+from moneytrailz.trades import Trades
 
 
 @pytest.fixture

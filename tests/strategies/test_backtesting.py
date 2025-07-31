@@ -20,15 +20,15 @@ from unittest.mock import MagicMock, patch
 from dataclasses import dataclass
 
 # Import backtesting components
-from thetagang.backtesting import (
+from moneytrailz.backtesting import (
     DataManager, BacktestEngine, TradeSimulator, BacktestStrategy,
     PortfolioManager, StrategyOptimizer, ReportGenerator, LiveTradingAdapter
 )
-from thetagang.analytics import (
+from moneytrailz.analytics import (
     PerformanceCalculator, RiskCalculator, AttributionAnalyzer, ChartGenerator
 )
-from thetagang.strategies.base import BaseStrategy, StrategyResult, StrategyContext
-from thetagang.strategies.enums import StrategySignal, StrategyType, TimeFrame
+from moneytrailz.strategies.base import BaseStrategy, StrategyResult, StrategyContext
+from moneytrailz.strategies.enums import StrategySignal, StrategyType, TimeFrame
 
 
 class MockBacktestStrategy(BacktestStrategy):
