@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { cn } from '@/lib/utils'
 import { Card, CardContent, CardHeader, CardTitle } from './card'
 import { Badge } from './badge'
@@ -124,6 +124,16 @@ export function PositionSummary({
   maintenanceMargin,
   className
 }: PositionSummaryProps) {
+  const [currentTime, setCurrentTime] = useState<string>('')
+
+  useEffect(() => {
+    setCurrentTime(new Date().toLocaleTimeString())
+    const interval = setInterval(() => {
+      setCurrentTime(new Date().toLocaleTimeString())
+    }, 1000)
+    
+    return () => clearInterval(interval)
+  }, [])
   return (
     <Card className={cn("", className)}>
       <CardHeader className="pb-3">
@@ -197,7 +207,7 @@ export function PositionSummary({
               {dayPnL >= 0 ? "Profitable Day" : "Loss Day"}
             </Badge>
             <div className="text-xs text-gray-500 dark:text-gray-400">
-              Last updated: {new Date().toLocaleTimeString()}
+              Last updated: {currentTime}
             </div>
           </div>
         </div>

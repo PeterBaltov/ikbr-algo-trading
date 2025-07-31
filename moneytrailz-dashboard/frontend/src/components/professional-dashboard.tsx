@@ -254,28 +254,34 @@ export function ProfessionalDashboard() {
                         />
                         <TradingTableCell align="right">
                           <div className="space-y-1">
-                            <DataCell 
-                              value={position.unrealizedPnL}
-                              type="currency"
-                            />
-                            <DataCell 
-                              value={position.unrealizedPnLPercent}
-                              type="percentage"
-                              className="text-xs"
-                            />
+                            <div className={cn(
+                              "font-semibold",
+                              position.unrealizedPnL >= 0 ? "text-profit" : "text-loss"
+                            )}>
+                              ${position.unrealizedPnL.toFixed(2)}
+                            </div>
+                            <div className={cn(
+                              "text-xs font-semibold",
+                              position.unrealizedPnL >= 0 ? "text-profit" : "text-loss"
+                            )}>
+                              {position.unrealizedPnLPercent.toFixed(2)}%
+                            </div>
                           </div>
                         </TradingTableCell>
                         <TradingTableCell align="right">
                           <div className="space-y-1">
-                            <DataCell 
-                              value={position.dayChange}
-                              type="currency"
-                            />
-                            <DataCell 
-                              value={position.dayChangePercent}
-                              type="percentage"
-                              className="text-xs"
-                            />
+                            <div className={cn(
+                              "font-semibold",
+                              position.dayChange >= 0 ? "text-profit" : "text-loss"
+                            )}>
+                              ${position.dayChange.toFixed(2)}
+                            </div>
+                            <div className={cn(
+                              "text-xs font-semibold",
+                              position.dayChange >= 0 ? "text-profit" : "text-loss"
+                            )}>
+                              {position.dayChangePercent.toFixed(2)}%
+                            </div>
                           </div>
                         </TradingTableCell>
                       </TradingTableRow>
