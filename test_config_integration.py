@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-Test Phase 1 integration with actual ThetaGang configuration
+Test Phase 1 integration with actual moneytrailz configuration
 
 This shows how the new strategy framework would work with
-real ThetaGang config and components.
+real moneytrailz config and components.
 """
 
 import asyncio
@@ -11,18 +11,18 @@ import toml
 from pathlib import Path
 
 def test_config_loading():
-    """Test loading ThetaGang config alongside strategy framework"""
+    """Test loading moneytrailz config alongside strategy framework"""
     print("📋 TESTING CONFIG INTEGRATION")
     print("=" * 50)
     
     try:
-        # Load actual ThetaGang config
+        # Load actual moneytrailz config
         config_path = Path("moneytrailz.toml")
         if config_path.exists():
             with open(config_path, 'r') as f:
                 config_data = toml.load(f)
             
-            print("✅ ThetaGang config loaded successfully")
+            print("✅ moneytrailz config loaded successfully")
             print(f"📊 Account: {config_data.get('account', {}).get('number', 'Not set')}")
             print(f"🎯 Symbols configured: {list(config_data.get('symbols', {}).keys())}")
         else:
@@ -39,7 +39,7 @@ def test_config_loading():
         return {}
 
 def test_strategy_config_compatibility():
-    """Test that strategy configs are compatible with ThetaGang structure"""
+    """Test that strategy configs are compatible with moneytrailz structure"""
     print("\n⚙️ TESTING STRATEGY CONFIG COMPATIBILITY")
     print("=" * 50)
     
@@ -80,12 +80,12 @@ async def test_portfolio_manager_integration():
     print("=" * 50)
     
     try:
-        # Import actual ThetaGang components
+        # Import actual moneytrailz components
         from moneytrailz.config import Config, normalize_config
         from moneytrailz.strategies import get_registry, StrategyContext
         from moneytrailz.strategies.implementations.example_strategy import ExampleStrategy
         
-        print("✅ Successfully imported ThetaGang and strategy framework")
+        print("✅ Successfully imported moneytrailz and strategy framework")
         
         # Register a strategy
         registry = get_registry()
@@ -97,7 +97,7 @@ async def test_portfolio_manager_integration():
         print("\n🔄 Simulating integration with PortfolioManager.manage():")
         
         integration_steps = [
-            "1. Load existing ThetaGang configuration",
+            "1. Load existing moneytrailz configuration",
             "2. Execute existing wheel strategy logic", 
             "3. Get strategy registry and enabled strategies",
             "4. Create StrategyContext from existing components",
@@ -125,7 +125,7 @@ async def test_portfolio_manager_integration():
         return False
 
 def test_backwards_compatibility():
-    """Test that Phase 1 doesn't break existing ThetaGang functionality"""
+    """Test that Phase 1 doesn't break existing moneytrailz functionality"""
     print("\n🔄 TESTING BACKWARDS COMPATIBILITY")
     print("=" * 50)
     
@@ -136,7 +136,7 @@ def test_backwards_compatibility():
         from moneytrailz.options import option_dte
         from moneytrailz.trades import Trades
         
-        print("✅ All existing ThetaGang imports work")
+        print("✅ All existing moneytrailz imports work")
         
         # Test that we can import strategy framework alongside
         from moneytrailz.strategies import BaseStrategy, get_registry
@@ -204,7 +204,7 @@ async def main():
     
     if passed == total:
         print("\n🎉 ALL CONFIG INTEGRATION TESTS PASSED!")
-        print("✅ Phase 1 framework is fully compatible with existing ThetaGang")
+        print("✅ Phase 1 framework is fully compatible with existing moneytrailz")
         print("🚀 Ready for production integration and Phase 2 development")
     else:
         print(f"\n⚠️  {total - passed} test(s) failed - needs attention")

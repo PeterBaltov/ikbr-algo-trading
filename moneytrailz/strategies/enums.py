@@ -1,5 +1,5 @@
 """
-Enums and types for the ThetaGang strategy framework.
+Enums and types for the moneytrailz strategy framework.
 
 This module defines the core enumerations used throughout the strategy system
 including signal types, strategy categories, timeframes, and execution status.

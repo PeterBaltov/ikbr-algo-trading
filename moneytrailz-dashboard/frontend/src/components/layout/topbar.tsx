@@ -124,7 +124,7 @@ export function TopBar() {
                   <span className="text-white text-sm font-medium">TG</span>
                 </div>
                 <div className="hidden md:block text-left">
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">ThetaGang</p>
+                  <p className="text-sm font-medium text-gray-900 dark:text-white">moneytrailz</p>
                   <p className="text-xs text-gray-500 dark:text-gray-400">Algorithmic Trader</p>
                 </div>
                 <ChevronDown className="w-4 h-4 text-gray-400" />

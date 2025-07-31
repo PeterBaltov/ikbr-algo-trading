@@ -117,7 +117,7 @@ class IBCConfig(BaseModel):
     gateway: bool = Field(default=True)
     RaiseRequestErrors: bool = Field(default=False)
     ibcPath: str = Field(default="/opt/ibc")
-    ibcIni: str = Field(default="/etc/thetagang/config.ini")
+    ibcIni: str = Field(default="/etc/moneytrailz/config.ini")
     twsPath: Optional[str] = None
     twsSettingsPath: Optional[str] = None
     javaPath: str = Field(default="/opt/java/openjdk/bin")

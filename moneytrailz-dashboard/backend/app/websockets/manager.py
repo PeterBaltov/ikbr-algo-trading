@@ -20,7 +20,7 @@ class ConnectionManager:
         # Send welcome message
         await self.send_personal_message({
             "type": "connection.established",
-            "message": "Connected to ThetaGang Dashboard",
+            "message": "Connected to moneytrailz Dashboard",
             "timestamp": datetime.now(timezone.utc).isoformat(),
             "client_id": id(websocket)
         }, websocket)

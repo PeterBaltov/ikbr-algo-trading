@@ -312,15 +312,15 @@ def test_configuration_validation():
         return False
 
 def test_integration_points():
-    """Test integration with existing ThetaGang components"""
+    """Test integration with existing moneytrailz components"""
     print("\n🔗 Testing Integration Points...")
     
     try:
-        # Test that we can import existing ThetaGang modules alongside new framework
+        # Test that we can import existing moneytrailz modules alongside new framework
         from moneytrailz.config import Config
         from moneytrailz.strategies import get_registry, StrategyType
         
-        print("  ✅ Existing ThetaGang imports - SUCCESS")
+        print("  ✅ Existing moneytrailz imports - SUCCESS")
         
         # Test that TimeFrame enum works with existing timeframe concepts
         from moneytrailz.strategies import TimeFrame

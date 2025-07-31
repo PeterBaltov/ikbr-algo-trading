@@ -1,7 +1,7 @@
 """
 Strategy Execution Engine Package
 
-This package provides comprehensive strategy execution capabilities for the ThetaGang
+This package provides comprehensive strategy execution capabilities for the moneytrailz
 algorithmic trading system, including coordination, scheduling, pipeline processing,
 and multi-strategy management.
 

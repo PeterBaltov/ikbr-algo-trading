@@ -8,8 +8,8 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Use the shared virtual environment from parent directory
-ENV PATH="/thetagang-system/.venv/bin:$PATH"
-ENV PYTHONPATH="/app:/thetagang-system"
+ENV PATH="/moneytrailz-system/.venv/bin:$PATH"
+ENV PYTHONPATH="/app:/moneytrailz-system"
 
 # Copy and install requirements (some packages might already be in shared .venv)
 COPY requirements.txt .

@@ -301,7 +301,7 @@ def main():
         
         if success:
             print("\n🎉 SIMPLIFIED VALIDATION COMPLETED SUCCESSFULLY!")
-            print("🚀 ThetaGang system core functionality validated!")
+            print("🚀 moneytrailz system core functionality validated!")
             
             print("\n📋 Next Steps:")
             print("  • Run individual phase tests for detailed validation")

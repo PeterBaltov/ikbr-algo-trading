@@ -18,7 +18,7 @@ services:
       - backend
     restart: unless-stopped
     networks:
-      - thetagang-net
+      - moneytrailz-net
 
   # Backend - FastAPI
   backend:
@@ -28,29 +28,29 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_URL=postgresql://thetagang:${POSTGRES_PASSWORD}@database:5432/thetagang_dashboard
+      - DATABASE_URL=postgresql://moneytrailz:${POSTGRES_PASSWORD}@database:5432/thetagang_dashboard
       - REDIS_URL=redis://redis:6379
-      - PYTHONPATH=/app:/thetagang-system
-      - PATH=/thetagang-system/.venv/bin:$PATH
+      - PYTHONPATH=/app:/moneytrailz-system
+      - PATH=/moneytrailz-system/.venv/bin:$PATH
       - SECRET_KEY=${SECRET_KEY}
       - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost:3000,https://your-domain.com}
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
     volumes:
-      - ../thetagang:/thetagang-system:ro  # Mount ThetaGang system for integration
+      - ../moneytrailz:/moneytrailz-system:ro  # Mount moneytrailz system for integration
       - backend_logs:/app/logs
     depends_on:
       - database
       - redis
     restart: unless-stopped
     networks:
-      - thetagang-net
+      - moneytrailz-net
 
   # Database - TimescaleDB for time-series data
   database:
     image: timescale/timescaledb:latest-pg14
     environment:
       - POSTGRES_DB=thetagang_dashboard
-      - POSTGRES_USER=thetagang
+      - POSTGRES_USER=moneytrailz
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_INITDB_ARGS="--auth-host=scram-sha-256"
     volumes:
@@ -60,9 +60,9 @@ services:
       - "5432:5432"
     restart: unless-stopped
     networks:
-      - thetagang-net
+      - moneytrailz-net
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U thetagang -d thetagang_dashboard"]
+      test: ["CMD-SHELL", "pg_isready -U moneytrailz -d thetagang_dashboard"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -77,7 +77,7 @@ services:
     command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
     restart: unless-stopped
     networks:
-      - thetagang-net
+      - moneytrailz-net
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 30s
@@ -99,7 +99,7 @@ services:
       - backend
     restart: unless-stopped
     networks:
-      - thetagang-net
+      - moneytrailz-net
 
   # Monitoring - Prometheus (optional)
   prometheus:
@@ -118,7 +118,7 @@ services:
       - '--web.enable-lifecycle'
     restart: unless-stopped
     networks:
-      - thetagang-net
+      - moneytrailz-net
 
   # Monitoring - Grafana (optional)
   grafana:
@@ -136,7 +136,7 @@ services:
       - prometheus
     restart: unless-stopped
     networks:
-      - thetagang-net
+      - moneytrailz-net
 
 volumes:
   postgres_data:
@@ -153,7 +153,7 @@ volumes:
     driver: local
 
 networks:
-  thetagang-net:
+  moneytrailz-net:
     driver: bridge
     ipam:
       config:

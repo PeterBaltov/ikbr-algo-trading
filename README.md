@@ -2,7 +2,7 @@
 
 _Professional-grade algorithmic trading with advanced strategy framework and real-time analytics_
 
-MoneyTrailz is a sophisticated algorithmic trading system built on IBKR (Interactive Brokers) that combines the proven "Wheel" strategy with an advanced multi-strategy framework, technical analysis engine, and real-time dashboard. Originally evolved from the thetagang project, MoneyTrailz has been completely transformed into a professional trading platform with enterprise-grade features.
+MoneyTrailz is a sophisticated algorithmic trading system built on IBKR (Interactive Brokers) that combines the proven "Wheel" strategy with an advanced multi-strategy framework, technical analysis engine, and real-time dashboard. Originally evolved from the moneytrailz project, MoneyTrailz has been completely transformed into a professional trading platform with enterprise-grade features.
 
 ## 🚀 **Key Features**
 

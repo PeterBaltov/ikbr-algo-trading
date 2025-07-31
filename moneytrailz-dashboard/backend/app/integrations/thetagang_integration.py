@@ -14,10 +14,10 @@ from uuid import uuid4
 logger = logging.getLogger(__name__)
 
 class DashboardIntegration:
-    """Integration layer between ThetaGang and the dashboard"""
+    """Integration layer between moneytrailz and the dashboard"""
     
     def __init__(self, config_path: Optional[str] = None):
-        """Initialize the integration with ThetaGang system"""
+        """Initialize the integration with moneytrailz system"""
         self.config = None
         self.portfolio_manager: Optional[PortfolioManager] = None
         self.is_connected = False
@@ -28,23 +28,23 @@ class DashboardIntegration:
         asyncio.create_task(self._initialize_connection())
     
     async def _initialize_connection(self):
-        """Initialize connection to ThetaGang system"""
+        """Initialize connection to moneytrailz system"""
         try:
-            logger.info("🔗 Attempting ThetaGang connection...")
+            logger.info("🔗 Attempting moneytrailz connection...")
             
             # For now, we'll start in mock mode since we need IB connection setup
             # In a real deployment, this would check for IB connection and credentials
-            logger.info("🎭 Real ThetaGang connection requires IB setup - using mock mode")
+            logger.info("🎭 Real moneytrailz connection requires IB setup - using mock mode")
             await self._initialize_mock_mode()
             
         except Exception as e:
-            logger.error(f"❌ Failed to connect to ThetaGang: {e}")
+            logger.error(f"❌ Failed to connect to moneytrailz: {e}")
             self.is_connected = False
             # Fall back to mock mode
             await self._initialize_mock_mode()
     
     async def _test_connection(self):
-        """Test the connection to ThetaGang system"""
+        """Test the connection to moneytrailz system"""
         if self.portfolio_manager:
             # Test basic portfolio access
             try:
@@ -262,7 +262,7 @@ class DashboardIntegration:
             if not self.is_connected:
                 return {
                     "success": False,
-                    "message": "Not connected to ThetaGang system",
+                    "message": "Not connected to moneytrailz system",
                     "mock_mode": True
                 }
             

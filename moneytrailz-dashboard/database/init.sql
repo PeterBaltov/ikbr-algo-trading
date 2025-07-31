@@ -1,4 +1,4 @@
--- ThetaGang Dashboard Database Initialization
+-- moneytrailz Dashboard Database Initialization
 -- Phase 1: Basic schema setup
 
 -- Enable TimescaleDB extension

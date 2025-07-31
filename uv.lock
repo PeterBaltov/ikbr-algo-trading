@@ -802,7 +802,7 @@ wheels = [
 ]
 
 [[package]]
-name = "thetagang"
+name = "moneytrailz"
 version = "1.16.1"
 source = { editable = "." }
 dependencies = [

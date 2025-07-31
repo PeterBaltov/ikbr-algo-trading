@@ -1,1 +1,1 @@
-# Integration layer for ThetaGang system 
+# Integration layer for moneytrailz system 

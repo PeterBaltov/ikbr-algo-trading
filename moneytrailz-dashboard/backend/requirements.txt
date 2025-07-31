@@ -15,7 +15,7 @@ sqlalchemy==2.0.23
 alembic==1.12.1
 psycopg2-binary==2.9.9
 
-# ThetaGang integration (assuming it's in parent directory)
+# moneytrailz integration (assuming it's in parent directory)
 # We'll add this as a development dependency
 
 # Development and testing

@@ -3,7 +3,7 @@
 ============================================
 
 This package contains production-ready trading strategy implementations
-that leverage the complete ThetaGang framework infrastructure:
+that leverage the complete moneytrailz framework infrastructure:
 
 - Phase 1: Strategy Framework (BaseStrategy, Registry)
 - Phase 2: Technical Analysis Engine (Indicators, Signals)
@@ -152,7 +152,7 @@ __all__ = [
 
 # Version and metadata
 __version__ = "6.0.0"
-__author__ = "ThetaGang Phase 6 Implementation"
+__author__ = "moneytrailz Phase 6 Implementation"
 __description__ = "Production-ready algorithmic trading strategy implementations"
 
 def get_strategy_info():

@@ -58,7 +58,7 @@ ADD ./dist /src/dist
 ADD entrypoint.bash /src/entrypoint.bash
 ADD ./data/jxbrowser-linux64-arm-7.29.jar /root/Jts/1030/jars/
 
-RUN python3 -m pip install dist/thetagang-*.whl \
+RUN python3 -m pip install dist/moneytrailz-*.whl \
   && rm -rf /root/.cache \
   && rm -rf dist \
   && echo '--module-path /usr/share/openjfx/lib' | tee -a /root/Jts/*/tws.vmoptions \

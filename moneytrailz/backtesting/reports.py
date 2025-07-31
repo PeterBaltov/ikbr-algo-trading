@@ -110,7 +110,7 @@ class ReportConfig:
     # Metadata
     report_title: str = "Strategy Performance Report"
     report_subtitle: str = "Backtesting Analysis"
-    author: str = "ThetaGang Framework"
+    author: str = "moneytrailz Framework"
     company: str = ""
     
     metadata: Dict[str, Any] = field(default_factory=dict)

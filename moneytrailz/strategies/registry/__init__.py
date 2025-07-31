@@ -2,7 +2,7 @@
 Strategy Registry Package
 
 This package provides dynamic strategy loading, registration, and management
-capabilities for the ThetaGang strategy framework.
+capabilities for the moneytrailz strategy framework.
 """
 
 from .registry import StrategyRegistry, get_registry, register_strategy

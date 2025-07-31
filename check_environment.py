@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Environment verification script for ThetaGang Python 3.13 workspace
+Environment verification script for moneytrailz Python 3.13 workspace
 """
 
 import sys
@@ -36,25 +36,25 @@ def check_virtual_environment():
         return False
 
 def check_thetagang_installation():
-    """Check if ThetaGang is installed"""
+    """Check if moneytrailz is installed"""
     try:
-        import thetagang
-        print(f"📊 ThetaGang: Installed")
+        import moneytrailz
+        print(f"📊 moneytrailz: Installed")
         
-        # Try to run thetagang --help
+        # Try to run moneytrailz --help
         result = subprocess.run([sys.executable, "-m", "moneytrailz.entry", "--help"], 
                               capture_output=True, text=True, timeout=10)
         if result.returncode == 0:
-            print("✅ ThetaGang command - GOOD")
+            print("✅ moneytrailz command - GOOD")
             return True
         else:
-            print("❌ ThetaGang command failed")
+            print("❌ moneytrailz command failed")
             return False
     except ImportError:
-        print("❌ ThetaGang not installed")
+        print("❌ moneytrailz not installed")
         return False
     except subprocess.TimeoutExpired:
-        print("⚠️  ThetaGang command timeout")
+        print("⚠️  moneytrailz command timeout")
         return False
 
 def check_dependencies():
@@ -83,13 +83,13 @@ def check_dependencies():
 
 def main():
     """Main verification function"""
-    print("🔍 ThetaGang Environment Verification")
+    print("🔍 moneytrailz Environment Verification")
     print("=" * 50)
     
     checks = [
         ("Python Version", check_python_version),
         ("Virtual Environment", check_virtual_environment), 
-        ("ThetaGang Installation", check_thetagang_installation),
+        ("moneytrailz Installation", check_thetagang_installation),
         ("Dependencies", check_dependencies)
     ]
     
@@ -102,10 +102,10 @@ def main():
     print("\n" + "=" * 50)
     if all(results):
         print("🎉 ALL CHECKS PASSED!")
-        print("🚀 Environment ready for ThetaGang development!")
+        print("🚀 Environment ready for moneytrailz development!")
         print("\nQuick start:")
         print("  source activate_env.sh")
-        print("  thetagang -c moneytrailz.toml --dry-run")
+        print("  moneytrailz -c moneytrailz.toml --dry-run")
     else:
         print("❌ Some checks failed")
         print("Fix the issues above and run again")

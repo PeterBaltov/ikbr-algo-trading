@@ -17,7 +17,7 @@ services:
     depends_on:
       - backend
     networks:
-      - thetagang-net
+      - moneytrailz-net
 
   # Backend - FastAPI
   backend:
@@ -27,26 +27,26 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_URL=postgresql://thetagang:password@database:5432/thetagang_dashboard
+      - DATABASE_URL=postgresql://moneytrailz:password@database:5432/thetagang_dashboard
       - REDIS_URL=redis://redis:6379
-      - PYTHONPATH=/app:/thetagang-system
-      - PATH=/thetagang-system/.venv/bin:$PATH
+      - PYTHONPATH=/app:/moneytrailz-system
+      - PATH=/moneytrailz-system/.venv/bin:$PATH
     volumes:
       - ./backend:/app
-      - ../:/thetagang-system  # Mount parent directory for shared .venv and thetagang module
-      - ../.venv:/thetagang-system/.venv  # Mount shared virtual environment
+      - ../:/moneytrailz-system  # Mount parent directory for shared .venv and moneytrailz module
+      - ../.venv:/moneytrailz-system/.venv  # Mount shared virtual environment
     depends_on:
       - database
       - redis
     networks:
-      - thetagang-net
+      - moneytrailz-net
 
   # Database - PostgreSQL + TimescaleDB
   database:
     image: timescale/timescaledb:latest-pg15
     environment:
       - POSTGRES_DB=thetagang_dashboard
-      - POSTGRES_USER=thetagang
+      - POSTGRES_USER=moneytrailz
       - POSTGRES_PASSWORD=password
     ports:
       - "5432:5432"
@@ -54,7 +54,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
-      - thetagang-net
+      - moneytrailz-net
 
   # Redis - Caching and real-time data
   redis:
@@ -64,7 +64,7 @@ services:
     volumes:
       - redis_data:/data
     networks:
-      - thetagang-net
+      - moneytrailz-net
 
   # Optional: pgAdmin for database management
   pgadmin:
@@ -77,7 +77,7 @@ services:
     depends_on:
       - database
     networks:
-      - thetagang-net
+      - moneytrailz-net
     profiles:
       - dev
 
@@ -86,5 +86,5 @@ volumes:
   redis_data:
 
 networks:
-  thetagang-net:
+  moneytrailz-net:
     driver: bridge 

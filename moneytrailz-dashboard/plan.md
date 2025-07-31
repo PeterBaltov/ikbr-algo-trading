@@ -1,9 +1,9 @@
-# 🎯 **ThetaGang Dashboard UI - Comprehensive Implementation Plan**
+# 🎯 **moneytrailz Dashboard UI - Comprehensive Implementation Plan**
 
 ## 🎨 **Dashboard Vision & Architecture**
 
 ### **🎯 Core Objectives**
-Create a **sophisticated, real-time web dashboard** that provides complete visibility and control over the ThetaGang multi-strategy trading system with:
+Create a **sophisticated, real-time web dashboard** that provides complete visibility and control over the moneytrailz multi-strategy trading system with:
 
 - **📊 Real-time Strategy Monitoring**
 - **⚡ Live Trade Execution Tracking** 
@@ -64,7 +64,7 @@ Create a **sophisticated, real-time web dashboard** that provides complete visib
 ### **⚡ Backend Integration**
 ```python
 # FastAPI + WebSockets ⭐⭐⭐
-- Native Python integration with ThetaGang
+- Native Python integration with moneytrailz
 - Real-time WebSocket support
 - Automatic API documentation
 - High performance async operations
@@ -103,7 +103,7 @@ graph TB
     end
     
     subgraph "Core Trading System"
-        G[ThetaGang Portfolio Manager]
+        G[moneytrailz Portfolio Manager]
         H[Strategy Execution Engine]
         I[Technical Analysis Engine]
     end
@@ -145,7 +145,7 @@ interface DashboardEvents {
 ### **🎯 Main Dashboard Layout**
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│ 🎯 ThetaGang Trading Dashboard              👤 User Settings │
+│ 🎯 moneytrailz Trading Dashboard              👤 User Settings │
 ├─────────────────────────────────────────────────────────────┤
 │ 📊 Portfolio Overview                    💰 $125,450.23    │
 │ ┌─────────────┬─────────────┬─────────────┬─────────────┐   │
@@ -203,7 +203,7 @@ interface StrategyDashboard {
 #### **1.1 Project Setup**
 ```bash
 # Create Next.js project with TypeScript
-npx create-next-app@latest thetagang-dashboard --typescript --tailwind --app
+npx create-next-app@latest moneytrailz-dashboard --typescript --tailwind --app
 
 # Install core dependencies
 npm install @tanstack/react-query
@@ -217,7 +217,7 @@ npm install zustand  # State management
 #### **1.2 Backend API Setup**
 ```python
 # FastAPI backend structure
-thetagang-api/
+moneytrailz-api/
 ├── app/
 │   ├── __init__.py
 │   ├── main.py              # FastAPI app
@@ -387,7 +387,7 @@ export function useRealtimePortfolio() {
 }
 ```
 
-#### **3.2 ThetaGang Integration Layer**
+#### **3.2 moneytrailz Integration Layer**
 ```python
 # integrations/moneytrailz.py
 from moneytrailz.portfolio_manager import PortfolioManager
@@ -632,7 +632,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_URL=postgresql://user:pass@database:5432/thetagang
+      - DATABASE_URL=postgresql://user:pass@database:5432/moneytrailz
       - REDIS_URL=redis://redis:6379
     depends_on:
       - database
@@ -641,7 +641,7 @@ services:
   database:
     image: timescale/timescaledb:latest-pg14
     environment:
-      - POSTGRES_DB=thetagang
+      - POSTGRES_DB=moneytrailz
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=pass
     volumes:
@@ -922,7 +922,7 @@ NEXTAUTH_SECRET=your_nextauth_secret
 NEXTAUTH_URL=https://dashboard.yourtrading.com
 
 # Backend (.env.production)
-DATABASE_URL=postgresql://user:pass@db.yourtrading.com:5432/thetagang
+DATABASE_URL=postgresql://user:pass@db.yourtrading.com:5432/moneytrailz
 REDIS_URL=redis://redis.yourtrading.com:6379
 IBKR_HOST=127.0.0.1
 IBKR_PORT=7497
@@ -1078,4 +1078,4 @@ Deployment: Vercel (Frontend) + AWS/GCP (Backend)
 4. **Plan for scalability** - your system will grow
 5. **Invest in security** - financial data protection is critical
 
-**This dashboard will transform your ThetaGang system into a professional-grade trading platform with institutional-quality monitoring, analytics, and control capabilities!** 🎯📊💹
+**This dashboard will transform your moneytrailz system into a professional-grade trading platform with institutional-quality monitoring, analytics, and control capabilities!** 🎯📊💹

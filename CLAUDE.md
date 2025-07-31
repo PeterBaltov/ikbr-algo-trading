@@ -4,20 +4,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-ThetaGang is an automated options trading bot for Interactive Brokers (IBKR) that implements "The Wheel" strategy - selling cash-secured puts and covered calls to generate income from option premiums.
+moneytrailz is an automated options trading bot for Interactive Brokers (IBKR) that implements "The Wheel" strategy - selling cash-secured puts and covered calls to generate income from option premiums.
 
 ## Development Commands
 
 ### Running the application
 ```bash
 # Always use uv to run the application
-uv run thetagang --config moneytrailz.toml
+uv run moneytrailz --config moneytrailz.toml
 
 # Dry run mode (no actual trades)
-uv run thetagang --config moneytrailz.toml --dry-run
+uv run moneytrailz --config moneytrailz.toml --dry-run
 
 # Without IBC (when TWS/Gateway is already running)
-uv run thetagang --config moneytrailz.toml --without-ibc
+uv run moneytrailz --config moneytrailz.toml --without-ibc
 ```
 
 ### Testing
@@ -29,7 +29,7 @@ uv run pytest
 uv run pytest tests/test_portfolio_manager.py
 
 # Run with coverage
-uv run pytest --cov=thetagang
+uv run pytest --cov=moneytrailz
 
 # Watch mode for development
 uv run pytest-watch
@@ -54,13 +54,13 @@ uv run pre-commit run --all-files
 
 ### Core Components
 
-1. **Entry Point** (`thetagang/moneytrailz.py`):
+1. **Entry Point** (`moneytrailz/moneytrailz.py`):
    - Initializes IB connection and IBC controller
    - Sets up event loop with ib_async
    - Creates PortfolioManager instance
    - Handles graceful shutdown
 
-2. **Portfolio Manager** (`thetagang/portfolio_manager.py`):
+2. **Portfolio Manager** (`moneytrailz/portfolio_manager.py`):
    - Core trading logic implementation
    - Main `manage()` loop that:
      - Analyzes account positions
@@ -68,12 +68,12 @@ uv run pre-commit run --all-files
      - Evaluates existing positions for rolling/closing
      - Handles order submission and management
 
-3. **Configuration** (`thetagang/config.py`):
+3. **Configuration** (`moneytrailz/config.py`):
    - Pydantic models for type-safe configuration
    - Key configs: `Config`, `SymbolConfig`, `RollWhenConfig`, `WriteWhenConfig`
    - Loaded from `moneytrailz.toml` file
 
-4. **IBKR Integration** (`thetagang/ibkr.py`):
+4. **IBKR Integration** (`moneytrailz/ibkr.py`):
    - Wrapper around ib_async library
    - Handles all API calls to Interactive Brokers
    - Manages market data subscriptions

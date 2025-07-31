@@ -3,7 +3,7 @@
 Phase 1 Integration Demo
 
 This demo shows how the new strategy framework integrates with
-existing ThetaGang components and how you could extend the system.
+existing moneytrailz components and how you could extend the system.
 """
 
 import asyncio
@@ -202,11 +202,11 @@ async def demo_strategy_execution(registry, configs):
     return results, order_manager
 
 def demo_future_integration():
-    """Demo: Show how this could integrate with existing ThetaGang"""
+    """Demo: Show how this could integrate with existing moneytrailz"""
     print("\n🔗 FUTURE INTEGRATION DEMO")
     print("=" * 50)
     
-    print("📝 How Phase 1 framework would integrate with existing ThetaGang:")
+    print("📝 How Phase 1 framework would integrate with existing moneytrailz:")
     print()
     
     integration_code = '''

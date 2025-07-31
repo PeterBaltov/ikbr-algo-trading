@@ -1,7 +1,7 @@
 # Technical Analysis Engine - Phase 2
 # 
 # This package provides comprehensive technical analysis capabilities
-# for ThetaGang strategies including indicators, signal processing,
+# for moneytrailz strategies including indicators, signal processing,
 # multi-timeframe support, and performance optimization.
 
 from .indicators import (

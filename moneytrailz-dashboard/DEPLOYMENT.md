@@ -1,4 +1,4 @@
-# ThetaGang Dashboard - Production Deployment Guide
+# moneytrailz Dashboard - Production Deployment Guide
 
 ## 🚀 Quick Start
 
@@ -15,7 +15,7 @@ Create a `.env.production` file in the root directory:
 ```bash
 # Database Configuration
 POSTGRES_PASSWORD=your_secure_postgres_password_here
-DATABASE_URL=postgresql://thetagang:your_secure_postgres_password_here@database:5432/thetagang_dashboard
+DATABASE_URL=postgresql://moneytrailz:your_secure_postgres_password_here@database:5432/thetagang_dashboard
 
 # Application Security
 SECRET_KEY=your_super_secure_secret_key_here_at_least_32_characters_long
@@ -108,7 +108,7 @@ docker-compose -f docker-compose.production.yml logs -f
 - **Framework**: FastAPI with WebSocket support
 - **Database**: TimescaleDB for time-series data
 - **Caching**: Redis for session and real-time data
-- **Integration**: Direct connection to ThetaGang system
+- **Integration**: Direct connection to moneytrailz system
 
 ### Database Schema
 The system automatically creates the following tables:
@@ -207,7 +207,7 @@ backup:
   command: |
     bash -c '
     while true; do
-      pg_dump -h database -U thetagang thetagang_dashboard > /backups/backup_$$(date +%Y%m%d_%H%M%S).sql
+      pg_dump -h database -U moneytrailz thetagang_dashboard > /backups/backup_$$(date +%Y%m%d_%H%M%S).sql
       find /backups -name "*.sql" -mtime +30 -delete
       sleep 86400
     done'
@@ -218,10 +218,10 @@ backup:
 ### Manual Backup
 ```bash
 # Create backup
-docker exec thetagang-database pg_dump -U thetagang thetagang_dashboard > backup.sql
+docker exec moneytrailz-database pg_dump -U moneytrailz thetagang_dashboard > backup.sql
 
 # Restore backup
-docker exec -i thetagang-database psql -U thetagang thetagang_dashboard < backup.sql
+docker exec -i moneytrailz-database psql -U moneytrailz thetagang_dashboard < backup.sql
 ```
 
 ## 🐛 Troubleshooting
@@ -258,7 +258,7 @@ curl -H "Origin: https://your-domain.com" https://your-domain.com/api/health
 **4. Database connection errors**
 ```bash
 # Check database status
-docker-compose -f docker-compose.production.yml exec database pg_isready -U thetagang
+docker-compose -f docker-compose.production.yml exec database pg_isready -U moneytrailz
 
 # Reset database
 docker-compose -f docker-compose.production.yml down -v
@@ -328,7 +328,7 @@ For technical support:
 - Check logs: `docker-compose -f docker-compose.production.yml logs`
 - Review metrics: Access Grafana dashboard
 - Submit issues: GitHub Issues
-- Documentation: [ThetaGang Dashboard Wiki](link-to-wiki)
+- Documentation: [moneytrailz Dashboard Wiki](link-to-wiki)
 
 ## 🚀 Advanced Configuration
 
@@ -338,21 +338,21 @@ For technical support:
 3. Configure SSL certificates
 4. Update CORS origins
 
-### Integration with ThetaGang
-The dashboard integrates with your existing ThetaGang setup:
-- Mount ThetaGang directory: `/thetagang-system`
+### Integration with moneytrailz
+The dashboard integrates with your existing moneytrailz setup:
+- Mount moneytrailz directory: `/moneytrailz-system`
 - Configure data path: `THETAGANG_DATA_PATH`
 - Set config path: `THETAGANG_CONFIG_PATH`
 
 ### Custom Strategies
 Add custom strategy monitoring:
-1. Implement strategy in ThetaGang
+1. Implement strategy in moneytrailz
 2. Update dashboard backend integration
 3. Add strategy cards to frontend
 4. Configure alerts in Grafana
 
 ---
 
-**🎯 Ready to deploy your ThetaGang Dashboard!** 
+**🎯 Ready to deploy your moneytrailz Dashboard!** 
 
 This production setup provides a robust, scalable, and secure environment for monitoring your algorithmic trading performance. 

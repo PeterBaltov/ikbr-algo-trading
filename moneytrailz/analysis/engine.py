@@ -22,7 +22,7 @@ from ..strategies.enums import TimeFrame
 
 class TechnicalAnalysisEngine:
     """
-    Main technical analysis engine for ThetaGang strategies
+    Main technical analysis engine for moneytrailz strategies
     
     Provides comprehensive technical analysis capabilities including:
     - Multiple technical indicators

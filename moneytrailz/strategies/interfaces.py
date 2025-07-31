@@ -1,5 +1,5 @@
 """
-Protocol interfaces for the ThetaGang strategy framework.
+Protocol interfaces for the moneytrailz strategy framework.
 
 This module defines the interfaces (protocols) that components must implement
 to work with the strategy framework. These interfaces ensure type safety and

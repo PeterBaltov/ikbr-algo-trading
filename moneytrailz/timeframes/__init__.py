@@ -1,7 +1,7 @@
 """
 Multi-Timeframe Architecture Package
 
-This package provides sophisticated multi-timeframe capabilities for the ThetaGang
+This package provides sophisticated multi-timeframe capabilities for the moneytrailz
 algorithmic trading system, including data synchronization, execution scheduling,
 memory management, and latency optimization.
 

@@ -13,13 +13,13 @@ from ..models.dashboard import (
 logger = logging.getLogger(__name__)
 
 class SimpleDashboardIntegration:
-    """Simplified ThetaGang integration for Phase 3 real-time dashboard"""
+    """Simplified moneytrailz integration for Phase 3 real-time dashboard"""
     
     def __init__(self):
         """Initialize the simplified integration"""
         self.is_connected = False
         self.last_update = datetime.now(timezone.utc)
-        logger.info("🎭 Initializing simplified ThetaGang integration")
+        logger.info("🎭 Initializing simplified moneytrailz integration")
     
     async def get_portfolio_snapshot(self) -> PortfolioSnapshot:
         """Get current portfolio state snapshot"""

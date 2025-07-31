@@ -22,7 +22,7 @@ A sophisticated, real-time trading dashboard for the MoneyTrailz algorithmic tra
 - **RESTful API**: Complete portfolio, strategies, trades, and analytics endpoints
 - **Real-time WebSockets**: Live data streaming with connection management
 - **Pydantic Models**: Type-safe data validation and serialization
-- **Mock Data Integration**: Development-ready mock ThetaGang integration
+- **Mock Data Integration**: Development-ready mock moneytrailz integration
 - **Error Handling**: Comprehensive error handling and logging
 
 ### ✅ **Database Infrastructure (TimescaleDB)**
@@ -102,7 +102,7 @@ graph TB
     end
     
     subgraph "Core Trading System"
-        G[ThetaGang Portfolio Manager]
+        G[moneytrailz Portfolio Manager]
         H[Strategy Execution Engine]
         I[Technical Analysis Engine]
     end
@@ -125,7 +125,7 @@ graph TB
 
 ### **Directory Structure**
 ```
-thetagang-dashboard/
+moneytrailz-dashboard/
 ├── frontend/                 # Next.js Dashboard
 │   ├── src/
 │   │   ├── app/             # App router pages
@@ -142,7 +142,7 @@ thetagang-dashboard/
 │   │   ├── routers/         # API endpoints
 │   │   ├── models/          # Pydantic models
 │   │   ├── websockets/      # WebSocket management
-│   │   ├── integrations/    # ThetaGang integration
+│   │   ├── integrations/    # moneytrailz integration
 │   │   └── main.py          # FastAPI application
 │   └── requirements.txt
 ├── database/                # Database configuration
@@ -240,7 +240,7 @@ NEXT_PUBLIC_WS_URL=ws://localhost:8000/ws
 
 #### **Backend (.env)**
 ```bash
-DATABASE_URL=postgresql://thetagang:password@localhost:5432/thetagang_dashboard
+DATABASE_URL=postgresql://moneytrailz:password@localhost:5432/thetagang_dashboard
 REDIS_URL=redis://localhost:6379
 ```
 
@@ -297,7 +297,7 @@ All environment variables are configured in `docker-compose.yml` for development
    NEXT_PUBLIC_WS_URL=wss://api.yourdomain.com/ws
    
    # Backend production
-   DATABASE_URL=postgresql://user:pass@prod-db:5432/thetagang
+   DATABASE_URL=postgresql://user:pass@prod-db:5432/moneytrailz
    ```
 
 2. **SSL/TLS Configuration**:
@@ -316,7 +316,7 @@ All environment variables are configured in `docker-compose.yml` for development
 #### **Option 1: Docker Swarm**
 ```bash
 docker swarm init
-docker stack deploy -c docker-compose.prod.yml thetagang-stack
+docker stack deploy -c docker-compose.prod.yml moneytrailz-stack
 ```
 
 #### **Option 2: Kubernetes**
@@ -330,16 +330,16 @@ docker stack deploy -c docker-compose.prod.yml thetagang-stack
 
 ---
 
-## 🔄 **Integration with ThetaGang**
+## 🔄 **Integration with moneytrailz**
 
 ### **Current Status (Phase 1)**
 - **Mock Integration**: Full mock data for development
-- **API Compatible**: Ready for ThetaGang system integration
-- **Data Models**: Match ThetaGang strategy and portfolio structures
+- **API Compatible**: Ready for moneytrailz system integration
+- **Data Models**: Match moneytrailz strategy and portfolio structures
 
 ### **Phase 3 Integration Plan**
 ```python
-# Integration will connect to actual ThetaGang system
+# Integration will connect to actual moneytrailz system
 from moneytrailz.portfolio_manager import PortfolioManager
 from moneytrailz.strategies.registry import get_registry
 
@@ -418,7 +418,7 @@ docker-compose up -d database
 
 **✅ Foundation Successfully Established**
 
-The ThetaGang Dashboard Phase 1 is now **production-ready** with:
+The moneytrailz Dashboard Phase 1 is now **production-ready** with:
 
 - **🎨 Professional Trading UI**: Next.js dashboard with real-time updates
 - **⚡ High-Performance API**: FastAPI with WebSocket real-time streaming  

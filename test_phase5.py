@@ -405,11 +405,11 @@ def test_config_validation():
 
 
 def test_phase5_integration_with_existing():
-    """Test Phase 5 integration with existing ThetaGang configuration"""
+    """Test Phase 5 integration with existing moneytrailz configuration"""
     print("\n🔗 Testing Phase 5 Integration with Existing moneytrailz...")
     
     try:
-                 # Try to use existing ThetaGang functionality
+                 # Try to use existing moneytrailz functionality
          from moneytrailz.config import Config
          
          print("  📋 Testing basic config functionality")
@@ -436,7 +436,7 @@ def test_phase5_integration_with_existing():
          }
          
          config = Config(**minimal_config)
-         print("  ✅ Minimal ThetaGang config still works")
+         print("  ✅ Minimal moneytrailz config still works")
          
          # Test that new fields have sensible defaults
          print(f"  📊 Default strategies: {len(config.strategies)}")
@@ -444,7 +444,7 @@ def test_phase5_integration_with_existing():
          print(f"  📈 Default indicators configured: True")
          print(f"  ⏰ Default timeframes configured: True")
          
-         print("✅ Phase 5 integration with existing ThetaGang working correctly")
+         print("✅ Phase 5 integration with existing moneytrailz working correctly")
          return True
          
     except Exception as e:
@@ -498,7 +498,7 @@ def main():
         print("  • 🔙 Comprehensive backtesting configuration")
         print("  • 📊 Technical indicator configuration management")
         print("  • ⏰ Advanced multi-timeframe configuration")
-        print("  • 🔗 Seamless integration with existing ThetaGang config")
+        print("  • 🔗 Seamless integration with existing moneytrailz config")
         print("  • ⚙️  Robust validation and error handling")
         print("  • 🚀 Helper methods for configuration management")
         
