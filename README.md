@@ -1,3 +1,16 @@
+
+# 🚧 Under Construction 🚧
+
+**This repository is currently under active development.**
+
+Please note that this project is still in progress. Features may be incomplete, documentation may be missing, and breaking changes may occur frequently.
+
+---
+
+⚠️ **Warning**: This code is not yet ready for production use.
+
+---
+
 # 💰 MoneyTrailz - Advanced Algorithmic Trading System
 
 _Professional-grade algorithmic trading with advanced strategy framework and real-time analytics_
